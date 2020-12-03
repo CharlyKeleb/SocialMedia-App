@@ -105,7 +105,7 @@ class _PublicationState extends State<Publication> {
     postRef.doc(currentUserId()).collection('userPosts').doc(postId).set({
       "postId": postId,
       "username": user.username,
-      "ownerId": currentUserId(),
+      "ownerId": user.id,
       "mediaUrl": mediaUrl,
       "description": description,
       "location": location,

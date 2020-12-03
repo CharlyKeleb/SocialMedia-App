@@ -46,6 +46,7 @@ dependencies:
   geolocator: ^6.1.7
   geocoding: ^1.0.5
   timeago: ^2.0.28
+  like_button: ^1.0.4
 
 dev_dependencies:
   flutter_test:

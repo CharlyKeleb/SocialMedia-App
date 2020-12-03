@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:social_media_app/models/user.dart';
+import 'package:social_media_app/pages/profile.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/indicators.dart';
 
@@ -150,6 +151,7 @@ class _SearchState extends State<Search> {
             return Column(
               children: [
                 ListTile(
+                  onTap: () => showProfile(context, profileId:user.id),
                   contentPadding: EdgeInsets.symmetric(horizontal: 25.0),
                   leading: CircleAvatar(
                     radius: 35.0,
@@ -173,5 +175,8 @@ class _SearchState extends State<Search> {
         child: circularProgress(context),
       );
     }
+  }
+  showProfile(BuildContext context, {String profileId}){
+    Navigator.push(context, MaterialPageRoute(builder: (_) => Profile(profileId:profileId),));
   }
 }

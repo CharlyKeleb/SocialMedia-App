@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:social_media_app/auth/register/register.dart';
 import 'package:social_media_app/components/stream_builder_wrapper.dart';
 import 'package:social_media_app/components/stream_grid_wrapper.dart';
 import 'package:social_media_app/models/post.dart';
@@ -12,6 +13,10 @@ import 'package:social_media_app/widgets/post_tiles.dart';
 import 'package:social_media_app/widgets/posts.dart';
 
 class Profile extends StatefulWidget {
+  final profileId;
+
+  Profile({this.profileId});
+
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -31,9 +36,17 @@ class _ProfileState extends State<Profile> {
     return firebaseAuth.currentUser?.uid;
   }
 
+  profileIds() {
+    if (widget.profileId == currentUserId()) {
+      return currentUserId();
+    } else {
+      return widget.profileId;
+    }
+  }
+
   postsCount() async {
     QuerySnapshot snapshot =
-        await postRef.doc(profileId()).collection('userPosts').get();
+        await postRef.doc(widget.profileId).collection('userPosts').get();
     setState(() {
       postCount = snapshot.docs?.length;
     });
@@ -62,9 +75,16 @@ class _ProfileState extends State<Profile> {
           Center(
             child: Padding(
               padding: const EdgeInsets.only(right: 25.0),
-              child: Text(
-                'Log Out',
-                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 15.0),
+              child: GestureDetector(
+                onTap: () {
+                  firebaseAuth.signOut();
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => Register()));
+                },
+                child: Text(
+                  'Log Out',
+                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 15.0),
+                ),
               ),
             ),
           ),
@@ -194,10 +214,11 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+//show the toggling icons "grid" or "list" view.
   buildIcons() {
     if (isToggle) {
       return IconButton(
-          icon: Icon(Icons.grid_on),
+          icon: Icon(Feather.list),
           onPressed: () {
             setState(() {
               isToggle = false;
@@ -205,7 +226,7 @@ class _ProfileState extends State<Profile> {
           });
     } else if (isToggle == false) {
       return IconButton(
-        icon: Icon(Feather.list),
+        icon: Icon(Icons.grid_on),
         onPressed: () {
           setState(() {
             isToggle = true;
@@ -247,10 +268,15 @@ class _ProfileState extends State<Profile> {
 
   buildProfileButton() {
     //if isMe then display "edit profile"
-    bool isMe = currentUserId() == profileId();
+    bool isMe = widget.profileId == firebaseAuth.currentUser.uid;
     if (isMe) {
       return buildButton(
         text: "Edit Profile",
+        function: editProfile,
+      );
+    } else {
+      return buildButton(
+        text: "Follow",
         function: editProfile,
       );
     }
@@ -277,7 +303,6 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-
 
   buildPostView() {
     if (isToggle == true) {

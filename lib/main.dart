@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:social_media_app/landing/landing.dart';
 import 'package:social_media_app/screens/mainscreen.dart';
 import 'package:social_media_app/utils/config.dart';
-
-//import 'package:social_media_app/screens/mainscreen.dart';
 import 'package:social_media_app/utils/constants.dart';
 
 void main() async {

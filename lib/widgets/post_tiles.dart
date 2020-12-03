@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_media_app/models/post.dart';
+import 'package:social_media_app/screens/view_image.dart';
 import 'package:social_media_app/widgets/cached_image.dart';
 
 class PostTile extends StatefulWidget {
@@ -14,7 +15,11 @@ class _PostTileState extends State<PostTile> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => 'Tapped',
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => ViewImage(post: widget.post),
+        ));
+      },
       child: Container(
         height: 100,
         width: 150,
@@ -24,11 +29,10 @@ class _PostTileState extends State<PostTile> {
           ),
           elevation: 5,
           child: ClipRRect(
-            borderRadius: BorderRadius.all(
-              Radius.circular(3.0),
-            ),
-            child: cachedNetworkImage(widget.post.mediaUrl)
-          ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(3.0),
+              ),
+              child: cachedNetworkImage(widget.post.mediaUrl)),
         ),
       ),
     );

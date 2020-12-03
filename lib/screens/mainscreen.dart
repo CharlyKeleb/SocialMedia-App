@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:social_media_app/components/fab_container.dart';
@@ -7,6 +8,7 @@ import 'package:social_media_app/pages/profile.dart';
 import 'package:social_media_app/pages/publication.dart';
 import 'package:social_media_app/pages/search.dart';
 import 'package:social_media_app/pages/timeline.dart';
+import 'package:social_media_app/utils/firebase.dart';
 
 class TabScreen extends StatefulWidget {
   @override
@@ -44,7 +46,7 @@ class _TabScreenState extends State<TabScreen> {
     {
       'title': 'Profile',
       'icon': Feather.user,
-      'page': Profile(),
+      'page': Profile(profileId: firebaseAuth.currentUser.uid),
       'index': 4,
     },
   ];

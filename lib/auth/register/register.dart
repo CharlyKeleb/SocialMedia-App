@@ -266,6 +266,7 @@ class _RegisterState extends State<Register> {
           "bio": "",
           "time": timestamp,
           "photoUrl": user.photoURL,
+          "id": user.uid
         }).then((val) {
           setState(() {
             loading = false;
