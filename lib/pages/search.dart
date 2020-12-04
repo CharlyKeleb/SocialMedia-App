@@ -151,7 +151,7 @@ class _SearchState extends State<Search> {
             return Column(
               children: [
                 ListTile(
-                  onTap: () => showProfile(context, profileId:user.id),
+                  onTap: () => showProfile(context, profileId:user?.id),
                   contentPadding: EdgeInsets.symmetric(horizontal: 25.0),
                   leading: CircleAvatar(
                     radius: 35.0,

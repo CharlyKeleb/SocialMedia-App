@@ -31,7 +31,7 @@ class UserModel {
     isOnline = json['isOnline'];
     lastSeen = json['lastSeen'];
     bio = json['bio'];
-    bio = json['id'];
+    id = json['id'];
   }
 
   Map<String, dynamic> toJson() {

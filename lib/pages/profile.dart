@@ -95,7 +95,7 @@ class _ProfileState extends State<Profile> {
         shrinkWrap: true,
         children: [
           StreamBuilder(
-            stream: usersRef.doc(profileId()).snapshots(),
+            stream: usersRef.doc(widget.profileId).snapshots(),
             builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasData) {
                 UserModel user = UserModel.fromJson(snapshot.data.data());
@@ -317,9 +317,9 @@ class _ProfileState extends State<Profile> {
       shrinkWrap: true,
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       stream: postRef
-          .doc(profileId())
+          .doc(widget.profileId)
           .collection('userPosts')
-          .where('ownerId', isEqualTo: firebaseAuth.currentUser.uid)
+          .where('ownerId', isEqualTo: widget.profileId)
           //       .orderBy('timestamp', descending: true)
           .snapshots(),
       physics: NeverScrollableScrollPhysics(),
@@ -340,9 +340,9 @@ class _ProfileState extends State<Profile> {
       shrinkWrap: true,
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       stream: postRef
-          .doc(profileId())
+          .doc(widget.profileId)
           .collection('userPosts')
-          .where('ownerId', isEqualTo: firebaseAuth.currentUser.uid)
+         // .where('ownerId', isEqualTo: firebaseAuth.currentUser.uid)
           //       .orderBy('timestamp', descending: true)
           .snapshots(),
       physics: NeverScrollableScrollPhysics(),

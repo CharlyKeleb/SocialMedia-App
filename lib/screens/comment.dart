@@ -222,7 +222,6 @@ class _CommentsState extends State<Comments> {
     });
 
     bool isNotMe = widget.post.ownerId != currentUserId();
-
     if (isNotMe) {
       notificationRef.doc(widget.post.ownerId).collection('notifications').add({
         "type": "comment",

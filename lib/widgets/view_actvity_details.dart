@@ -32,10 +32,17 @@ class _ViewActivityDetailsState extends State<ViewActivityDetails> {
         children: [
           buildImage(context),
           ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal:10.0),
+            contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
             leading: GestureDetector(
-              onTap: showProfile(context, profileId:widget.activity.userId),
-                          child: CircleAvatar(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          Profile(profileId: widget.activity.userId),
+                    ));
+              },
+              child: CircleAvatar(
                 radius: 25.0,
                 backgroundImage: NetworkImage(widget.activity.userDp),
               ),
@@ -59,7 +66,7 @@ class _ViewActivityDetailsState extends State<ViewActivityDetails> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
               widget.activity?.commentData ?? "",
               style: TextStyle(fontWeight: FontWeight.w400),
@@ -90,8 +97,5 @@ class _ViewActivityDetailsState extends State<ViewActivityDetails> {
         ),
       ),
     );
-  }
-  showProfile(BuildContext context, {String profileId}){
-    Navigator.push(context, MaterialPageRoute(builder: (_) => Profile(profileId:profileId),));
   }
 }
