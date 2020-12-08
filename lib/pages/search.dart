@@ -67,13 +67,8 @@ class _SearchState extends State<Search> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(Feather.x_circle, color: Colors.black54),
-        ),
-        titleSpacing: .0,
+        centerTitle: true,
+        titleSpacing: 50.0,
         title: buildSearch(),
       ),
       body: buildUsers(),

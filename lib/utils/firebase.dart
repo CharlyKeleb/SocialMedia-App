@@ -11,5 +11,7 @@ CollectionReference usersRef = firestore.collection('users');
 CollectionReference postRef = firestore.collection('posts');
 CollectionReference commentRef = firestore.collection('comments');
 CollectionReference notificationRef = firestore.collection('notifications');
+CollectionReference followersRef = firestore.collection('followers');
+CollectionReference followingRef = firestore.collection('following');
 
 // Storage refs

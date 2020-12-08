@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-//import 'package:social_media_app/widgets/indicators.dart';
+import 'package:flutter/cupertino.dart';
 
 class Timeline extends StatefulWidget {
   @override
@@ -17,7 +17,7 @@ class _TimelineState extends State<Timeline> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Feather.message_circle),
+            icon: Icon(CupertinoIcons.chat_bubble_2, size: 30.0),
             onPressed: () {},
           ),
           SizedBox(width: 20.0),

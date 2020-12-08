@@ -25,24 +25,29 @@ class _ProfileState extends State<Profile> {
   User user;
   bool isLoading = false;
   int postCount = 0;
+  int followersCount = 0;
+  int followingCount = 0;
   bool isToggle = true;
+  bool isFollowing = false;
+  UserModel users;
+  final DateTime timestamp = DateTime.now();
 
-  profileId() {
-    user = firebaseAuth.currentUser;
-    return user?.uid;
-  }
+  // profileId() {
+  //   user = firebaseAuth.currentUser;
+  //   return user?.uid;
+  // }
 
   currentUserId() {
     return firebaseAuth.currentUser?.uid;
   }
 
-  profileIds() {
-    if (widget.profileId == currentUserId()) {
-      return currentUserId();
-    } else {
-      return widget.profileId;
-    }
-  }
+  // profileIds() {
+  //   if (widget.profileId == currentUserId()) {
+  //     return currentUserId();
+  //   } else {
+  //     return widget.profileId;
+  //   }
+  // }
 
   postsCount() async {
     QuerySnapshot snapshot =
@@ -56,6 +61,40 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     postsCount();
+    fetchFollowers();
+    fetchFollowing();
+    checkIfFollowing();
+  }
+
+  checkIfFollowing() async {
+    DocumentSnapshot doc = await followersRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .doc(currentUserId())
+        .get();
+    setState(() {
+      isFollowing = doc.exists;
+    });
+  }
+
+  fetchFollowers() async {
+    QuerySnapshot snapshot = await followersRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .get();
+    setState(() {
+      followersCount = snapshot.docs.length;
+    });
+  }
+
+  fetchFollowing() async {
+    QuerySnapshot snapshot = await followingRef
+        .doc(widget.profileId)
+        .collection('userFollowing')
+        .get();
+    setState(() {
+      followingCount = snapshot.docs.length;
+    });
   }
 
   @override
@@ -179,7 +218,7 @@ class _ProfileState extends State<Profile> {
                       color: Colors.grey,
                     ),
                   ),
-                  buildCount("FOLLOWERS", 0),
+                  buildCount("FOLLOWERS", followersCount),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
                     child: Container(
@@ -188,7 +227,7 @@ class _ProfileState extends State<Profile> {
                       color: Colors.grey,
                     ),
                   ),
-                  buildCount("FOLLOWING", 0),
+                  buildCount("FOLLOWING", followingCount),
                 ],
               ),
             ),
@@ -274,10 +313,15 @@ class _ProfileState extends State<Profile> {
         text: "Edit Profile",
         function: editProfile,
       );
-    } else {
+    } else if (isFollowing) {
+      return buildButton(
+        text: "Unfollow",
+        function: handleUnfollow,
+      );
+    } else if (!isFollowing) {
       return buildButton(
         text: "Follow",
-        function: editProfile,
+        function: handleFollow,
       );
     }
   }
@@ -302,6 +346,84 @@ class _ProfileState extends State<Profile> {
         ),
       ),
     );
+  }
+
+  handleUnfollow() async {
+    DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
+    users = UserModel.fromJson(doc.data());
+    setState(() {
+      isFollowing = false;
+    });
+    //remove follower
+    followersRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .doc(currentUserId())
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+    //remove following
+    followingRef
+        .doc(currentUserId())
+        .collection('userFollowing')
+        .doc(widget.profileId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+
+    //remove from feeds
+    notificationRef
+        .doc(widget.profileId)
+        .collection('notifications')
+        .doc(currentUserId())
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+  }
+
+  handleFollow() async {
+    DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
+    users = UserModel.fromJson(doc.data());
+    setState(() {
+      isFollowing = true;
+    });
+
+    //updates the followers collection of the followed user
+    followersRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .doc(currentUserId())
+        .set({});
+
+    //updates the following collection of the currentUser
+    followingRef
+        .doc(currentUserId())
+        .collection('userFollowing')
+        .doc(widget.profileId)
+        .set({});
+
+    //update the notification feeds
+    notificationRef
+        .doc(widget.profileId)
+        .collection('notifications')
+        .doc(currentUserId())
+        .set({
+      "type": "follow",
+      "ownerId": widget.profileId,
+      "username": users.username,
+      "userId": users.id,
+      "userDp": users.photoUrl,
+      "timestamp": timestamp,
+    });
   }
 
   buildPostView() {
@@ -342,7 +464,7 @@ class _ProfileState extends State<Profile> {
       stream: postRef
           .doc(widget.profileId)
           .collection('userPosts')
-         // .where('ownerId', isEqualTo: firebaseAuth.currentUser.uid)
+          // .where('ownerId', isEqualTo: firebaseAuth.currentUser.uid)
           //       .orderBy('timestamp', descending: true)
           .snapshots(),
       physics: NeverScrollableScrollPhysics(),
