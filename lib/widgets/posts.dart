@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+
 //import 'package:like_button/like_button.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/models/user.dart';
@@ -30,6 +31,7 @@ class _PostsState extends State<Posts> {
 
   bool isLiked;
   UserModel user;
+
   @override
   Widget build(BuildContext context) {
     isLiked = (widget.post?.likes[currentUserId()] == true);

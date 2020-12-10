@@ -20,6 +20,8 @@ class Comments extends StatefulWidget {
 
 class _CommentsState extends State<Comments> {
   UserModel user;
+  bool isLiked;
+
   final DateTime timestamp = DateTime.now();
   TextEditingController commentsTEC = TextEditingController();
 
@@ -29,6 +31,8 @@ class _CommentsState extends State<Comments> {
 
   @override
   Widget build(BuildContext context) {
+    isLiked = (widget.post?.likes[currentUserId()] == true);
+
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
@@ -167,9 +171,14 @@ class _CommentsState extends State<Comments> {
               ],
             ),
           ),
-          trailing: Icon(
-            CupertinoIcons.heart_fill,
-            color: Colors.red,
+          trailing: IconButton(
+            icon: isLiked
+                ? Icon(
+                    CupertinoIcons.heart_fill,
+                    color: Colors.red,
+                  )
+                : Icon(CupertinoIcons.heart),
+            onPressed: handleLikePost,
           ),
         ),
       ],
@@ -277,5 +286,75 @@ class _CommentsState extends State<Comments> {
         );
       },
     );
+  }
+
+  handleLikePost() {
+    bool _isLiked = widget.post?.likes[currentUserId()] == true;
+    if (_isLiked) {
+      postRef
+          .doc(widget.post.ownerId)
+          .collection('userPosts')
+          .doc(widget.post.postId)
+          .update({'likes.$currentUserId': false});
+      removeLikeFromNotification();
+      setState(() {
+        widget.post.likesCount -= 1;
+        isLiked = false;
+        widget.post.likes[currentUserId()] = false;
+      });
+    } else if (!_isLiked) {
+      postRef
+          .doc(widget.post.ownerId)
+          .collection('userPosts')
+          .doc(widget.post.postId)
+          .update({
+        "likes": {currentUserId(): true}
+      });
+      addLikesToNotification();
+      setState(() {
+        widget.post.likesCount += 1;
+        isLiked = true;
+        widget.post.likes[currentUserId()] = true;
+      });
+    }
+  }
+
+  addLikesToNotification() async {
+    bool isNotMe = currentUserId() != widget.post.ownerId;
+
+    if (isNotMe) {
+      DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
+      user = UserModel.fromJson(doc.data());
+      notificationRef
+          .doc(widget.post.ownerId)
+          .collection('notifications')
+          .doc(widget.post.postId)
+          .set({
+        "type": "like",
+        "username": user.username,
+        "userId": currentUserId(),
+        "userDp": user.photoUrl,
+        "postId": widget.post.postId,
+        "mediaUrl": widget.post.mediaUrl,
+        "timestamp": timestamp,
+      });
+    }
+  }
+
+  removeLikeFromNotification() async {
+    bool isNotMe = currentUserId() != widget.post.ownerId;
+
+    if (isNotMe) {
+      DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
+      user = UserModel.fromJson(doc.data());
+      notificationRef
+          .doc(widget.post.ownerId)
+          .collection('notifications')
+          .doc(widget.post.postId)
+          .get()
+          .then((doc) => {
+                if (doc.exists) {doc.reference.delete()}
+              });
+    }
   }
 }

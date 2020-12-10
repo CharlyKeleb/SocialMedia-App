@@ -7,6 +7,7 @@ class PostTile extends StatefulWidget {
   final PostModel post;
 
   PostTile({this.post});
+
   @override
   _PostTileState createState() => _PostTileState();
 }
