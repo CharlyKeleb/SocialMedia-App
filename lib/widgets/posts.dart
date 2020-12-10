@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -29,7 +30,6 @@ class _PostsState extends State<Posts> {
 
   bool isLiked;
   UserModel user;
-
   @override
   Widget build(BuildContext context) {
     isLiked = (widget.post?.likes[currentUserId()] == true);
@@ -106,21 +106,24 @@ class _PostsState extends State<Posts> {
   }
 
   buildPostHeader() {
+    bool isMe = currentUserId() == widget.post.ownerId;
+
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
-      leading: buildUserDp(),
-      title: Text(
-        widget.post.username,
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      subtitle: Text(
-        widget.post.location,
-      ),
-      trailing: IconButton(
-        icon: Icon(Feather.more_horizontal),
-        onPressed: () {},
-      ),
-    );
+        contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
+        leading: buildUserDp(),
+        title: Text(
+          widget.post.username,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          widget.post.location,
+        ),
+        trailing: isMe
+            ? IconButton(
+                icon: Icon(Feather.more_horizontal),
+                onPressed: () => handleDelete(context),
+              )
+            : SizedBox());
   }
 
   buildUserDp() {
@@ -207,5 +210,71 @@ class _PostsState extends State<Posts> {
                 if (doc.exists) {doc.reference.delete()}
               });
     }
+  }
+
+  handleDelete(BuildContext parentContext) {
+    return showDialog(
+        context: parentContext,
+        builder: (context) {
+          return SimpleDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0)),
+            children: [
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context);
+                  deletePost();
+                },
+                child: Text('Delete Post'),
+              ),
+              Divider(),
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Cancel'),
+              ),
+            ],
+          );
+        });
+  }
+
+//you can only delete your own posts
+  deletePost() async {
+    //delete the post
+    postRef
+        .doc(widget.post.ownerId)
+        .collection('userPosts')
+        .doc(widget.post.postId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+    //delete the uploaded image from the storage
+    Reference storageReference =
+        storage.ref().child("posts/${widget.post.postId}.jpg");
+    storageReference.delete();
+    //delete notification associated with that given post
+
+    QuerySnapshot notificationsSnap = await notificationRef
+        .doc(widget.post.ownerId)
+        .collection('notifications')
+        .where('postId', isEqualTo: widget.post.postId)
+        .get();
+    notificationsSnap.docs.forEach((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+    //delete all the comments associated with that given post
+    QuerySnapshot commentSnapshot =
+        await commentRef.doc(widget.post.postId).collection('comments').get();
+    commentSnapshot.docs.forEach((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
   }
 }
