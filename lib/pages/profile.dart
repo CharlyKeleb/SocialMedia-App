@@ -376,8 +376,9 @@ class _ProfileState extends State<Profile> {
         doc.reference.delete();
       }
     });
-
-    //remove from feeds
+      //remove from feeds
+    removePostsFromFeeds();
+    //remove from notifications fees
     notificationRef
         .doc(widget.profileId)
         .collection('notifications')
@@ -403,14 +404,13 @@ class _ProfileState extends State<Profile> {
         .collection('userFollowers')
         .doc(currentUserId())
         .set({});
-
     //updates the following collection of the currentUser
     followingRef
         .doc(currentUserId())
         .collection('userFollowing')
         .doc(widget.profileId)
         .set({});
-
+    getFollowedUserPosts();
     //update the notification feeds
     notificationRef
         .doc(widget.profileId)
@@ -475,5 +475,41 @@ class _ProfileState extends State<Profile> {
         );
       },
     );
+  }
+
+//this gets the posts of all the user you are following and add them to the feeds collection
+  getFollowedUserPosts() async {
+    final followedUserPostRef = firestore
+        .collection('posts')
+        .doc(widget.profileId)
+        .collection('userPosts');
+    final feedsPostsRef =
+        feedsRef.doc(widget.profileId).collection('feedPosts');
+    //get each posts
+    final querySnapshot = await followedUserPostRef.get();
+    querySnapshot.docs.forEach((doc) {
+      if (doc.exists) {
+        final postId = doc.id;
+        final postData = doc.data();
+        feedsPostsRef.doc(postId).set(postData);
+      }
+    });
+  }
+
+//Removes the unfollowed user post from feeds
+  removePostsFromFeeds() async {
+    final followedUserPostRef = firestore
+        .collection('posts')
+        .doc(widget.profileId)
+        .collection('userPosts')
+        .where("ownerId", isEqualTo: widget.profileId);
+
+    final querySnapshot = await followedUserPostRef.get();
+
+    querySnapshot.docs.forEach((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
   }
 }

@@ -215,6 +215,7 @@ class _PostsState extends State<Posts> {
   }
 
   handleDelete(BuildContext parentContext) {
+    //shows a simple dialog box
     return showDialog(
         context: parentContext,
         builder: (context) {

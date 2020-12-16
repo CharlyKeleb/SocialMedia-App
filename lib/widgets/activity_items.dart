@@ -62,14 +62,14 @@ class _ActivityItemsState extends State<ActivityItems> {
     if (widget.activity.type == "like" || widget.activity.type == "comment") {
       return buildPreviewImage();
     } else {
-      return "";
+      return Text('');
     }
   }
 
   buildTextConfiguration() {
     if (widget.activity.type == "like") {
       return "liked your post";
-    } else if (widget.activity.type == " follow ") {
+    } else if (widget.activity.type == "follow") {
       return "is following you";
     } else if (widget.activity.type == "comment") {
       return "commented '${widget.activity.commentData}'";
