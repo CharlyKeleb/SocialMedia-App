@@ -376,8 +376,10 @@ class _ProfileState extends State<Profile> {
         doc.reference.delete();
       }
     });
-      //remove from feeds
-    removePostsFromFeeds();
+    //remove from feeds
+
+    // removePostsFromFeeds();
+
     //remove from notifications fees
     notificationRef
         .doc(widget.profileId)
@@ -410,7 +412,9 @@ class _ProfileState extends State<Profile> {
         .collection('userFollowing')
         .doc(widget.profileId)
         .set({});
-    getFollowedUserPosts();
+
+    // getFollowedUserPosts();
+
     //update the notification feeds
     notificationRef
         .doc(widget.profileId)
@@ -442,7 +446,7 @@ class _ProfileState extends State<Profile> {
           .doc(widget.profileId)
           .collection('userPosts')
           .where('ownerId', isEqualTo: widget.profileId)
-          //       .orderBy('timestamp', descending: true)
+          .orderBy('timestamp', descending: true)
           .snapshots(),
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (_, DocumentSnapshot snapshot) {
@@ -464,8 +468,8 @@ class _ProfileState extends State<Profile> {
       stream: postRef
           .doc(widget.profileId)
           .collection('userPosts')
-          // .where('ownerId', isEqualTo: firebaseAuth.currentUser.uid)
-          //       .orderBy('timestamp', descending: true)
+          .where('ownerId', isEqualTo: widget.profileId)
+          .orderBy('timestamp', descending: true)
           .snapshots(),
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (_, DocumentSnapshot snapshot) {
@@ -478,38 +482,35 @@ class _ProfileState extends State<Profile> {
   }
 
 //this gets the posts of all the user you are following and add them to the feeds collection
-  getFollowedUserPosts() async {
-    final followedUserPostRef = firestore
-        .collection('posts')
-        .doc(widget.profileId)
-        .collection('userPosts');
-    final feedsPostsRef =
-        feedsRef.doc(widget.profileId).collection('feedPosts');
-    //get each posts
-    final querySnapshot = await followedUserPostRef.get();
-    querySnapshot.docs.forEach((doc) {
-      if (doc.exists) {
-        final postId = doc.id;
-        final postData = doc.data();
-        feedsPostsRef.doc(postId).set(postData);
-      }
-    });
-  }
+  // getFollowedUserPosts() async {
+  //   final followedUserPostRef =
+  //       postRef.doc(widget.profileId).collection('userPosts');
+  //   final feedsPostsRef =
+  //       feedsRef.doc(widget.profileId).collection('feedPosts');
+  //   //get each posts
+  //   final querySnapshot = await followedUserPostRef.get();
+  //   querySnapshot.docs.forEach((doc) {
+  //     if (doc.exists) {
+  //       final postId = doc.id;
+  //       final postData = doc.data();
+  //       feedsPostsRef.doc(postId).set(postData);
+  //     }
+  //   });
+  // }
 
 //Removes the unfollowed user post from feeds
-  removePostsFromFeeds() async {
-    final followedUserPostRef = firestore
-        .collection('posts')
-        .doc(widget.profileId)
-        .collection('userPosts')
-        .where("ownerId", isEqualTo: widget.profileId);
+  // removePostsFromFeeds() async {
+  //   final followedUserPostRef = feedsRef
+  //       .doc(widget.profileId)
+  //       .collection('feedPosts')
+  //       .where("ownerId", isEqualTo: widget.profileId);
 
-    final querySnapshot = await followedUserPostRef.get();
+  //   final querySnapshot = await followedUserPostRef.get();
 
-    querySnapshot.docs.forEach((doc) {
-      if (doc.exists) {
-        doc.reference.delete();
-      }
-    });
-  }
+  //   querySnapshot.docs.forEach((doc) {
+  //     if (doc.exists) {
+  //       doc.reference.delete();
+  //     }
+  //   });
+  // }
 }

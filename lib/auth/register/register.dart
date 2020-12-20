@@ -301,6 +301,9 @@ class _RegisterState extends State<Register> {
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 3,
         );
+         setState(() {
+            loading = false;
+          });
       });
     }
   }

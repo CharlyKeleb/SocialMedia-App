@@ -114,6 +114,9 @@ class _PublicationState extends State<Publication> {
     }).catchError((e) {
       print(e);
     });
+    // feedsRef.add({
+      
+    // });
   }
 
   compressImage() async {

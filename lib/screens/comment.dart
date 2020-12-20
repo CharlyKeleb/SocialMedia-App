@@ -250,8 +250,11 @@ class _CommentsState extends State<Comments> {
     return CommentsStreamWrapper(
       shrinkWrap: true,
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      stream:
-          commentRef.doc(widget.post.postId).collection('comments').snapshots(),
+      stream: commentRef
+          .doc(widget.post.postId)
+          .collection('comments')
+          .orderBy('timestamp', descending: true)
+          .snapshots(),
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (_, DocumentSnapshot snapshot) {
         CommentModel comments = CommentModel.fromJson(snapshot.data());

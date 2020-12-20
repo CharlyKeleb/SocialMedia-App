@@ -33,7 +33,7 @@ class _ActivitiesState extends State<Activities> {
             child: Text(
               'CLEAR',
               style: TextStyle(
-                fontSize: 13.0,
+                  fontSize: 13.0,
                   fontWeight: FontWeight.w900,
                   color: Theme.of(context).accentColor),
             ),
@@ -56,6 +56,7 @@ class _ActivitiesState extends State<Activities> {
         stream: notificationRef
             .doc(currentUserId())
             .collection('notifications')
+            .orderBy('timestamp', descending: true)
             .limit(20)
             .snapshots(),
         physics: NeverScrollableScrollPhysics(),
