@@ -33,7 +33,6 @@ class _ViewImageState extends State<ViewImage> {
     isLiked = (widget.post?.likes[currentUserId()] == true);
 
     return Scaffold(
-      //appBar: header(context),
       body: Center(
         child: buildImage(context),
       ),
@@ -52,15 +51,7 @@ class _ViewImageState extends State<ViewImage> {
               Text(timeago.format(widget.post.timestamp.toDate())),
             ],
           ),
-          trailing: IconButton(
-            icon: isLiked
-                ? Icon(
-                    CupertinoIcons.heart_fill,
-                    color: Colors.red,
-                  )
-                : Icon(CupertinoIcons.heart),
-            onPressed: handleLikePost,
-          ),
+          trailing: buildLikeButton(),
         ),
       ),
     );
@@ -85,37 +76,6 @@ class _ViewImageState extends State<ViewImage> {
         ),
       ),
     );
-  }
-
-  handleLikePost() {
-    bool _isLiked = widget.post?.likes[currentUserId()] == true;
-    if (_isLiked) {
-      postRef
-          .doc(widget.post.ownerId)
-          .collection('userPosts')
-          .doc(widget.post.postId)
-          .update({'likes.$currentUserId': false});
-      removeLikeFromNotification();
-      setState(() {
-        widget.post.likesCount -= 1;
-        isLiked = false;
-        widget.post.likes[currentUserId()] = false;
-      });
-    } else if (!_isLiked) {
-      postRef
-          .doc(widget.post.ownerId)
-          .collection('userPosts')
-          .doc(widget.post.postId)
-          .update({
-        "likes": {currentUserId(): true}
-      });
-      addLikesToNotification();
-      setState(() {
-        widget.post.likesCount += 1;
-        isLiked = true;
-        widget.post.likes[currentUserId()] = true;
-      });
-    }
   }
 
   addLikesToNotification() async {
@@ -155,5 +115,43 @@ class _ViewImageState extends State<ViewImage> {
                 if (doc.exists) {doc.reference.delete()}
               });
     }
+  }
+
+  buildLikeButton() {
+    return StreamBuilder(
+      stream: likesRef
+          .where('postId', isEqualTo: widget.post.postId)
+          .where('userId', isEqualTo: currentUserId())
+          .snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasData) {
+          List<QueryDocumentSnapshot> docs = snapshot?.data?.docs ?? [];
+          return IconButton(
+            onPressed: () {
+              if (docs.isEmpty) {
+                likesRef.add({
+                  'userId': currentUserId(),
+                  'postId': widget.post.postId,
+                  'dateCreated': Timestamp.now(),
+                });
+                addLikesToNotification();
+              } else {
+                likesRef.doc(docs[0].id).delete();
+                removeLikeFromNotification();
+              }
+            },
+            icon: docs.isEmpty
+                ? Icon(
+                    CupertinoIcons.heart,
+                  )
+                : Icon(
+                    CupertinoIcons.heart_fill,
+                    color: Colors.red,
+                  ),
+          );
+        }
+        return Container();
+      },
+    );
   }
 }

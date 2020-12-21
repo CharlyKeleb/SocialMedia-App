@@ -48,8 +48,6 @@ class _TimelineState extends State<Timeline> {
               return StreamBuilderWrapper(
                 shrinkWrap: true,
                 stream: postRef
-                    .doc()
-                    .collection('userPosts')
                     .orderBy('timestamp', descending: true)
                     .snapshots(),
                 physics: NeverScrollableScrollPhysics(),

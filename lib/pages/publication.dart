@@ -101,8 +101,12 @@ class _PublicationState extends State<Publication> {
   createPostInFirestore(
       {String mediaUrl, String location, String description}) async {
     DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
+
     user = UserModel.fromJson(doc.data());
-    postRef.doc(currentUserId()).collection('userPosts').doc(postId).set({
+    // postRef.doc(currentUserId()).collection('userPosts').doc(postId).set({
+    var ref = postRef.doc();
+    ref.set({
+      "id": ref.id,
       "postId": postId,
       "username": user.username,
       "ownerId": currentUserId(),
@@ -115,7 +119,7 @@ class _PublicationState extends State<Publication> {
       print(e);
     });
     // feedsRef.add({
-      
+
     // });
   }
 

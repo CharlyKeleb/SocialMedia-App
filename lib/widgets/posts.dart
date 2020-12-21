@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-
 //import 'package:like_button/like_button.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/models/user.dart';
+import 'package:social_media_app/pages/profile.dart';
 import 'package:social_media_app/screens/comment.dart';
 import 'package:social_media_app/screens/view_image.dart';
 import 'package:social_media_app/utils/firebase.dart';
@@ -29,7 +28,6 @@ class _PostsState extends State<Posts> {
     return firebaseAuth.currentUser.uid;
   }
 
-  bool isLiked;
   UserModel user;
 
   @override
@@ -69,24 +67,26 @@ class _PostsState extends State<Posts> {
                       timeago.format(widget.post.timestamp.toDate()),
                     ),
                     SizedBox(width: 3.0),
-                    Text(
-                      '  ${widget.post?.likesCount.toString()} likes',
-                      style: TextStyle(
-                          fontSize: 15.0, fontWeight: FontWeight.bold),
+                    StreamBuilder(
+                      stream: likesRef
+                          .where('postId', isEqualTo: widget.post.postId)
+                          .snapshots(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasData) {
+                          QuerySnapshot snap = snapshot.data;
+                          List<DocumentSnapshot> docs = snap.docs;
+                          return buildCommentsCount(context, docs?.length ?? 0);
+                        } else {
+                          return buildCommentsCount(context, 0);
+                        }
+                      },
                     ),
                   ],
                 ),
               ),
               trailing: Wrap(children: [
-                IconButton(
-                  icon: isLiked
-                      ? Icon(
-                          CupertinoIcons.heart_fill,
-                          color: Colors.red,
-                        )
-                      : Icon(CupertinoIcons.heart),
-                  onPressed: handleLikePost,
-                ),
+                buildLikeButton(),
                 IconButton(
                   icon: Icon(
                     CupertinoIcons.chat_bubble,
@@ -107,25 +107,42 @@ class _PostsState extends State<Posts> {
     );
   }
 
+  buildCommentsCount(BuildContext context, int count) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 7.0),
+      child: Text(
+        '$count likes',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 10.0,
+        ),
+      ),
+    );
+  }
+
   buildPostHeader() {
     bool isMe = currentUserId() == widget.post.ownerId;
 
     return ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
-        leading: buildUserDp(),
-        title: Text(
-          widget.post.username,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Text(
-          widget.post.location,
-        ),
-        trailing: isMe
-            ? IconButton(
-                icon: Icon(Feather.more_horizontal),
-                onPressed: () => handleDelete(context),
-              )
-            : SizedBox());
+      contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
+      leading: buildUserDp(),
+      title: Text(
+        widget.post.username,
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      subtitle: Text(
+        widget.post.location,
+      ),
+      trailing: isMe
+          ? IconButton(
+              icon: Icon(Feather.more_horizontal),
+              onPressed: () => handleDelete(context),
+            )
+          : IconButton(
+              icon: Icon(CupertinoIcons.bookmark, size: 25.0),
+              onPressed: () {},
+            ),
+    );
   }
 
   buildUserDp() {
@@ -134,9 +151,12 @@ class _PostsState extends State<Posts> {
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasData) {
           UserModel user = UserModel.fromJson(snapshot.data.data());
-          return CircleAvatar(
-            radius: 25.0,
-            backgroundImage: NetworkImage(user.photoUrl),
+          return GestureDetector(
+            onTap: () => showProfile(context, profileId: user?.id),
+            child: CircleAvatar(
+              radius: 25.0,
+              backgroundImage: NetworkImage(user.photoUrl),
+            ),
           );
         }
         return Container();
@@ -144,35 +164,43 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  handleLikePost() {
-    bool _isLiked = widget.post?.likes[currentUserId()] == true;
-    if (_isLiked) {
-      postRef
-          .doc(widget.post.ownerId)
-          .collection('userPosts')
-          .doc(widget.post.postId)
-          .update({'likes.$currentUserId': false});
-      removeLikeFromNotification();
-      setState(() {
-        widget.post.likesCount -= 1;
-        isLiked = false;
-        widget.post.likes[currentUserId()] = false;
-      });
-    } else if (!_isLiked) {
-      postRef
-          .doc(widget.post.ownerId)
-          .collection('userPosts')
-          .doc(widget.post.postId)
-          .update({
-        "likes": {currentUserId(): true}
-      });
-      addLikesToNotification();
-      setState(() {
-        widget.post.likesCount += 1;
-        isLiked = true;
-        widget.post.likes[currentUserId()] = true;
-      });
-    }
+  buildLikeButton() {
+    return StreamBuilder(
+      stream: likesRef
+          .where('postId', isEqualTo: widget.post.postId)
+          .where('userId', isEqualTo: currentUserId())
+          .snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasData) {
+          List<QueryDocumentSnapshot> docs = snapshot?.data?.docs ?? [];
+          return IconButton(
+            onPressed: () {
+              if (docs.isEmpty) {
+                likesRef.add({
+                  'userId': currentUserId(),
+                  'postId': widget.post.postId,
+                  'dateCreated': Timestamp.now(),
+                });
+                addLikesToNotification();
+              } else {
+                likesRef.doc(docs[0].id).delete();
+
+                removeLikeFromNotification();
+              }
+            },
+            icon: docs.isEmpty
+                ? Icon(
+                    CupertinoIcons.heart,
+                  )
+                : Icon(
+                    CupertinoIcons.heart_fill,
+                    color: Colors.red,
+                  ),
+          );
+        }
+        return Container();
+      },
+    );
   }
 
   addLikesToNotification() async {
@@ -244,21 +272,8 @@ class _PostsState extends State<Posts> {
 
 //you can only delete your own posts
   deletePost() async {
-    //delete the post
-    postRef
-        .doc(widget.post.ownerId)
-        .collection('userPosts')
-        .doc(widget.post.postId)
-        .get()
-        .then((doc) {
-      if (doc.exists) {
-        doc.reference.delete();
-      }
-    });
-    //delete the uploaded image from the storage
-    Reference storageReference =
-        storage.ref().child("posts/${widget.post.postId}.jpg");
-    storageReference.delete();
+    postRef.doc(widget.post.id).delete();
+
     //delete notification associated with that given post
 
     QuerySnapshot notificationsSnap = await notificationRef
@@ -279,5 +294,14 @@ class _PostsState extends State<Posts> {
         doc.reference.delete();
       }
     });
+  }
+
+  showProfile(BuildContext context, {String profileId}) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => Profile(profileId: profileId),
+      ),
+    );
   }
 }

@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -67,8 +66,6 @@ class _SearchState extends State<Search> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        titleSpacing: 50.0,
         title: buildSearch(),
       ),
       body: buildUsers(),
@@ -146,15 +143,14 @@ class _SearchState extends State<Search> {
             return Column(
               children: [
                 ListTile(
-                  onTap: () => showProfile(context, profileId:user?.id),
+                  onTap: () => showProfile(context, profileId: user?.id),
                   contentPadding: EdgeInsets.symmetric(horizontal: 25.0),
                   leading: CircleAvatar(
                     radius: 35.0,
                     backgroundImage: NetworkImage(user?.photoUrl),
                   ),
-                  title: Text(
-                    user?.username, style: TextStyle(fontWeight: FontWeight.bold)
-                  ),
+                  title: Text(user?.username,
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text(
                     user?.email,
                   ),
@@ -171,7 +167,12 @@ class _SearchState extends State<Search> {
       );
     }
   }
-  showProfile(BuildContext context, {String profileId}){
-    Navigator.push(context, MaterialPageRoute(builder: (_) => Profile(profileId:profileId),));
+
+  showProfile(BuildContext context, {String profileId}) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => Profile(profileId: profileId),
+        ));
   }
 }

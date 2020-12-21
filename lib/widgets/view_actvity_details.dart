@@ -60,10 +60,6 @@ class _ViewActivityDetailsState extends State<ViewActivityDetails> {
                 ),
               ],
             ),
-            trailing: Icon(
-              CupertinoIcons.heart_fill,
-              color: Colors.red,
-            ),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),

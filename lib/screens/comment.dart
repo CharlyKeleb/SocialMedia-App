@@ -205,7 +205,7 @@ class _CommentsState extends State<Comments> {
 
   buildUserDp() {
     return StreamBuilder(
-      stream: usersRef.doc(currentUserId()).snapshots(),
+      stream: usersRef.doc(widget.post.ownerId).snapshots(),
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasData) {
           UserModel user = UserModel.fromJson(snapshot.data.data());

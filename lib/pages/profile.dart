@@ -51,7 +51,9 @@ class _ProfileState extends State<Profile> {
 
   postsCount() async {
     QuerySnapshot snapshot =
-        await postRef.doc(widget.profileId).collection('userPosts').get();
+        // await postRef.doc(widget.profileId).collection('userPosts').get();
+        await postRef.where('ownerId', isEqualTo: currentUserId()).get();
+
     setState(() {
       postCount = snapshot.docs?.length;
     });
@@ -442,9 +444,13 @@ class _ProfileState extends State<Profile> {
     return StreamBuilderWrapper(
       shrinkWrap: true,
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      // stream: postRef
+      //     .doc(widget.profileId)
+      //     .collection('userPosts')
+      //     .where('ownerId', isEqualTo: widget.profileId)
+      //     .orderBy('timestamp', descending: true)
+      //     .snapshots(),
       stream: postRef
-          .doc(widget.profileId)
-          .collection('userPosts')
           .where('ownerId', isEqualTo: widget.profileId)
           .orderBy('timestamp', descending: true)
           .snapshots(),
@@ -465,9 +471,13 @@ class _ProfileState extends State<Profile> {
     return StreamGridWrapper(
       shrinkWrap: true,
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      // stream: postRef
+      //     .doc(widget.profileId)
+      //     .collection('userPosts')
+      //     .where('ownerId', isEqualTo: widget.profileId)
+      //     .orderBy('timestamp', descending: true)
+      //     .snapshots(),
       stream: postRef
-          .doc(widget.profileId)
-          .collection('userPosts')
           .where('ownerId', isEqualTo: widget.profileId)
           .orderBy('timestamp', descending: true)
           .snapshots(),
