@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:social_media_app/components/stream_builder_wrapper.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/utils/firebase.dart';
-import 'package:social_media_app/widgets/posts.dart';
-import 'package:social_media_app/widgets/story.dart';
+import 'package:social_media_app/widgets/posts_view.dart';
+import 'package:social_media_app/widgets/story_view.dart';
 
 class Timeline extends StatefulWidget {
   @override

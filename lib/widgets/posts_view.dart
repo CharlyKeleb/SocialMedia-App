@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+
 //import 'package:like_button/like_button.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/models/user.dart';
@@ -32,7 +33,6 @@ class _PostsState extends State<Posts> {
 
   @override
   Widget build(BuildContext context) {
-    isLiked = (widget.post?.likes[currentUserId()] == true);
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -76,9 +76,9 @@ class _PostsState extends State<Posts> {
                         if (snapshot.hasData) {
                           QuerySnapshot snap = snapshot.data;
                           List<DocumentSnapshot> docs = snap.docs;
-                          return buildCommentsCount(context, docs?.length ?? 0);
+                          return buildLikesCount(context, docs?.length ?? 0);
                         } else {
-                          return buildCommentsCount(context, 0);
+                          return buildLikesCount(context, 0);
                         }
                       },
                     ),
@@ -107,7 +107,7 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  buildCommentsCount(BuildContext context, int count) {
+  buildLikesCount(BuildContext context, int count) {
     return Padding(
       padding: const EdgeInsets.only(left: 7.0),
       child: Text(
@@ -274,8 +274,7 @@ class _PostsState extends State<Posts> {
   deletePost() async {
     postRef.doc(widget.post.id).delete();
 
-    //delete notification associated with that given post
-
+//delete notification associated with that given post
     QuerySnapshot notificationsSnap = await notificationRef
         .doc(widget.post.ownerId)
         .collection('notifications')
@@ -286,7 +285,8 @@ class _PostsState extends State<Posts> {
         doc.reference.delete();
       }
     });
-    //delete all the comments associated with that given post
+
+//delete all the comments associated with that given post
     QuerySnapshot commentSnapshot =
         await commentRef.doc(widget.post.postId).collection('comments').get();
     commentSnapshot.docs.forEach((doc) {

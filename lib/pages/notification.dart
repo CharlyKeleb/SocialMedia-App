@@ -24,18 +24,17 @@ class _ActivitiesState extends State<Activities> {
         title: Text('Notifications'),
         centerTitle: true,
         actions: [
-          // IconButton(
-          //   icon: Icon(Feather.x),
-          //   onPressed: () {},
-          // ),
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Text(
-              'CLEAR',
-              style: TextStyle(
-                  fontSize: 13.0,
-                  fontWeight: FontWeight.w900,
-                  color: Theme.of(context).accentColor),
+            child: GestureDetector(
+              onTap: () => deleteAllItems(),
+              child: Text(
+                'CLEAR',
+                style: TextStyle(
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w900,
+                    color: Theme.of(context).accentColor),
+              ),
             ),
           ),
           // SizedBox(width: 20.0),
@@ -66,5 +65,18 @@ class _ActivitiesState extends State<Activities> {
             activity: activities,
           );
         });
+  }
+
+  deleteAllItems() async {
+//delete all notifications associated with the authenticated user
+    QuerySnapshot notificationsSnap = await notificationRef
+        .doc(firebaseAuth.currentUser.uid)
+        .collection('notifications')
+        .get();
+    notificationsSnap.docs.forEach((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
   }
 }
