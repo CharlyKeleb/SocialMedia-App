@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:social_media_app/chats/conversation.dart';
 import 'package:social_media_app/models/user.dart';
 import 'package:social_media_app/pages/profile.dart';
 import 'package:social_media_app/utils/firebase.dart';
@@ -120,13 +124,6 @@ class _SearchState extends State<Search> {
     );
   }
 
-  buildEmptyContent() {
-    return Center(
-      child:
-          Image.asset('assets/images/search.png', height: 300.0, width: 300.0),
-    );
-  }
-
   buildUsers() {
     if (!loading) {
       if (filteredUsers.isEmpty) {
@@ -140,6 +137,13 @@ class _SearchState extends State<Search> {
           itemBuilder: (BuildContext context, int index) {
             DocumentSnapshot doc = filteredUsers[index];
             UserModel user = UserModel.fromJson(doc.data());
+            if (doc.id == currentUserId()) {
+              Timer(Duration(milliseconds: 500), () {
+                setState(() {
+                  removeFromList(index);
+                });
+              });
+            }
             return Column(
               children: [
                 ListTile(
@@ -153,6 +157,20 @@ class _SearchState extends State<Search> {
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text(
                     user?.email,
+                  ),
+                  trailing: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => Conversation(
+                              userId: doc.id,
+                              chatId: 'newChat',
+                            ),
+                          ));
+                    },
+                    child: Icon(CupertinoIcons.chat_bubble_fill,color:Theme.of(context).accentColor),
                   ),
                 ),
                 Divider(),

@@ -47,6 +47,10 @@ dependencies:
   geocoding: ^1.0.5
   timeago: ^2.0.28
   like_button: ^1.0.4
+  google_fonts: ^1.1.1
+  provider: ^4.3.2+3
+  modal_progress_hud: ^0.1.3
+  image_cropper: ^1.3.1
 
 dev_dependencies:
   flutter_test:
@@ -79,17 +83,20 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+     - family: Lato-Regular
+       fonts:
+         - asset: assets/fonts/Lato-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
+     - family: Roboto-Regular
+       fonts:
+         - asset: assets/fonts/Roboto-Regular.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+     - family: Ubuntu-Regular
+       fonts:
+         - asset: assets/fonts/Ubuntu-Regular.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

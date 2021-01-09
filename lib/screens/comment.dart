@@ -20,7 +20,6 @@ class Comments extends StatefulWidget {
 
 class _CommentsState extends State<Comments> {
   UserModel user;
-  bool isLiked;
 
   final DateTime timestamp = DateTime.now();
   TextEditingController commentsTEC = TextEditingController();
@@ -31,15 +30,13 @@ class _CommentsState extends State<Comments> {
 
   @override
   Widget build(BuildContext context) {
-    isLiked = (widget.post?.likes[currentUserId()] == true);
-
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(context);
           },
-          child: Icon(Feather.x),
+          child: Icon(CupertinoIcons.xmark_circle_fill,color:Theme.of(context).accentColor),
         ),
         centerTitle: true,
         title: Text('COMMENTS'),
@@ -90,6 +87,7 @@ class _CommentsState extends State<Comments> {
                       child: ListTile(
                         contentPadding: EdgeInsets.all(0),
                         title: TextField(
+                          textCapitalization: TextCapitalization.sentences,
                           controller: commentsTEC,
                           style: TextStyle(
                             fontSize: 15.0,
@@ -109,7 +107,7 @@ class _CommentsState extends State<Comments> {
                               ),
                               borderRadius: BorderRadius.circular(5.0),
                             ),
-                            hintText: "Write your message...",
+                            hintText: "Write your comment...",
                             hintStyle: TextStyle(
                               fontSize: 15.0,
                               color:
@@ -123,7 +121,7 @@ class _CommentsState extends State<Comments> {
                           child: Padding(
                             padding: const EdgeInsets.only(right: 10.0),
                             child: Icon(
-                              Feather.send,
+                              Icons.send,
                               color: Theme.of(context).accentColor,
                             ),
                           ),
@@ -146,41 +144,42 @@ class _CommentsState extends State<Comments> {
       children: [
         buildPostHeader(),
         Container(
-          height: 200.0,
+          height: 250.0,
           width: MediaQuery.of(context).size.width - 20.0,
           child: cachedNetworkImage(widget.post.mediaUrl),
         ),
         ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
-          title: Text(
-            widget.post.description,
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
-          ),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Row(
-              children: [
-                Text(
-                  timeago.format(widget.post.timestamp.toDate()),
-                ),
-                SizedBox(width: 3.0),
-                Text(
-                  ' ${widget.post?.likesCount.toString()} likes',
-                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
-                ),
-              ],
+            contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+            title: Text(
+              widget.post.description,
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
             ),
-          ),
-          trailing: IconButton(
-            icon: isLiked
-                ? Icon(
-                    CupertinoIcons.heart_fill,
-                    color: Colors.red,
-                  )
-                : Icon(CupertinoIcons.heart),
-            onPressed: handleLikePost,
-          ),
-        ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Row(
+                children: [
+                  Text(
+                    timeago.format(widget.post.timestamp.toDate()),
+                  ),
+                  SizedBox(width: 3.0),
+                  StreamBuilder(
+                    stream: likesRef
+                        .where('postId', isEqualTo: widget.post.postId)
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasData) {
+                        QuerySnapshot snap = snapshot.data;
+                        List<DocumentSnapshot> docs = snap.docs;
+                        return buildLikesCount(context, docs?.length ?? 0);
+                      } else {
+                        return buildLikesCount(context, 0);
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+            trailing: buildLikeButton()),
       ],
     );
   }
@@ -195,10 +194,6 @@ class _CommentsState extends State<Comments> {
       ),
       subtitle: Text(
         widget.post.location,
-      ),
-      trailing: IconButton(
-        icon: Icon(Feather.more_horizontal),
-        onPressed: () {},
       ),
     );
   }
@@ -291,35 +286,56 @@ class _CommentsState extends State<Comments> {
     );
   }
 
-  handleLikePost() {
-    bool _isLiked = widget.post?.likes[currentUserId()] == true;
-    if (_isLiked) {
-      postRef
-          .doc(widget.post.ownerId)
-          .collection('userPosts')
-          .doc(widget.post.postId)
-          .update({'likes.$currentUserId': false});
-      removeLikeFromNotification();
-      setState(() {
-        widget.post.likesCount -= 1;
-        isLiked = false;
-        widget.post.likes[currentUserId()] = false;
-      });
-    } else if (!_isLiked) {
-      postRef
-          .doc(widget.post.ownerId)
-          .collection('userPosts')
-          .doc(widget.post.postId)
-          .update({
-        "likes": {currentUserId(): true}
-      });
-      addLikesToNotification();
-      setState(() {
-        widget.post.likesCount += 1;
-        isLiked = true;
-        widget.post.likes[currentUserId()] = true;
-      });
-    }
+  buildLikeButton() {
+    return StreamBuilder(
+      stream: likesRef
+          .where('postId', isEqualTo: widget.post.postId)
+          .where('userId', isEqualTo: currentUserId())
+          .snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasData) {
+          List<QueryDocumentSnapshot> docs = snapshot?.data?.docs ?? [];
+          return IconButton(
+            onPressed: () {
+              if (docs.isEmpty) {
+                likesRef.add({
+                  'userId': currentUserId(),
+                  'postId': widget.post.postId,
+                  'dateCreated': Timestamp.now(),
+                });
+                addLikesToNotification();
+              } else {
+                likesRef.doc(docs[0].id).delete();
+
+                removeLikeFromNotification();
+              }
+            },
+            icon: docs.isEmpty
+                ? Icon(
+                    CupertinoIcons.heart,
+                  )
+                : Icon(
+                    CupertinoIcons.heart_fill,
+                    color: Colors.red,
+                  ),
+          );
+        }
+        return Container();
+      },
+    );
+  }
+
+  buildLikesCount(BuildContext context, int count) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 7.0),
+      child: Text(
+        '$count likes',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 10.0,
+        ),
+      ),
+    );
   }
 
   addLikesToNotification() async {

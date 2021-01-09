@@ -6,12 +6,12 @@ import 'package:social_media_app/components/custom_image.dart';
 import 'package:social_media_app/view_models/auth/posts_view_model.dart';
 import 'package:social_media_app/widgets/indicators.dart';
 
-class ProfilePicDemo extends StatefulWidget {
+class ProfilePicture extends StatefulWidget {
   @override
-  _ProfilePicDemoState createState() => _ProfilePicDemoState();
+  _ProfilePictureState createState() => _ProfilePictureState();
 }
 
-class _ProfilePicDemoState extends State<ProfilePicDemo> {
+class _ProfilePictureState extends State<ProfilePicture> {
   @override
   Widget build(BuildContext context) {
     PostsViewModel viewModel = Provider.of<PostsViewModel>(context);

@@ -1,14 +1,14 @@
 import 'package:animations/animations.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:social_media_app/components/fab_container.dart';
-import 'package:social_media_app/pages/activities.dart';
+import 'package:social_media_app/pages/notification.dart';
 import 'package:social_media_app/pages/profile.dart';
-import 'package:social_media_app/pages/publication.dart';
 import 'package:social_media_app/pages/search.dart';
-import 'package:social_media_app/pages/timeline.dart';
+import 'package:social_media_app/pages/feeds.dart';
 import 'package:social_media_app/utils/firebase.dart';
+import 'package:social_media_app/widgets/icon_badge.dart';
 
 class TabScreen extends StatefulWidget {
   @override
@@ -21,13 +21,13 @@ class _TabScreenState extends State<TabScreen> {
   List pages = [
     {
       'title': 'Home',
-      'icon': Feather.home,
+      'icon': CupertinoIcons.home,
       'page': Timeline(),
       'index': 0,
     },
     {
       'title': 'Search',
-      'icon': Feather.search,
+      'icon': CupertinoIcons.search,
       'page': Search(),
       'index': 1,
     },
@@ -38,14 +38,14 @@ class _TabScreenState extends State<TabScreen> {
       'index': 2,
     },
     {
-      'title': 'Activity',
-      'icon': Feather.bell,
+      'title': 'Notification',
+      'icon': CupertinoIcons.bell_solid,
       'page': Activities(),
       'index': 3,
     },
     {
       'title': 'Profile',
-      'icon': Feather.user,
+      'icon': CupertinoIcons.person,
       'page': Profile(profileId: firebaseAuth.currentUser.uid),
       'index': 4,
     },
@@ -104,7 +104,7 @@ class _TabScreenState extends State<TabScreen> {
       height: 45.0,
       width: 45.0,
       child: FabContainer(
-        page: Publication(),
+        // page: Publication(),
         icon: Feather.plus,
         mini: true,
       ),

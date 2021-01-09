@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:social_media_app/chats/recent_chats.dart';
 import 'package:social_media_app/components/stream_builder_wrapper.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/utils/firebase.dart';
@@ -23,27 +24,30 @@ class _TimelineState extends State<Timeline> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('FlutterSocial'),
+        title: Text('Wooble'),
         centerTitle: false,
         actions: [
           IconButton(
-            icon: Icon(CupertinoIcons.chat_bubble_2, size: 30.0),
-            onPressed: () {},
+            icon: Icon(CupertinoIcons.chat_bubble_2_fill, size: 30.0,color:Theme.of(context).accentColor),
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => Chats()));
+            },
           ),
           SizedBox(width: 20.0),
         ],
       ),
       body: CustomScrollView(
         slivers: <Widget>[
-          SliverAppBar(
-            expandedHeight: 115.0,
-            flexibleSpace: FlexibleSpaceBar(
-              background: StoryItems(),
-            ),
-          ),
+       //   SliverAppBar(
+            //expandedHeight: 115.0,
+          //  flexibleSpace: FlexibleSpaceBar(
+            //  background: StoryItems(),
+          //  ),
+          //),
           SliverList(
             delegate:
-                SliverChildBuilderDelegate((BuildContext context, int index) {
+            SliverChildBuilderDelegate((BuildContext context, int index) {
               if (index > 0) return null;
               return StreamBuilderWrapper(
                 shrinkWrap: true,

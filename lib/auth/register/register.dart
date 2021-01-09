@@ -3,21 +3,21 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/auth/login/login.dart';
+import 'package:social_media_app/components/password_text_field.dart';
 import 'package:social_media_app/components/text_form_builder.dart';
 import 'package:social_media_app/utils/validation.dart';
 import 'package:social_media_app/view_models/auth/register_view_model.dart';
 import 'package:social_media_app/widgets/indicators.dart';
 
-class RegisterDemo extends StatefulWidget {
+class Register extends StatefulWidget {
   @override
-  _RegisterDemoState createState() => _RegisterDemoState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _RegisterDemoState extends State<RegisterDemo> {
+class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     RegisterViewModel viewModel = Provider.of<RegisterViewModel>(context);
-
     return ModalProgressHUD(
       progressIndicator: circularProgress(context),
       inAsyncCall: viewModel.loading,
@@ -26,11 +26,9 @@ class _RegisterDemoState extends State<RegisterDemo> {
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 20.0,vertical:40.0),
           children: [
-
              Text(
                 'Welcome to FlutterSocial..\ncreate a new account and connect with friends',
-                // textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0,fontFamily: 'Lato-Regular'),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0,fontFamily: 'Roboto-Regular'),
               ),
 
             SizedBox(height: 30.0),
@@ -108,7 +106,7 @@ class _RegisterDemoState extends State<RegisterDemo> {
             nextFocusNode: viewModel.passFN,
           ),
           SizedBox(height: 15.0),
-          TextFormBuilder(
+          PasswordFormBuilder(
             enabled: !viewModel.loading,
             prefix: Feather.lock,
             suffix:Feather.eye,
@@ -123,7 +121,7 @@ class _RegisterDemoState extends State<RegisterDemo> {
             nextFocusNode: viewModel.cPassFN,
           ),
           SizedBox(height: 15.0),
-          TextFormBuilder(
+          PasswordFormBuilder(
             enabled: !viewModel.loading,
             prefix: Feather.lock,
             hintText: "Confirm Password",

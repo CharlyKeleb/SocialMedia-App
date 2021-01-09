@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:social_media_app/auth/register/register.dart';
@@ -7,10 +8,10 @@ import 'package:social_media_app/components/stream_builder_wrapper.dart';
 import 'package:social_media_app/components/stream_grid_wrapper.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/models/user.dart';
-import 'package:social_media_app/screens/editprofile.dart';
+import 'package:social_media_app/screens/edit_profile.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/post_tiles.dart';
-import 'package:social_media_app/widgets/posts.dart';
+import 'package:social_media_app/widgets/posts_view.dart';
 
 class Profile extends StatefulWidget {
   final profileId;
@@ -31,40 +32,15 @@ class _ProfileState extends State<Profile> {
   bool isFollowing = false;
   UserModel users;
   final DateTime timestamp = DateTime.now();
-
-  // profileId() {
-  //   user = firebaseAuth.currentUser;
-  //   return user?.uid;
-  // }
+  ScrollController controller = ScrollController();
 
   currentUserId() {
     return firebaseAuth.currentUser?.uid;
   }
 
-  // profileIds() {
-  //   if (widget.profileId == currentUserId()) {
-  //     return currentUserId();
-  //   } else {
-  //     return widget.profileId;
-  //   }
-  // }
-
-  postsCount() async {
-    QuerySnapshot snapshot =
-        // await postRef.doc(widget.profileId).collection('userPosts').get();
-        await postRef.where('ownerId', isEqualTo: currentUserId()).get();
-
-    setState(() {
-      postCount = snapshot.docs?.length;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    postsCount();
-    fetchFollowers();
-    fetchFollowing();
     checkIfFollowing();
   }
 
@@ -79,177 +55,261 @@ class _ProfileState extends State<Profile> {
     });
   }
 
-  fetchFollowers() async {
-    QuerySnapshot snapshot = await followersRef
-        .doc(widget.profileId)
-        .collection('userFollowers')
-        .get();
-    setState(() {
-      followersCount = snapshot.docs.length;
-    });
-  }
-
-  fetchFollowing() async {
-    QuerySnapshot snapshot = await followingRef
-        .doc(widget.profileId)
-        .collection('userFollowing')
-        .get();
-    setState(() {
-      followingCount = snapshot.docs.length;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Feather.chevron_left,
-            color: Theme.of(context).accentColor,
-          ),
-          iconSize: 30.0,
-        ),
+        title: Text('FlutterSocial'),
         actions: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 25.0),
-              child: GestureDetector(
-                onTap: () {
-                  firebaseAuth.signOut();
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => Register()));
-                },
-                child: Text(
-                  'Log Out',
-                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 15.0),
-                ),
-              ),
-            ),
-          ),
+          widget.profileId == firebaseAuth.currentUser.uid
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 25.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        firebaseAuth.signOut();
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => Register()));
+                      },
+                      child: Text(
+                        'Log Out',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w900, fontSize: 15.0),
+                      ),
+                    ),
+                  ),
+                )
+              : SizedBox()
         ],
       ),
-      body: ListView(
-        padding: EdgeInsets.all(0.0),
-        shrinkWrap: true,
-        children: [
-          StreamBuilder(
-            stream: usersRef.doc(widget.profileId).snapshots(),
-            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-              if (snapshot.hasData) {
-                UserModel user = UserModel.fromJson(snapshot.data.data());
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.transparent,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.3),
-                              offset: new Offset(0.0, 0.0),
-                              blurRadius: 2.0,
-                              spreadRadius: 0.0,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            automaticallyImplyLeading: false,
+            pinned: true,
+            floating: false,
+            toolbarHeight: 5.0,
+            collapsedHeight: 6.0,
+            expandedHeight: 220.0,
+            flexibleSpace: FlexibleSpaceBar(
+              background: StreamBuilder(
+                stream: usersRef.doc(widget.profileId).snapshots(),
+                builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    UserModel user = UserModel.fromJson(snapshot.data.data());
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: CircleAvatar(
+                                backgroundImage: NetworkImage(user?.photoUrl),
+                                radius: 40.0,
+                              ),
+                            ),
+                            SizedBox(width: 20.0),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 32.0),
+                                Row(
+                                  children: [
+                                    Visibility(
+                                        visible: false,
+                                        child: SizedBox(width: 10.0)),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: 130.0,
+                                          child: Text(
+                                            user?.username,
+                                            style: TextStyle(
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.w900,
+                                            ),
+                                            maxLines: null,
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 130.0,
+                                          child: Text(
+                                            user?.country,
+                                            style: TextStyle(
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w600,
+                                              //color: Color(0xff4D4D4D),
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        SizedBox(width: 10.0),
+                                        Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              user?.email,
+                                              style: TextStyle(
+                                                color: Color(0xff4D4D4D),
+                                                fontSize: 10.0,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Icon(CupertinoIcons.chat_bubble_fill,
+                                            color:
+                                                Theme.of(context).accentColor),
+                                        Text(
+                                          'Message',
+                                          style: TextStyle(fontSize: 12.0),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(1.0),
-                          child: CircleAvatar(
-                            radius: 60.0,
-                            backgroundImage: NetworkImage(user?.photoUrl),
-                          ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10.0, left: 20.0),
+                          child: user.bio.isEmpty
+                              ? Container()
+                              : Container(
+                                  width: 200,
+                                  child: Text(
+                                    user?.bio,
+                                    style: TextStyle(
+                                        color: Color(0xff4D4D4D),
+                                        fontSize: 10.0,
+                                        fontWeight: FontWeight.w600),
+                                    maxLines: null,
+                                  ),
+                                ),
                         ),
-                      ),
-                    ),
-                    ListTile(
-                      contentPadding: EdgeInsets.all(0.0),
-                      title: Text(
-                        user?.username,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontWeight: FontWeight.w900),
-                      ),
-                      subtitle: Text(
-                        user?.country,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0, bottom: 10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            user?.bio,
-                            style: TextStyle(
-                              fontSize: 13.0,
-                              fontWeight: FontWeight.w500,
+                        SizedBox(height: 10.0),
+                        Container(
+                          height: 50.0,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 30.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                StreamBuilder(
+                                  stream: postRef
+                                      .where('ownerId',
+                                          isEqualTo: currentUserId())
+                                      .snapshots(),
+                                  builder: (context,
+                                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    if (snapshot.hasData) {
+                                      QuerySnapshot snap = snapshot.data;
+                                      List<DocumentSnapshot> docs = snap.docs;
+                                      return buildCount(
+                                          "POSTS", docs?.length ?? 0);
+                                    } else {
+                                      return buildCount("POSTS", 0);
+                                    }
+                                  },
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 15.0),
+                                  child: Container(
+                                    height: 50.0,
+                                    width: 0.3,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                StreamBuilder(
+                                  stream: followersRef
+                                      .doc(widget.profileId)
+                                      .collection('userFollowers')
+                                      .snapshots(),
+                                  builder: (context,
+                                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    if (snapshot.hasData) {
+                                      QuerySnapshot snap = snapshot.data;
+                                      List<DocumentSnapshot> docs = snap.docs;
+                                      return buildCount(
+                                          "FOLLOWERS", docs?.length ?? 0);
+                                    } else {
+                                      return buildCount("FOLLOWERS", 0);
+                                    }
+                                  },
+                                ),
+                                //buildCount("FOLLOWERS", followersCount),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 15.0),
+                                  child: Container(
+                                    height: 50.0,
+                                    width: 0.3,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                StreamBuilder(
+                                  stream: followingRef
+                                      .doc(widget.profileId)
+                                      .collection('userFollowing')
+                                      .snapshots(),
+                                  builder: (context,
+                                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    if (snapshot.hasData) {
+                                      QuerySnapshot snap = snapshot.data;
+                                      List<DocumentSnapshot> docs = snap.docs;
+                                      return buildCount(
+                                          "FOLLOWING", docs?.length ?? 0);
+                                    } else {
+                                      return buildCount("FOLLOWING", 0);
+                                    }
+                                  },
+                                ),
+                                //buildCount("FOLLOWING", followingCount),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              }
-              return Container();
-            },
-          ),
-          Container(
-            height: 50.0,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  buildCount("POSTS", postCount),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: Container(
-                      height: 50.0,
-                      width: 0.3,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  buildCount("FOLLOWERS", followersCount),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: Container(
-                      height: 50.0,
-                      width: 0.3,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  buildCount("FOLLOWING", followingCount),
-                ],
+                        ),
+                        buildProfileButton(user),
+                      ],
+                    );
+                  }
+                  return Container();
+                },
               ),
             ),
           ),
-          buildProfileButton(),
-          SizedBox(height: 5.0),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Row(
-              children: [
-                Text(
-                  'POSTS',
-                  style: TextStyle(fontWeight: FontWeight.w700),
+          SliverList(delegate:
+              SliverChildBuilderDelegate((BuildContext context, int index) {
+            if (index > 0) return null;
+            return Column(children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Row(
+                  children: [
+                    Text(
+                      'All Posts',
+                      style: TextStyle(fontWeight: FontWeight.w900),
+                    ),
+                    Spacer(),
+                    buildIcons(),
+                  ],
                 ),
-                Spacer(),
-                buildIcons(),
-              ],
-            ),
-          ),
-          buildPostView()
+              ),
+              buildPostView()
+            ]);
+          }))
         ],
       ),
     );
@@ -283,38 +343,49 @@ class _ProfileState extends State<Profile> {
         Text(
           count.toString(),
           style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w900,
-          ),
+              fontSize: 16.0,
+              fontWeight: FontWeight.w900,
+              fontFamily: 'Ubuntu-Regular'),
         ),
         SizedBox(height: 3.0),
         Text(
           label,
           style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-          ),
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
+              fontFamily: 'Ubuntu-Regular'),
         )
       ],
     );
   }
 
-  editProfile() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => EditProfile(),
-      ),
-    );
-  }
+  // editProfile() {
+  //   Provider.of<EditProfileViewModel>(context, listen: false).setUser(users);
+  //   Navigator.of(context).push(
+  //     MaterialPageRoute(
+  //       builder: (_) => EditProfileDemo(
+  //         user: user,
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  buildProfileButton() {
+  buildProfileButton(user) {
     //if isMe then display "edit profile"
     bool isMe = widget.profileId == firebaseAuth.currentUser.uid;
     if (isMe) {
       return buildButton(
-        text: "Edit Profile",
-        function: editProfile,
-      );
+          text: "Edit Profile",
+          //function: editProfile,
+          function: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => EditProfile(
+                  user: user,
+                ),
+              ),
+            );
+          });
     } else if (isFollowing) {
       return buildButton(
         text: "Unfollow",
@@ -330,21 +401,28 @@ class _ProfileState extends State<Profile> {
 
   buildButton({String text, Function function}) {
     return Center(
-      child: Container(
-        height: 40.0,
-        width: 200.0,
-        child: MaterialButton(
-          shape: RoundedRectangleBorder(
+      child: GestureDetector(
+        onTap: function,
+        child: Container(
+          height: 40.0,
+          width: 200.0,
+          decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5.0),
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Theme.of(context).accentColor,
+                Color(0xff597FDB),
+              ],
+            ),
           ),
-          color: Theme.of(context).accentColor,
           child: Center(
             child: Text(
               text,
               style: TextStyle(color: Colors.white),
             ),
           ),
-          onPressed: function,
         ),
       ),
     );
@@ -378,11 +456,7 @@ class _ProfileState extends State<Profile> {
         doc.reference.delete();
       }
     });
-    //remove from feeds
-
-    // removePostsFromFeeds();
-
-    //remove from notifications fees
+    //remove from notifications feeds
     notificationRef
         .doc(widget.profileId)
         .collection('notifications')
@@ -414,9 +488,6 @@ class _ProfileState extends State<Profile> {
         .collection('userFollowing')
         .doc(widget.profileId)
         .set({});
-
-    // getFollowedUserPosts();
-
     //update the notification feeds
     notificationRef
         .doc(widget.profileId)
@@ -444,12 +515,6 @@ class _ProfileState extends State<Profile> {
     return StreamBuilderWrapper(
       shrinkWrap: true,
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      // stream: postRef
-      //     .doc(widget.profileId)
-      //     .collection('userPosts')
-      //     .where('ownerId', isEqualTo: widget.profileId)
-      //     .orderBy('timestamp', descending: true)
-      //     .snapshots(),
       stream: postRef
           .where('ownerId', isEqualTo: widget.profileId)
           .orderBy('timestamp', descending: true)
@@ -471,12 +536,6 @@ class _ProfileState extends State<Profile> {
     return StreamGridWrapper(
       shrinkWrap: true,
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      // stream: postRef
-      //     .doc(widget.profileId)
-      //     .collection('userPosts')
-      //     .where('ownerId', isEqualTo: widget.profileId)
-      //     .orderBy('timestamp', descending: true)
-      //     .snapshots(),
       stream: postRef
           .where('ownerId', isEqualTo: widget.profileId)
           .orderBy('timestamp', descending: true)
@@ -490,37 +549,4 @@ class _ProfileState extends State<Profile> {
       },
     );
   }
-
-//this gets the posts of all the user you are following and add them to the feeds collection
-  // getFollowedUserPosts() async {
-  //   final followedUserPostRef =
-  //       postRef.doc(widget.profileId).collection('userPosts');
-  //   final feedsPostsRef =
-  //       feedsRef.doc(widget.profileId).collection('feedPosts');
-  //   //get each posts
-  //   final querySnapshot = await followedUserPostRef.get();
-  //   querySnapshot.docs.forEach((doc) {
-  //     if (doc.exists) {
-  //       final postId = doc.id;
-  //       final postData = doc.data();
-  //       feedsPostsRef.doc(postId).set(postData);
-  //     }
-  //   });
-  // }
-
-//Removes the unfollowed user post from feeds
-  // removePostsFromFeeds() async {
-  //   final followedUserPostRef = feedsRef
-  //       .doc(widget.profileId)
-  //       .collection('feedPosts')
-  //       .where("ownerId", isEqualTo: widget.profileId);
-
-  //   final querySnapshot = await followedUserPostRef.get();
-
-  //   querySnapshot.docs.forEach((doc) {
-  //     if (doc.exists) {
-  //       doc.reference.delete();
-  //     }
-  //   });
-  // }
 }

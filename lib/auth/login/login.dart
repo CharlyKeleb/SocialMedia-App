@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
-import 'package:social_media_app/auth/register/register_demo.dart';
+import 'package:social_media_app/auth/register/register.dart';
+import 'package:social_media_app/components/password_text_field.dart';
 import 'package:social_media_app/components/text_form_builder.dart';
 import 'package:social_media_app/utils/validation.dart';
 import 'package:social_media_app/view_models/auth/login_view_model.dart';
 import 'package:social_media_app/widgets/indicators.dart';
 
-class LoginDemo extends StatefulWidget {
+class Login extends StatefulWidget {
   @override
-  _LoginDemoState createState() => _LoginDemoState();
+  _LoginState createState() => _LoginState();
 }
 
-class _LoginDemoState extends State<LoginDemo> {
+class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     LoginViewModel viewModel = Provider.of<LoginViewModel>(context);
@@ -63,7 +64,7 @@ class _LoginDemoState extends State<LoginDemo> {
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => RegisterDemo()));
+                        MaterialPageRoute(builder: (_) => Register()));
                   },
                   child: Text(
                     'Sign up',
@@ -100,7 +101,7 @@ class _LoginDemoState extends State<LoginDemo> {
             nextFocusNode: viewModel.passFN,
           ),
           SizedBox(height: 15.0),
-          TextFormBuilder(
+          PasswordFormBuilder(
             enabled: !viewModel.loading,
             prefix: Feather.lock,
             suffix: Feather.eye,

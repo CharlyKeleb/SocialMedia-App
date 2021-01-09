@@ -24,13 +24,11 @@ currentUserId() {
   return firebaseAuth.currentUser.uid;
 }
 
-bool isLiked;
 UserModel user;
 
 class _ViewImageState extends State<ViewImage> {
   @override
   Widget build(BuildContext context) {
-    isLiked = (widget.post?.likes[currentUserId()] == true);
 
     return Scaffold(
       body: Center(

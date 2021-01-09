@@ -33,8 +33,12 @@ class CommentsStreamWrapper extends StatelessWidget {
         if (snapshot.hasData) {
           var list = snapshot.data.documents.toList();
           return list.length == 0
-              ? Container(child: Center(child: Text('No comments')))
+              ? Container(child: Center(child: Padding(
+                padding: const EdgeInsets.only(top:20.0),
+                child: Text('No comments'),
+              )))
               : ListView.builder(
+                reverse: true,
                   padding: padding,
                   scrollDirection: scrollDirection,
                   itemCount: list.length,

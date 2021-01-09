@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_media_app/models/activity.dart';
+import 'package:social_media_app/models/notification.dart';
 import 'package:social_media_app/utils/firebase.dart';
-import 'package:social_media_app/widgets/view_actvity_details.dart';
+import 'package:social_media_app/widgets/view_notification_details.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:social_media_app/widgets/indicators.dart';

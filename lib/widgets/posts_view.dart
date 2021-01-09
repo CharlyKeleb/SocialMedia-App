@@ -41,7 +41,7 @@ class _PostsState extends State<Posts> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(5.0),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -82,6 +82,20 @@ class _PostsState extends State<Posts> {
                         }
                       },
                     ),
+                    SizedBox(width: 5.0),
+                    StreamBuilder(
+                      stream:    commentRef.doc(widget.post.postId).collection("comments").snapshots(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasData) {
+                          QuerySnapshot snap = snapshot.data;
+                          List<DocumentSnapshot> docs = snap.docs;
+                          return buildCommentsCount(context, docs?.length ?? 0);
+                        } else {
+                          return buildCommentsCount(context, 0);
+                        }
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -119,10 +133,19 @@ class _PostsState extends State<Posts> {
       ),
     );
   }
-
+buildCommentsCount(BuildContext context, int count){
+    return
+  Padding(
+    padding: const EdgeInsets.only(top: 0.5),
+    child: Text(
+      '- $count comments',
+      style: TextStyle(
+          fontSize: 8.5, fontWeight: FontWeight.bold),
+    ),
+  );
+}
   buildPostHeader() {
     bool isMe = currentUserId() == widget.post.ownerId;
-
     return ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
       leading: buildUserDp(),
@@ -131,7 +154,7 @@ class _PostsState extends State<Posts> {
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: Text(
-        widget.post.location,
+        widget.post.location == null ? 'Fluttersocial' : widget.post.location,
       ),
       trailing: isMe
           ? IconButton(

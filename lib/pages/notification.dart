@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:social_media_app/components/activity_stream_wrapper.dart';
-import 'package:social_media_app/models/activity.dart';
+import 'package:social_media_app/components/notification_stream_wrapper.dart';
+import 'package:social_media_app/models/notification.dart';
 import 'package:social_media_app/utils/firebase.dart';
-import 'package:social_media_app/widgets/activity_items.dart';
+import 'package:social_media_app/widgets/notification_items.dart';
 
 class Activities extends StatefulWidget {
   @override

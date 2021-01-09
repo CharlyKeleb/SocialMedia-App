@@ -1,5 +1,7 @@
 import 'package:animations/animations.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'file:///C:/Users/success/social_media_app/lib/posts/create_post.dart';
 
 class FabContainer extends StatelessWidget {
   final Widget page;
@@ -29,8 +31,66 @@ class FabContainer extends StatelessWidget {
             icon,
             color: Theme.of(context).accentColor,
           ),
-          onPressed: null,
+          onPressed: () {
+            chooseUpload(context);
+          },
           mini: mini,
+        );
+      },
+    );
+  }
+
+  chooseUpload(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      builder: (BuildContext context) {
+        return FractionallySizedBox(
+          heightFactor: .6,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 20.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Text(
+                  'SELECT',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color:Theme.of(context).accentColor
+                  ),
+                ),
+              ),
+              Divider(),
+              ListTile(
+                leading: Icon(
+                  CupertinoIcons.chart_pie_fill,
+                  size: 25.0,
+                ),
+                title: Text('Post on status'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  CupertinoIcons.camera_on_rectangle,
+                  size: 25.0,
+                ),
+                title: Text('Make a Post'),
+                onTap: () {
+                   Navigator.pop(context);
+
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => CreatePost()));
+
+                 },
+              ),
+            ],
+          ),
         );
       },
     );

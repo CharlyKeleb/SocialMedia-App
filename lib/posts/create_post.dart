@@ -9,14 +9,13 @@ import 'package:social_media_app/models/user.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/view_models/auth/posts_view_model.dart';
 import 'package:social_media_app/widgets/indicators.dart';
-import 'package:uuid/uuid.dart';
 
-class AddPost extends StatefulWidget {
+class CreatePost extends StatefulWidget {
   @override
-  _AddPostState createState() => _AddPostState();
+  _CreatePostState createState() => _CreatePostState();
 }
 
-class _AddPostState extends State<AddPost> {
+class _CreatePostState extends State<CreatePost> {
   @override
   Widget build(BuildContext context) {
 
@@ -27,7 +26,7 @@ class _AddPostState extends State<AddPost> {
     PostsViewModel viewModel = Provider.of<PostsViewModel>(context);
     return WillPopScope(
       onWillPop: () async {
-        viewModel.resetPost();
+       await viewModel.resetPost();
         return true;
       },
       child: ModalProgressHUD(
@@ -50,6 +49,8 @@ class _AddPostState extends State<AddPost> {
                 onTap: () async {
                   await viewModel.uploadPosts();
                   Navigator.pop(context);
+                  viewModel.resetPost();
+
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),

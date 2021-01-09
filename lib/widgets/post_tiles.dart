@@ -30,10 +30,11 @@ class _PostTileState extends State<PostTile> {
           ),
           elevation: 5,
           child: ClipRRect(
-              borderRadius: BorderRadius.all(
-                Radius.circular(3.0),
-              ),
-              child: cachedNetworkImage(widget.post.mediaUrl)),
+            borderRadius: BorderRadius.all(
+              Radius.circular(3.0),
+            ),
+            child: cachedNetworkImage(widget.post.mediaUrl),
+          ),
         ),
       ),
     );
