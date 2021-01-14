@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:social_media_app/components/notification_stream_wrapper.dart';
 import 'package:social_media_app/models/notification.dart';
 import 'package:social_media_app/utils/firebase.dart';
@@ -31,13 +30,13 @@ class _ActivitiesState extends State<Activities> {
               child: Text(
                 'CLEAR',
                 style: TextStyle(
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.w900,
-                    color: Theme.of(context).accentColor),
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w900,
+                  color: Theme.of(context).accentColor,
+                ),
               ),
             ),
           ),
-          // SizedBox(width: 20.0),
         ],
       ),
       body: ListView(

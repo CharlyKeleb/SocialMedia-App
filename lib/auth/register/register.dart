@@ -24,13 +24,15 @@ class _RegisterState extends State<Register> {
       child: Scaffold(
         key: viewModel.scaffoldKey,
         body: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 20.0,vertical:40.0),
+          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
           children: [
-             Text(
-                'Welcome to FlutterSocial..\ncreate a new account and connect with friends',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0,fontFamily: 'Roboto-Regular'),
-              ),
-
+            Text(
+              'Welcome to Wooble Social App..\nCreate a new account and connect with friends',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14.0,
+                  fontFamily: 'Roboto-Regular'),
+            ),
             SizedBox(height: 30.0),
             buildForm(viewModel, context),
             SizedBox(height: 30.0),
@@ -94,7 +96,7 @@ class _RegisterState extends State<Register> {
           ),
           SizedBox(height: 15.0),
           TextFormBuilder(
-            enabled:  !viewModel.loading,
+            enabled: !viewModel.loading,
             prefix: Feather.map_pin,
             hintText: "Country",
             textInputAction: TextInputAction.next,
@@ -109,7 +111,7 @@ class _RegisterState extends State<Register> {
           PasswordFormBuilder(
             enabled: !viewModel.loading,
             prefix: Feather.lock,
-            suffix:Feather.eye,
+            suffix: Feather.eye,
             hintText: "Password",
             textInputAction: TextInputAction.next,
             validateFunction: Validations.validatePassword,

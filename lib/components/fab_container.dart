@@ -55,12 +55,13 @@ class FabContainer extends StatelessWidget {
               SizedBox(height: 20.0),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Text(
-                  'SELECT',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color:Theme.of(context).accentColor
+                child: Center(
+                  child: Text(
+                    'SELECT',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).accentColor),
                   ),
                 ),
               ),
@@ -72,6 +73,7 @@ class FabContainer extends StatelessWidget {
                 ),
                 title: Text('Post on status'),
                 onTap: () {
+                  ///Feature coming soon
                   Navigator.pop(context);
                 },
               ),
@@ -82,12 +84,11 @@ class FabContainer extends StatelessWidget {
                 ),
                 title: Text('Make a Post'),
                 onTap: () {
-                   Navigator.pop(context);
+                  Navigator.pop(context);
 
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (_) => CreatePost()));
-
-                 },
+                },
               ),
             ],
           ),

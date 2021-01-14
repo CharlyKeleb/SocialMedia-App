@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:social_media_app/components/stream_comments_wrapper.dart';
 import 'package:social_media_app/models/comments.dart';
 import 'package:social_media_app/models/post.dart';
@@ -36,7 +35,8 @@ class _CommentsState extends State<Comments> {
           onTap: () {
             Navigator.pop(context);
           },
-          child: Icon(CupertinoIcons.xmark_circle_fill,color:Theme.of(context).accentColor),
+          child: Icon(CupertinoIcons.xmark_circle_fill,
+              color: Theme.of(context).accentColor),
         ),
         centerTitle: true,
         title: Text('COMMENTS'),

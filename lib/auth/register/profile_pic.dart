@@ -28,12 +28,6 @@ class _ProfilePictureState extends State<ProfilePicture> {
           appBar: AppBar(
             title: Text('Add a profile picture'),
             centerTitle: true,
-            // actions: [
-            //   GestureDetector(
-            //     onTap: () async {
-            //       await viewModel.uploadPosts();
-            //       Navigator.pop(context);
-            //     },
           ),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -45,7 +39,6 @@ class _ProfilePictureState extends State<ProfilePicture> {
                   height: MediaQuery.of(context).size.width - 30,
                   decoration: BoxDecoration(
                     color: Colors.grey[300],
-                    //    shape: BoxShape.circle,
                     borderRadius: BorderRadius.all(
                       Radius.circular(3.0),
                     ),

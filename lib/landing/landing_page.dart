@@ -20,7 +20,7 @@ class _LandingState extends State<Landing> {
             Align(
               alignment: Alignment.center,
               child: Padding(
-                padding: const EdgeInsets.only(left:10.0),
+                padding: const EdgeInsets.only(left: 10.0),
                 child: Image.asset(
                   'assets/images/new1.png',
                   height: 200.0,
@@ -50,7 +50,10 @@ class _LandingState extends State<Landing> {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => Login()));
+                    MaterialPageRoute(
+                      builder: (_) => Login(),
+                    ),
+                  );
                 },
                 child: Container(
                   height: 45.0,

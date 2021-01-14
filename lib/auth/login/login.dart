@@ -63,8 +63,8 @@ class _LoginState extends State<Login> {
                 Text('Don\'t have an account?'),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => Register()));
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (_) => Register()));
                   },
                   child: Text(
                     'Sign up',

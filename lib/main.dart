@@ -44,7 +44,6 @@ class _MyAppState extends State<MyApp> {
             if (snapshot.hasData) {
               return TabScreen();
             }
-            //   return LandingPage();
             return Landing();
           },
         ),

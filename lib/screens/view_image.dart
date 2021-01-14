@@ -29,7 +29,6 @@ UserModel user;
 class _ViewImageState extends State<ViewImage> {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Center(
         child: buildImage(context),

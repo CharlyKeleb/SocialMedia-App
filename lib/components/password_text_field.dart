@@ -20,21 +20,21 @@ class PasswordFormBuilder extends StatefulWidget {
 
   PasswordFormBuilder(
       {this.prefix,
-        this.suffix,
-        this.initialValue,
-        this.enabled,
-        this.hintText,
-        this.textInputType,
-        this.controller,
-        this.textInputAction,
-        this.nextFocusNode,
-        this.focusNode,
-        this.submitAction,
-        this.obscureText = false,
-        this.validateFunction,
-        this.onSaved,
-        this.onChange,
-        this.key});
+      this.suffix,
+      this.initialValue,
+      this.enabled,
+      this.hintText,
+      this.textInputType,
+      this.controller,
+      this.textInputAction,
+      this.nextFocusNode,
+      this.focusNode,
+      this.submitAction,
+      this.obscureText = false,
+      this.validateFunction,
+      this.onSaved,
+      this.onChange,
+      this.key});
 
   @override
   _PasswordFormBuilderState createState() => _PasswordFormBuilderState();
@@ -43,6 +43,7 @@ class PasswordFormBuilder extends StatefulWidget {
 class _PasswordFormBuilderState extends State<PasswordFormBuilder> {
   String error;
   bool obscureText = false;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -91,30 +92,31 @@ class _PasswordFormBuilderState extends State<PasswordFormBuilder> {
                     }
                   },
                   decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        widget.prefix,
+                    prefixIcon: Icon(
+                      widget.prefix,
+                      size: 15.0,
+                    ),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() => obscureText = !obscureText);
+                      },
+                      child: Icon(
+                        obscureText ? widget.suffix : Feather.eye_off,
                         size: 15.0,
                       ),
-                      suffixIcon: GestureDetector(
-                        onTap: (){
-                          setState(() => obscureText = !obscureText);
-                        },
-                        child: Icon(
-                          obscureText ? widget.suffix : Feather.eye_off,
-                          size: 15.0,
-                        ),
-                      ),
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: widget.hintText,
-                      hintStyle: TextStyle(
-                        color: Colors.grey[400],
-                      ),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                      border: border(context),
-                      enabledBorder: border(context),
-                      focusedBorder: focusBorder(context),
-                      errorStyle: TextStyle(height: 0.0, fontSize: 0.0)),
+                    ),
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: widget.hintText,
+                    hintStyle: TextStyle(
+                      color: Colors.grey[400],
+                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+                    border: border(context),
+                    enabledBorder: border(context),
+                    focusedBorder: focusBorder(context),
+                    errorStyle: TextStyle(height: 0.0, fontSize: 0.0),
+                  ),
                 ),
               ),
             ),

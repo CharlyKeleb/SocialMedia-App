@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 
 class StoryItems extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
-  
-    return  Container(
+    return Container(
       height: 130.0,
       child: ListView.builder(
         itemCount: 5,
         scrollDirection: Axis.horizontal,
         itemBuilder: (BuildContext context, int index) {
           return Padding(
-            padding: const EdgeInsets.only(left:10.0),
+            padding: const EdgeInsets.only(left: 10.0),
             child: Stack(
               children: [
                 Container(

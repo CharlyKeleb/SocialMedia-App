@@ -34,9 +34,13 @@ class StreamBuilderWrapper extends StatelessWidget {
           var list = snapshot.data.documents.toList();
           return list.length == 0
               ? Padding(
-                padding: const EdgeInsets.only(top:100.0),
-                child: Container(child: Center(child: Text('No Posts'))),
-              )
+                  padding: const EdgeInsets.only(top: 100.0),
+                  child: Container(
+                    child: Center(
+                      child: Text('No Posts'),
+                    ),
+                  ),
+                )
               : ListView.builder(
                   padding: padding,
                   scrollDirection: scrollDirection,

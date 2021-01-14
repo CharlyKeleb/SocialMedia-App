@@ -11,7 +11,6 @@ class ChatService {
 
   sendMessage(Message message, String chatId) async {
     await chatRef.doc("$chatId").collection("messages").add(message.toJson());
-
     await chatRef.doc("$chatId").update({"lastTextTime": Timestamp.now()});
   }
 

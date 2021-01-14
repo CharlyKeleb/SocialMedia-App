@@ -42,14 +42,11 @@ class ChatItem extends StatelessWidget {
                 EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
             leading: Stack(
               children: <Widget>[
-                Hero(
-                  tag: user.email,
-                  child: CircleAvatar(
-                    backgroundImage: CachedNetworkImageProvider(
-                      '${user.photoUrl}',
-                    ),
-                    radius: 25.0,
+                CircleAvatar(
+                  backgroundImage: CachedNetworkImageProvider(
+                    '${user?.photoUrl}',
                   ),
+                  radius: 25.0,
                 ),
                 Positioned(
                   bottom: 0.0,

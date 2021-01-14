@@ -53,19 +53,28 @@ class _ConversationState extends State<Conversation> {
   }
 
   setTyping(typing) {
-    var user = Provider.of<UserViewModel>(context, listen: false).user;
+    UserViewModel viewModel = Provider.of<UserViewModel>(context);
+    viewModel.setUser();
+    var user = Provider.of<UserViewModel>(context, listen: true).user;
     Provider.of<ConversationViewModel>(context, listen: false)
         .setUserTyping(widget.chatId, user, typing);
   }
 
   @override
   Widget build(BuildContext context) {
-    var user = Provider.of<UserViewModel>(context, listen: false).user;
+    UserViewModel viewModel = Provider.of<UserViewModel>(context);
+    viewModel.setUser();
+    var user = Provider.of<UserViewModel>(context, listen: true).user;
     return Consumer<ConversationViewModel>(
         builder: (BuildContext context, viewModel, Widget child) {
       return Scaffold(
         key: viewModel.scaffoldKey,
         appBar: AppBar(
+          leading: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(Icons.keyboard_backspace)),
           elevation: 0.0,
           titleSpacing: 0,
           title: buildUserName(),
@@ -132,7 +141,7 @@ class _ConversationState extends State<Conversation> {
                               contentPadding: EdgeInsets.all(10.0),
                               enabledBorder: InputBorder.none,
                               border: InputBorder.none,
-                              hintText: "Type a message",
+                              hintText: "Type your message",
                               hintStyle: TextStyle(
                                 color:
                                     Theme.of(context).textTheme.headline6.color,

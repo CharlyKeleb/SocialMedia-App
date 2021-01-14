@@ -119,8 +119,9 @@ class _ProfileState extends State<Profile> {
                                 Row(
                                   children: [
                                     Visibility(
-                                        visible: false,
-                                        child: SizedBox(width: 10.0)),
+                                      visible: false,
+                                      child: SizedBox(width: 10.0),
+                                    ),
                                     Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -130,9 +131,8 @@ class _ProfileState extends State<Profile> {
                                           child: Text(
                                             user?.username,
                                             style: TextStyle(
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.w900,
-                                            ),
+                                                fontSize: 15.0,
+                                                fontWeight: FontWeight.w900),
                                             maxLines: null,
                                           ),
                                         ),
@@ -143,7 +143,6 @@ class _ProfileState extends State<Profile> {
                                             style: TextStyle(
                                               fontSize: 12.0,
                                               fontWeight: FontWeight.w600,
-                                              //color: Color(0xff4D4D4D),
                                             ),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
@@ -166,17 +165,22 @@ class _ProfileState extends State<Profile> {
                                         ),
                                       ],
                                     ),
-                                    Column(
-                                      children: [
-                                        Icon(CupertinoIcons.chat_bubble_fill,
-                                            color:
-                                                Theme.of(context).accentColor),
-                                        Text(
-                                          'Message',
-                                          style: TextStyle(fontSize: 12.0),
-                                        )
-                                      ],
-                                    ),
+                                    widget.profileId == currentUserId()
+                                        ? Column(
+                                            children: [
+                                              Icon(
+                                                  CupertinoIcons
+                                                      .person_alt_circle,
+                                                  color: Theme.of(context)
+                                                      .accentColor),
+                                              Text(
+                                                'User',
+                                                style:
+                                                    TextStyle(fontSize: 12.0),
+                                              )
+                                            ],
+                                          )
+                                        : buildLikeButton()
                                   ],
                                 ),
                               ],
@@ -192,9 +196,10 @@ class _ProfileState extends State<Profile> {
                                   child: Text(
                                     user?.bio,
                                     style: TextStyle(
-                                        color: Color(0xff4D4D4D),
-                                        fontSize: 10.0,
-                                        fontWeight: FontWeight.w600),
+                                      color: Color(0xff4D4D4D),
+                                      fontSize: 10.0,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                     maxLines: null,
                                   ),
                                 ),
@@ -250,7 +255,6 @@ class _ProfileState extends State<Profile> {
                                     }
                                   },
                                 ),
-                                //buildCount("FOLLOWERS", followersCount),
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 15.0),
                                   child: Container(
@@ -276,7 +280,6 @@ class _ProfileState extends State<Profile> {
                                     }
                                   },
                                 ),
-                                //buildCount("FOLLOWING", followingCount),
                               ],
                             ),
                           ),
@@ -359,24 +362,12 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  // editProfile() {
-  //   Provider.of<EditProfileViewModel>(context, listen: false).setUser(users);
-  //   Navigator.of(context).push(
-  //     MaterialPageRoute(
-  //       builder: (_) => EditProfileDemo(
-  //         user: user,
-  //       ),
-  //     ),
-  //   );
-  // }
-
   buildProfileButton(user) {
     //if isMe then display "edit profile"
     bool isMe = widget.profileId == firebaseAuth.currentUser.uid;
     if (isMe) {
       return buildButton(
           text: "Edit Profile",
-          //function: editProfile,
           function: () {
             Navigator.of(context).push(
               MaterialPageRoute(
@@ -386,11 +377,13 @@ class _ProfileState extends State<Profile> {
               ),
             );
           });
+      //if you are already following the user then "unfollow"
     } else if (isFollowing) {
       return buildButton(
         text: "Unfollow",
         function: handleUnfollow,
       );
+      //if you are not following the user then "follow"
     } else if (!isFollowing) {
       return buildButton(
         text: "Follow",
@@ -475,7 +468,6 @@ class _ProfileState extends State<Profile> {
     setState(() {
       isFollowing = true;
     });
-
     //updates the followers collection of the followed user
     followersRef
         .doc(widget.profileId)
@@ -546,6 +538,54 @@ class _ProfileState extends State<Profile> {
         return PostTile(
           post: posts,
         );
+      },
+    );
+  }
+
+  buildLikeButton() {
+    return StreamBuilder(
+      stream: favUsersRef
+          .where('postId', isEqualTo: widget.profileId)
+          .where('userId', isEqualTo: currentUserId())
+          .snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasData) {
+          List<QueryDocumentSnapshot> docs = snapshot?.data?.docs ?? [];
+          return  GestureDetector(
+              onTap: () {
+                if (docs.isEmpty) {
+                  favUsersRef.add({
+                    'userId': currentUserId(),
+                    'postId': widget.profileId,
+                    'dateCreated': Timestamp.now(),
+                  });
+                } else {
+                  favUsersRef.doc(docs[0].id).delete();
+                }
+              },
+            child: Container(
+              decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey
+                          .withOpacity(0.2),
+                      spreadRadius: 3.0,
+                      blurRadius: 5.0,
+                    )
+                  ],
+                  color: Colors.white,
+                  shape: BoxShape.circle),
+              child: Padding(
+                padding: EdgeInsets.all(3.0),
+                  child: Icon(
+                    docs.isEmpty ? CupertinoIcons.heart : CupertinoIcons.heart_fill,
+                    color: Colors.red,
+                  ),
+              ),
+            ),
+          );
+        }
+        return Container();
       },
     );
   }

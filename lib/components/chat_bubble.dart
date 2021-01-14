@@ -46,18 +46,18 @@ class _ChatBubbleState extends State<ChatBubble> {
   @override
   Widget build(BuildContext context) {
     final align =
-    widget.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start;
+        widget.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start;
     final radius = widget.isMe
         ? BorderRadius.only(
-      topLeft: Radius.circular(5.0),
-      bottomLeft: Radius.circular(5.0),
-      bottomRight: Radius.circular(10.0),
-    )
+            topLeft: Radius.circular(5.0),
+            bottomLeft: Radius.circular(5.0),
+            bottomRight: Radius.circular(10.0),
+          )
         : BorderRadius.only(
-      topRight: Radius.circular(5.0),
-      bottomLeft: Radius.circular(10.0),
-      bottomRight: Radius.circular(5.0),
-    );
+            topRight: Radius.circular(5.0),
+            bottomLeft: Radius.circular(10.0),
+            bottomRight: Radius.circular(5.0),
+          );
     return Column(
       crossAxisAlignment: align,
       children: <Widget>[
@@ -78,22 +78,22 @@ class _ChatBubbleState extends State<ChatBubble> {
             children: <Widget>[
               Padding(
                 padding:
-                EdgeInsets.all(widget.type == MessageType.TEXT ? 5 : 0),
+                    EdgeInsets.all(widget.type == MessageType.TEXT ? 5 : 0),
                 child: widget.type == MessageType.TEXT
                     ? Text(
-                  widget.message,
-                  style: TextStyle(
-                    color: widget.isMe
-                        ? Colors.white
-                        : Theme.of(context).textTheme.headline6.color,
-                  ),
-                )
+                        widget.message,
+                        style: TextStyle(
+                          color: widget.isMe
+                              ? Colors.white
+                              : Theme.of(context).textTheme.headline6.color,
+                        ),
+                      )
                     : CachedNetworkImage(
-                  imageUrl: "${widget.message}",
-                  height: 200,
-                  width: MediaQuery.of(context).size.width / 1.3,
-                  fit: BoxFit.cover,
-                ),
+                        imageUrl: "${widget.message}",
+                        height: 200,
+                        width: MediaQuery.of(context).size.width / 1.3,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ],
           ),
@@ -101,13 +101,13 @@ class _ChatBubbleState extends State<ChatBubble> {
         Padding(
           padding: widget.isMe
               ? EdgeInsets.only(
-            right: 10.0,
-            bottom: 10.0,
-          )
+                  right: 10.0,
+                  bottom: 10.0,
+                )
               : EdgeInsets.only(
-            left: 10.0,
-            bottom: 10.0,
-          ),
+                  left: 10.0,
+                  bottom: 10.0,
+                ),
           child: TextTime(
             child: Text(
               timeago.format(widget.time.toDate()),

@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:social_media_app/chats/recent_chats.dart';
 import 'package:social_media_app/components/stream_builder_wrapper.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/posts_view.dart';
-import 'package:social_media_app/widgets/story_view.dart';
 
 class Timeline extends StatefulWidget {
   @override
@@ -39,6 +37,7 @@ class _TimelineState extends State<Timeline> {
       ),
       body: CustomScrollView(
         slivers: <Widget>[
+          ///StoryView coming soon
        //   SliverAppBar(
             //expandedHeight: 115.0,
           //  flexibleSpace: FlexibleSpaceBar(

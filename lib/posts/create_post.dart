@@ -18,7 +18,6 @@ class CreatePost extends StatefulWidget {
 class _CreatePostState extends State<CreatePost> {
   @override
   Widget build(BuildContext context) {
-
     currentUserId() {
       return firebaseAuth.currentUser.uid;
     }
@@ -26,7 +25,7 @@ class _CreatePostState extends State<CreatePost> {
     PostsViewModel viewModel = Provider.of<PostsViewModel>(context);
     return WillPopScope(
       onWillPop: () async {
-       await viewModel.resetPost();
+        await viewModel.resetPost();
         return true;
       },
       child: ModalProgressHUD(
@@ -50,16 +49,16 @@ class _CreatePostState extends State<CreatePost> {
                   await viewModel.uploadPosts();
                   Navigator.pop(context);
                   viewModel.resetPost();
-
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Text(
                     'Post'.toUpperCase(),
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15.0,
-                        color: Theme.of(context).accentColor),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.0,
+                      color: Theme.of(context).accentColor,
+                    ),
                   ),
                 ),
               )
@@ -146,7 +145,7 @@ class _CreatePostState extends State<CreatePost> {
                 maxLines: null,
                 onChanged: (val) => viewModel.setDescription(val),
               ),
-                  SizedBox(height: 20.0),
+              SizedBox(height: 20.0),
               Text(
                 'Location'.toUpperCase(),
                 style: TextStyle(
@@ -162,7 +161,7 @@ class _CreatePostState extends State<CreatePost> {
                     controller: viewModel.locationTEC,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(0.0),
-                      hintText: 'United State,California!',
+                      hintText: 'United States,Los Angeles!',
                       focusedBorder: UnderlineInputBorder(),
                     ),
                     maxLines: null,

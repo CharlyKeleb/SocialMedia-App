@@ -170,7 +170,8 @@ class _SearchState extends State<Search> {
                             ),
                           ));
                     },
-                    child: Icon(CupertinoIcons.chat_bubble_fill,color:Theme.of(context).accentColor),
+                    child: Icon(CupertinoIcons.chat_bubble_fill,
+                        color: Theme.of(context).accentColor),
                   ),
                 ),
                 Divider(),

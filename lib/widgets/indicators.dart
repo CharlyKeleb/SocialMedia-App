@@ -12,7 +12,6 @@ Center circularProgress(context) {
 
 Container linearProgress(context) {
   return Container(
-   // padding: const EdgeInsets.only(bottom:0.0),
     child: LinearProgressIndicator(
       valueColor: AlwaysStoppedAnimation(Theme.of(context).accentColor),
     ),

@@ -49,7 +49,7 @@ class _PostsState extends State<Posts> {
             buildPostHeader(),
             Container(
               height: 320.0,
-              width: MediaQuery.of(context).size.width - 20.0,
+              width: MediaQuery.of(context).size.width - 18.0,
               child: cachedNetworkImage(widget.post.mediaUrl),
             ),
             ListTile(
@@ -84,7 +84,10 @@ class _PostsState extends State<Posts> {
                     ),
                     SizedBox(width: 5.0),
                     StreamBuilder(
-                      stream:    commentRef.doc(widget.post.postId).collection("comments").snapshots(),
+                      stream: commentRef
+                          .doc(widget.post.postId)
+                          .collection("comments")
+                          .snapshots(),
                       builder:
                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasData) {
@@ -133,17 +136,17 @@ class _PostsState extends State<Posts> {
       ),
     );
   }
-buildCommentsCount(BuildContext context, int count){
-    return
-  Padding(
-    padding: const EdgeInsets.only(top: 0.5),
-    child: Text(
-      '- $count comments',
-      style: TextStyle(
-          fontSize: 8.5, fontWeight: FontWeight.bold),
-    ),
-  );
-}
+
+  buildCommentsCount(BuildContext context, int count) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 0.5),
+      child: Text(
+        '- $count comments',
+        style: TextStyle(fontSize: 8.5, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
   buildPostHeader() {
     bool isMe = currentUserId() == widget.post.ownerId;
     return ListTile(
@@ -154,7 +157,7 @@ buildCommentsCount(BuildContext context, int count){
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: Text(
-        widget.post.location == null ? 'Fluttersocial' : widget.post.location,
+        widget.post.location == null ? 'Wooble' : widget.post.location,
       ),
       trailing: isMe
           ? IconButton(
@@ -162,6 +165,7 @@ buildCommentsCount(BuildContext context, int count){
               onPressed: () => handleDelete(context),
             )
           : IconButton(
+              ///Feature coming soon
               icon: Icon(CupertinoIcons.bookmark, size: 25.0),
               onPressed: () {},
             ),

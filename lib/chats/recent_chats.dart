@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/components/chat_item.dart';
 import 'package:social_media_app/models/message.dart';
@@ -8,18 +9,24 @@ import 'package:social_media_app/view_models/user/user_view_model.dart';
 import 'package:social_media_app/widgets/indicators.dart';
 
 class Chats extends StatelessWidget {
-//   @override
-//   _ChatsState createState() => _ChatsState();
-// }
-
-// class _ChatsState extends State<Chats> {
   @override
   Widget build(BuildContext context) {
     UserViewModel viewModel =
         Provider.of<UserViewModel>(context, listen: false);
+    viewModel.setUser();
     return Scaffold(
       appBar: AppBar(
         title: Text("Chats"),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: GestureDetector(
+              //Feature coming soon
+              onTap: (){},
+              child: Icon(Feather.search),
+            ),
+          )
+        ],
       ),
       body: StreamBuilder(
           stream: userChatsStream('${viewModel.user?.uid ?? ""}'),
@@ -45,11 +52,11 @@ class Chats extends StatelessWidget {
                           String recipient = users[0];
                           return ChatItem(
                             userId: recipient,
-                            messageCount: messages.length,
-                            msg: message.content,
-                            time: message.time,
+                            messageCount: messages?.length,
+                            msg: message?.content,
+                            time: message?.time,
                             chatId: chatListSnapshot.id,
-                            type: message.type,
+                            type: message?.type,
                             currentUserId: viewModel.user?.uid ?? "",
                           );
                         } else {

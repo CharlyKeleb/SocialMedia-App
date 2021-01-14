@@ -16,6 +16,7 @@ class TextFormBuilder extends StatefulWidget {
   final Key key;
   final IconData prefix;
   final IconData suffix;
+
   TextFormBuilder(
       {this.prefix,
       this.suffix,
@@ -40,6 +41,7 @@ class TextFormBuilder extends StatefulWidget {
 
 class _TextFormBuilderState extends State<TextFormBuilder> {
   String error;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
