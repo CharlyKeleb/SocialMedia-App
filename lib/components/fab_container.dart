@@ -1,7 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/success/social_media_app/lib/posts/create_post.dart';
+import '../posts/create_post.dart';
+//import 'file:///C:/Users/success/social_media_app/lib/posts/create_post.dart';
 
 class FabContainer extends StatelessWidget {
   final Widget page;

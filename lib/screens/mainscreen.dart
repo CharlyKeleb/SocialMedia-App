@@ -8,7 +8,6 @@ import 'package:social_media_app/pages/profile.dart';
 import 'package:social_media_app/pages/search.dart';
 import 'package:social_media_app/pages/feeds.dart';
 import 'package:social_media_app/utils/firebase.dart';
-import 'package:social_media_app/widgets/icon_badge.dart';
 
 class TabScreen extends StatefulWidget {
   @override
@@ -103,6 +102,8 @@ class _TabScreenState extends State<TabScreen> {
     return Container(
       height: 45.0,
       width: 45.0,
+      // TODO REMOVE THAt a shit
+      // ignore: missing_required_param
       child: FabContainer(
         // page: Publication(),
         icon: Feather.plus,

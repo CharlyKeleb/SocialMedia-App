@@ -22,8 +22,8 @@ class _SearchState extends State<Search> {
   TextEditingController searchController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  List<DocumentSnapshot> users = List();
-  List<DocumentSnapshot> filteredUsers = List();
+  List<DocumentSnapshot> users = [];
+  List<DocumentSnapshot> filteredUsers = [];
   bool loading = true;
 
   currentUserId() {
