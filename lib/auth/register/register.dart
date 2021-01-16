@@ -26,11 +26,12 @@ class _RegisterState extends State<Register> {
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
           children: [
+            SizedBox(height:10.0),
             Text(
               'Welcome to Wooble Social App..\nCreate a new account and connect with friends',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 14.0,
+                  fontSize: 18.0,
                   fontFamily: 'Roboto-Regular'),
             ),
             SizedBox(height: 30.0),
@@ -81,7 +82,7 @@ class _RegisterState extends State<Register> {
             focusNode: viewModel.usernameFN,
             nextFocusNode: viewModel.emailFN,
           ),
-          SizedBox(height: 15.0),
+          SizedBox(height: 20.0),
           TextFormBuilder(
             enabled: !viewModel.loading,
             prefix: Feather.mail,
@@ -94,7 +95,7 @@ class _RegisterState extends State<Register> {
             focusNode: viewModel.emailFN,
             nextFocusNode: viewModel.countryFN,
           ),
-          SizedBox(height: 15.0),
+          SizedBox(height: 20.0),
           TextFormBuilder(
             enabled: !viewModel.loading,
             prefix: Feather.map_pin,
@@ -107,7 +108,7 @@ class _RegisterState extends State<Register> {
             focusNode: viewModel.countryFN,
             nextFocusNode: viewModel.passFN,
           ),
-          SizedBox(height: 15.0),
+          SizedBox(height: 20.0),
           PasswordFormBuilder(
             enabled: !viewModel.loading,
             prefix: Feather.lock,
@@ -122,7 +123,7 @@ class _RegisterState extends State<Register> {
             focusNode: viewModel.passFN,
             nextFocusNode: viewModel.cPassFN,
           ),
-          SizedBox(height: 15.0),
+          SizedBox(height: 20.0),
           PasswordFormBuilder(
             enabled: !viewModel.loading,
             prefix: Feather.lock,

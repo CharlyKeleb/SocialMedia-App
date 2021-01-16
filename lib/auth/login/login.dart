@@ -23,13 +23,15 @@ class _LoginState extends State<Login> {
       progressIndicator: circularProgress(context),
       inAsyncCall: viewModel.loading,
       child: Scaffold(
+        backgroundColor: Colors.white,
         key: viewModel.scaffoldKey,
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 15.0),
           children: [
             SizedBox(height: 60.0),
             Container(
-              height: 130.0,
+              height: 170.0,
+              width: MediaQuery.of(context).size.width,
               child: Image.asset(
                 'assets/images/login.png',
               ),

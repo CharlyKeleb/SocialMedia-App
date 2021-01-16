@@ -167,21 +167,24 @@ class PostsViewModel extends ChangeNotifier {
   }
 
   uploadProfilePicture(BuildContext context) async {
-    try {
-      loading = true;
-      notifyListeners();
-
-      await postService.uploadProfilePicture(
-          mediaUrl, firebaseAuth.currentUser);
-      loading = false;
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => TabScreen()));
-      notifyListeners();
-    } catch (e) {
-      print(e);
-      loading = false;
-      showInSnackBar('Uploaded successfully!');
-      notifyListeners();
+    if (mediaUrl == null) {
+      showInSnackBar('Please select an image');
+    } else {
+      try {
+        loading = true;
+        notifyListeners();
+        await postService.uploadProfilePicture(
+            mediaUrl, firebaseAuth.currentUser);
+        loading = false;
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (_) => TabScreen()));
+        notifyListeners();
+      } catch (e) {
+        print(e);
+        loading = false;
+        showInSnackBar('Uploaded successfully!');
+        notifyListeners();
+      }
     }
   }
 
