@@ -216,7 +216,7 @@ class _ProfileState extends State<Profile> {
                                 StreamBuilder(
                                   stream: postRef
                                       .where('ownerId',
-                                          isEqualTo: currentUserId())
+                                          isEqualTo: widget.profileId)
                                       .snapshots(),
                                   builder: (context,
                                       AsyncSnapshot<QuerySnapshot> snapshot) {

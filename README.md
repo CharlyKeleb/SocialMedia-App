@@ -26,6 +26,7 @@ Star⭐ the repo if you like what you see😉.
    * Add your own bio
  * Notifications Feed showing recent likes / comments of your posts + new followers
  * Swipe to delete notification
+ * Used Provider to manage state
  
 
 ## Screenshots
