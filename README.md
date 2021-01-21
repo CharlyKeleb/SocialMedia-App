@@ -30,7 +30,7 @@ Star⭐ the repo if you like what you see😉.
 
 ## Screenshots
 <p>
-<img src="ss/w10.jp" width="400"/><img src="ss/w11.jg" width="400"/>
+<img src="ss/w10.jpg" width="400"/><img src="ss/w11.jpg" width="400"/>
 <img src="ss/w12.jpg" width="400"> <img src="ss/w7.jpg" width="400">
 <img src="ss/w8.jpg" width="400"> <img src="ss/w1.jpg" width="400">
 <img src="ss/w9.jpg" width="400"> <img src="ss/w5.jpg" width="400">
