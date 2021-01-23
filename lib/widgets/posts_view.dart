@@ -55,7 +55,7 @@ class _PostsState extends State<Posts> {
             ListTile(
               contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
               title: Text(
-                widget.post.description,
+                widget.post.description == null ? "" : widget.post.description,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
               ),
