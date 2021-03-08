@@ -35,8 +35,9 @@ class _CommentsState extends State<Comments> {
           onTap: () {
             Navigator.pop(context);
           },
-          child: Icon(CupertinoIcons.xmark_circle_fill,
-              ),
+          child: Icon(
+            CupertinoIcons.xmark_circle_fill,
+          ),
         ),
         centerTitle: true,
         title: Text('Comments'),
@@ -52,7 +53,7 @@ class _CommentsState extends State<Comments> {
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: buildFullPost(),
                   ),
-                  Divider(thickness:1.5),
+                  Divider(thickness: 1.5),
                   Flexible(
                     child: buildComments(),
                   )
@@ -64,7 +65,6 @@ class _CommentsState extends State<Comments> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
-                 
                 ),
                 constraints: BoxConstraints(
                   maxHeight: 190.0,
@@ -130,44 +130,93 @@ class _CommentsState extends State<Comments> {
   buildFullPost() {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment:MainAxisAlignment.start,
+      crossAxisAlignment:CrossAxisAlignment.start,
       children: [
         Container(
           height: 250.0,
           width: MediaQuery.of(context).size.width - 20.0,
           child: cachedNetworkImage(widget.post.mediaUrl),
         ),
-        ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
-            title: Text(
-              widget.post.description,
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
-            ),
-            subtitle: Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Row(
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+           
+            children: [
+              Column(
+                mainAxisAlignment:MainAxisAlignment.start,
+      crossAxisAlignment:CrossAxisAlignment.start,
                 children: [
                   Text(
-                    timeago.format(widget.post.timestamp.toDate()),style:TextStyle(),
+                    widget.post.description,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
-                  SizedBox(width: 3.0),
-                  StreamBuilder(
-                    stream: likesRef
-                        .where('postId', isEqualTo: widget.post.postId)
-                        .snapshots(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasData) {
-                        QuerySnapshot snap = snapshot.data;
-                        List<DocumentSnapshot> docs = snap.docs;
-                        return buildLikesCount(context, docs?.length ?? 0);
-                      } else {
-                        return buildLikesCount(context, 0);
-                      }
-                    },
+                  SizedBox(height: 4.0),
+                  Row(
+                    children: [
+                      Text(
+                        timeago.format(widget.post.timestamp.toDate()),
+                        style: TextStyle(),
+                      ),
+                      SizedBox(width: 3.0),
+                      StreamBuilder(
+                        stream: likesRef
+                            .where('postId', isEqualTo: widget.post.postId)
+                            .snapshots(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            QuerySnapshot snap = snapshot.data;
+                            List<DocumentSnapshot> docs = snap.docs;
+                            return buildLikesCount(context, docs?.length ?? 0);
+                          } else {
+                            return buildLikesCount(context, 0);
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ),
-            trailing: buildLikeButton()),
+              Spacer(),
+              buildLikeButton(),
+            ],
+          ),
+        ),
+        // ListTile(
+        //     contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+        //     title: Text(
+        //       widget.post.description,
+        //       style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
+        //     ),
+        //     subtitle: Padding(
+        //       padding: const EdgeInsets.only(top: 8.0),
+        //       child: Row(
+        //         children: [
+        //           Text(
+        //             timeago.format(widget.post.timestamp.toDate()),style:TextStyle(),
+        //           ),
+        //           SizedBox(width: 3.0),
+        //           StreamBuilder(
+        //             stream: likesRef
+        //                 .where('postId', isEqualTo: widget.post.postId)
+        //                 .snapshots(),
+        //             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        //               if (snapshot.hasData) {
+        //                 QuerySnapshot snap = snapshot.data;
+        //                 List<DocumentSnapshot> docs = snap.docs;
+        //                 return buildLikesCount(context, docs?.length ?? 0);
+        //               } else {
+        //                 return buildLikesCount(context, 0);
+        //               }
+        //             },
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //     trailing: buildLikeButton()),
       ],
     );
   }

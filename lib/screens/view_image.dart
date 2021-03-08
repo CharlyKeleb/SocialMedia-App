@@ -34,23 +34,35 @@ class _ViewImageState extends State<ViewImage> {
         child: buildImage(context),
       ),
       bottomNavigationBar: BottomAppBar(
-        elevation: 0.0,
-        color: Colors.transparent,
-        child: ListTile(
-          title: Text(
-            widget.post.username,
-            style: TextStyle(fontWeight: FontWeight.w800),
-          ),
-          subtitle: Row(
-            children: [
-              Icon(Feather.clock, size: 13.0),
-              SizedBox(width: 3.0),
-              Text(timeago.format(widget.post.timestamp.toDate())),
-            ],
-          ),
-          trailing: buildLikeButton(),
-        ),
-      ),
+          elevation: 0.0,
+          color: Colors.transparent,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              height: 40.0,
+              width: MediaQuery.of(context).size.width,
+              child: Row(children: [
+                Column(
+                  children: [
+                    Text(
+                      widget.post.username,
+                      style: TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                    SizedBox(height: 3.0),
+                    Row(
+                      children: [
+                        Icon(Feather.clock, size: 13.0),
+                        SizedBox(width: 3.0),
+                        Text(timeago.format(widget.post.timestamp.toDate())),
+                      ],
+                    ),
+                  ],
+                ),
+                Spacer(),
+                buildLikeButton(),
+              ]),
+            ),
+          )),
     );
   }
 

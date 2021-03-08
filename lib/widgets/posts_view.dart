@@ -52,73 +52,78 @@ class _PostsState extends State<Posts> {
               width: MediaQuery.of(context).size.width - 18.0,
               child: cachedNetworkImage(widget.post.mediaUrl),
             ),
-            ListTile(
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
-              title: Text(
-                widget.post.description == null ? "" : widget.post.description,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
-              ),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Row(
+            Flexible(
+              child: ListTile(
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
+                title: Text(
+                  widget.post.description == null
+                      ? ""
+                      : widget.post.description,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
+                ),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        timeago.format(widget.post.timestamp.toDate()),
+                      ),
+                      SizedBox(width: 3.0),
+                      StreamBuilder(
+                        stream: likesRef
+                            .where('postId', isEqualTo: widget.post.postId)
+                            .snapshots(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            QuerySnapshot snap = snapshot.data;
+                            List<DocumentSnapshot> docs = snap.docs;
+                            return buildLikesCount(context, docs?.length ?? 0);
+                          } else {
+                            return buildLikesCount(context, 0);
+                          }
+                        },
+                      ),
+                      SizedBox(width: 5.0),
+                      StreamBuilder(
+                        stream: commentRef
+                            .doc(widget.post.postId)
+                            .collection("comments")
+                            .snapshots(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            QuerySnapshot snap = snapshot.data;
+                            List<DocumentSnapshot> docs = snap.docs;
+                            return buildCommentsCount(
+                                context, docs?.length ?? 0);
+                          } else {
+                            return buildCommentsCount(context, 0);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                trailing: Wrap(
                   children: [
-                    Text(
-                      timeago.format(widget.post.timestamp.toDate()),
-                    ),
-                    SizedBox(width: 3.0),
-                    StreamBuilder(
-                      stream: likesRef
-                          .where('postId', isEqualTo: widget.post.postId)
-                          .snapshots(),
-                      builder:
-                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasData) {
-                          QuerySnapshot snap = snapshot.data;
-                          List<DocumentSnapshot> docs = snap.docs;
-                          return buildLikesCount(context, docs?.length ?? 0);
-                        } else {
-                          return buildLikesCount(context, 0);
-                        }
-                      },
-                    ),
-                    SizedBox(width: 5.0),
-                    StreamBuilder(
-                      stream: commentRef
-                          .doc(widget.post.postId)
-                          .collection("comments")
-                          .snapshots(),
-                      builder:
-                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasData) {
-                          QuerySnapshot snap = snapshot.data;
-                          List<DocumentSnapshot> docs = snap.docs;
-                          return buildCommentsCount(context, docs?.length ?? 0);
-                        } else {
-                          return buildCommentsCount(context, 0);
-                        }
+                    buildLikeButton(),
+                    IconButton(
+                      icon: Icon(
+                        CupertinoIcons.chat_bubble,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          CupertinoPageRoute(
+                            builder: (_) => Comments(post: widget.post),
+                          ),
+                        );
                       },
                     ),
                   ],
                 ),
-              ),
-              trailing: Wrap(
-                children: [
-                  buildLikeButton(),
-                  IconButton(
-                    icon: Icon(
-                      CupertinoIcons.chat_bubble,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        CupertinoPageRoute(
-                          builder: (_) => Comments(post: widget.post),
-                        ),
-                      );
-                    },
-                  ),
-                ],
               ),
             ),
           ],
@@ -153,26 +158,27 @@ class _PostsState extends State<Posts> {
   Widget buildPostHeader() {
     bool isMe = currentUserId() == widget.post.ownerId;
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
-      leading: buildUserDp(),
-      title: Text(
-        widget.post.username,
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      subtitle: Text(
-        widget.post.location == null ? 'Wooble' : widget.post.location,
-      ),
-      trailing: isMe
-          ? IconButton(
-              icon: Icon(Feather.more_horizontal),
-              onPressed: () => handleDelete(context),
-            )
-          : IconButton(
-              ///Feature coming soon
-              icon: Icon(CupertinoIcons.bookmark, size: 25.0),
-              onPressed: () {},
-            ),
-    );
+        contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
+        leading: buildUserDp(),
+        title: Text(
+    widget.post.username,
+    style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+    widget.post.location == null ? 'Wooble' : widget.post.location,
+        ),
+        trailing: isMe
+      ? IconButton(
+          icon: Icon(Feather.more_horizontal),
+          onPressed: () => handleDelete(context),
+        )
+      : IconButton(
+          ///Feature coming soon
+          icon: Icon(CupertinoIcons.bookmark, size: 25.0),
+          onPressed: () {},
+        ),
+      );
+
   }
 
   buildUserDp() {

@@ -30,7 +30,7 @@ class UserPost extends StatelessWidget {
       onTap: null,
       borderRadius: BorderRadius.circular(10.0),
       child: OpenContainer(
-        transitionType: ContainerTransitionType.fade,
+        //transitionType: ContainerTransitionType.fade,
         openBuilder: (BuildContext context, VoidCallback _) {
           return ViewImage(post: post);
         },

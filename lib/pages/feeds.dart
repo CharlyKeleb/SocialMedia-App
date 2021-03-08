@@ -8,18 +8,9 @@ import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/userpost.dart';
 
-class Timeline extends StatefulWidget {
-  @override
-  _TimelineState createState() => _TimelineState();
-}
-
-class _TimelineState extends State<Timeline>{
-  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-  currentUserId() {
-    return firebaseAuth.currentUser?.uid;
-  }
-
+class Timeline extends StatelessWidget {
+  
+ final  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -50,16 +41,15 @@ class _TimelineState extends State<Timeline>{
         children: [
           StreamBuilderWrapper(
             shrinkWrap: true,
-            stream:
-                postRef.orderBy('timestamp', descending: true).snapshots(),
+            stream: postRef.orderBy('timestamp', descending: true).snapshots(),
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (_, DocumentSnapshot snapshot) {
               internetChecker();
               PostModel posts = PostModel.fromJson(snapshot.data());
               return Padding(
                 padding: const EdgeInsets.only(bottom: 12.0),
-              //  child: Posts(post: posts),
-              child:UserPost(post: posts),
+                //  child: Posts(post: posts),
+                child: UserPost(post: posts),
               );
             },
           ),
