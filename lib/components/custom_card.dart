@@ -20,17 +20,6 @@ class CustomCard extends StatelessWidget {
           ? BoxDecoration(
               borderRadius: borderRadius,
               color: Theme.of(context).cardColor,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey[300].withOpacity(0.8),
-                  blurRadius: 8.0,
-                  spreadRadius: 0.0,
-                  offset: Offset(
-                    0.0,
-                    2.0,
-                  ),
-                ),
-              ],
             )
           : BoxDecoration(
               borderRadius: borderRadius,

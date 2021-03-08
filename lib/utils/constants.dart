@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Constants {
   //App related strings
   static String appName = "Social App";
 
   //Colors for theme
-  static Color lightPrimary = Color(0xfffcfcff);
+  static Color lightPrimary = Color(0xfff3f4f9);
   static Color darkPrimary = Color(0xff2B2B2B);
 
   static Color lightAccent = Color(0xff886EE4);
@@ -37,6 +38,7 @@ class Constants {
         ),
       ),
     ),
+     
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -47,6 +49,10 @@ class Constants {
     accentColor: darkAccent,
     scaffoldBackgroundColor: darkBG,
     cursorColor: darkAccent,
+     bottomAppBarTheme: BottomAppBarTheme(
+      elevation: 0,
+      color: darkBG,
+    ),
     appBarTheme: AppBarTheme(
       elevation: 0,
       textTheme: TextTheme(
@@ -69,3 +75,35 @@ class Constants {
     return result;
   }
 }
+
+class ThemeNotifier extends ChangeNotifier {
+  final String key = 'theme';
+  SharedPreferences _prefs;
+  bool _darkTheme;
+  bool get dark => _darkTheme;
+
+  ThemeNotifier() {
+    _darkTheme = true;
+    _loadfromPrefs();
+  }
+  toggleTheme(){
+    _darkTheme = !_darkTheme;
+    _saveToPrefs();
+    notifyListeners();
+  }
+
+  _initPrefs()async{
+    if(_prefs == null)
+      _prefs = await SharedPreferences.getInstance();
+  }
+  _loadfromPrefs()async{
+    await _initPrefs();
+    _darkTheme = _prefs.getBool(key) ?? true;
+    notifyListeners();
+  }
+  _saveToPrefs()async{
+    await _initPrefs();
+    _prefs.setBool(key, _darkTheme);
+  }
+}
+

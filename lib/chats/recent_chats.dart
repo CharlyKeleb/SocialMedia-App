@@ -17,16 +17,16 @@ class Chats extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Chats"),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: GestureDetector(
-              //Feature coming soon
-              onTap: (){},
-              child: Icon(Feather.search),
-            ),
-          )
-        ],
+        // actions: [
+        //   Padding(
+        //     padding: const EdgeInsets.all(15.0),
+        //     child: GestureDetector(
+        //       //Feature coming soon
+        //       onTap: (){},
+        //       child: Icon(Feather.search),
+        //     ),
+        //   )
+        // ],
       ),
       body: StreamBuilder(
           stream: userChatsStream('${viewModel.user?.uid ?? ""}'),

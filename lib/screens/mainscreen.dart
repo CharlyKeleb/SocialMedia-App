@@ -83,7 +83,7 @@ class _TabScreenState extends State<TabScreen> {
                         icon: Icon(
                           item['icon'],
                           color: item['index'] != _page
-                              ? Colors.black
+                              ? Colors.grey
                               : Theme.of(context).accentColor,
                           size: 20.0,
                         ),
@@ -93,7 +93,6 @@ class _TabScreenState extends State<TabScreen> {
             SizedBox(width: 5),
           ],
         ),
-        color: Colors.white,
       ),
     );
   }
@@ -102,7 +101,6 @@ class _TabScreenState extends State<TabScreen> {
     return Container(
       height: 45.0,
       width: 45.0,
-      // TODO REMOVE THAt a shit
       // ignore: missing_required_param
       child: FabContainer(
         // page: Publication(),

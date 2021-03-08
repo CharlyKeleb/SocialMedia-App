@@ -34,19 +34,23 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: providers,
-      child: MaterialApp(
-        title: Constants.appName,
-        debugShowCheckedModeBanner: false,
-        theme: Constants.lightTheme,
-        home: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-            if (snapshot.hasData) {
-              return TabScreen();
-            }
-            return Landing();
-          },
-        ),
+      child: Consumer<ThemeNotifier>(
+        builder: (context, ThemeNotifier notifier, child) {
+          return MaterialApp(
+            title: Constants.appName,
+            debugShowCheckedModeBanner: false,
+            theme:notifier.dark ? Constants.darkTheme : Constants.lightTheme,
+            home: StreamBuilder(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+                if (snapshot.hasData) {
+                  return TabScreen();
+                } else
+                  return Landing();
+              },
+            ),
+          );
+        },
       ),
     );
   }

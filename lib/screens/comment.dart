@@ -36,10 +36,10 @@ class _CommentsState extends State<Comments> {
             Navigator.pop(context);
           },
           child: Icon(CupertinoIcons.xmark_circle_fill,
-              color: Theme.of(context).accentColor),
+              ),
         ),
         centerTitle: true,
-        title: Text('COMMENTS'),
+        title: Text('Comments'),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -50,14 +50,9 @@ class _CommentsState extends State<Comments> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: buildFullPost(),
-                    ),
+                    child: buildFullPost(),
                   ),
+                  Divider(thickness:1.5),
                   Flexible(
                     child: buildComments(),
                   )
@@ -69,13 +64,7 @@ class _CommentsState extends State<Comments> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey[500],
-                      offset: Offset(0.0, 1.5),
-                      blurRadius: 4.0,
-                    ),
-                  ],
+                 
                 ),
                 constraints: BoxConstraints(
                   maxHeight: 190.0,
@@ -142,7 +131,6 @@ class _CommentsState extends State<Comments> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        buildPostHeader(),
         Container(
           height: 250.0,
           width: MediaQuery.of(context).size.width - 20.0,
@@ -159,7 +147,7 @@ class _CommentsState extends State<Comments> {
               child: Row(
                 children: [
                   Text(
-                    timeago.format(widget.post.timestamp.toDate()),
+                    timeago.format(widget.post.timestamp.toDate()),style:TextStyle(),
                   ),
                   SizedBox(width: 3.0),
                   StreamBuilder(
@@ -181,36 +169,6 @@ class _CommentsState extends State<Comments> {
             ),
             trailing: buildLikeButton()),
       ],
-    );
-  }
-
-  buildPostHeader() {
-    return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
-      leading: buildUserDp(),
-      title: Text(
-        widget.post.username,
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      subtitle: Text(
-        widget.post.location,
-      ),
-    );
-  }
-
-  buildUserDp() {
-    return StreamBuilder(
-      stream: usersRef.doc(widget.post.ownerId).snapshots(),
-      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasData) {
-          UserModel user = UserModel.fromJson(snapshot.data.data());
-          return CircleAvatar(
-            radius: 25.0,
-            backgroundImage: NetworkImage(user.photoUrl),
-          );
-        }
-        return Container();
-      },
     );
   }
 

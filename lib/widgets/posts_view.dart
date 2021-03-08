@@ -29,18 +29,18 @@ class _PostsState extends State<Posts> {
     return firebaseAuth.currentUser.uid;
   }
 
-  UserModel user;
+  //UserModel user;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => ViewImage(post: widget.post)));
+            CupertinoPageRoute(builder: (_) => ViewImage(post: widget.post)));
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.black12,
           borderRadius: BorderRadius.circular(5.0),
         ),
         child: Column(
@@ -53,7 +53,8 @@ class _PostsState extends State<Posts> {
               child: cachedNetworkImage(widget.post.mediaUrl),
             ),
             ListTile(
-              contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
               title: Text(
                 widget.post.description == null ? "" : widget.post.description,
                 overflow: TextOverflow.ellipsis,
@@ -102,21 +103,23 @@ class _PostsState extends State<Posts> {
                   ],
                 ),
               ),
-              trailing: Wrap(children: [
-                buildLikeButton(),
-                IconButton(
-                  icon: Icon(
-                    CupertinoIcons.chat_bubble,
+              trailing: Wrap(
+                children: [
+                  buildLikeButton(),
+                  IconButton(
+                    icon: Icon(
+                      CupertinoIcons.chat_bubble,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        CupertinoPageRoute(
+                          builder: (_) => Comments(post: widget.post),
+                        ),
+                      );
+                    },
                   ),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => Comments(post: widget.post),
-                      ),
-                    );
-                  },
-                ),
-              ]),
+                ],
+              ),
             ),
           ],
         ),
@@ -141,13 +144,13 @@ class _PostsState extends State<Posts> {
     return Padding(
       padding: const EdgeInsets.only(top: 0.5),
       child: Text(
-        '- $count comments',
+        '-   $count comments',
         style: TextStyle(fontSize: 8.5, fontWeight: FontWeight.bold),
       ),
     );
   }
 
-  buildPostHeader() {
+  Widget buildPostHeader() {
     bool isMe = currentUserId() == widget.post.ownerId;
     return ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
@@ -211,7 +214,6 @@ class _PostsState extends State<Posts> {
                 addLikesToNotification();
               } else {
                 likesRef.doc(docs[0].id).delete();
-
                 removeLikeFromNotification();
               }
             },
@@ -326,7 +328,7 @@ class _PostsState extends State<Posts> {
   showProfile(BuildContext context, {String profileId}) {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      CupertinoPageRoute(
         builder: (_) => Profile(profileId: profileId),
       ),
     );

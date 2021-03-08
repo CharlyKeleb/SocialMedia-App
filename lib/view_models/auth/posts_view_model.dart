@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -177,7 +178,7 @@ class PostsViewModel extends ChangeNotifier {
             mediaUrl, firebaseAuth.currentUser);
         loading = false;
         Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (_) => TabScreen()));
+            .pushReplacement(CupertinoPageRoute(builder: (_) => TabScreen()));
         notifyListeners();
       } catch (e) {
         print(e);

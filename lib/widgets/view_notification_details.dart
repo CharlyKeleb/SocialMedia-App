@@ -37,7 +37,7 @@ class _ViewActivityDetailsState extends State<ViewActivityDetails> {
               onTap: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    CupertinoPageRoute(
                       builder: (_) =>
                           Profile(profileId: widget.activity.userId),
                     ));

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/screens/mainscreen.dart';
@@ -32,7 +33,7 @@ class LoginViewModel extends ChangeNotifier {
         print(success);
         if (success) {
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => TabScreen()));
+              CupertinoPageRoute(builder: (_) => TabScreen()));
         }
       } catch (e) {
         loading = false;

@@ -88,7 +88,7 @@ class FabContainer extends StatelessWidget {
                   Navigator.pop(context);
 
                   Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => CreatePost()));
+                      .push(CupertinoPageRoute(builder: (_) => CreatePost()));
                 },
               ),
             ],

@@ -9,6 +9,7 @@ import 'package:social_media_app/components/stream_grid_wrapper.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/models/user.dart';
 import 'package:social_media_app/screens/edit_profile.dart';
+import 'package:social_media_app/screens/settings.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/post_tiles.dart';
 import 'package:social_media_app/widgets/posts_view.dart';
@@ -22,7 +23,7 @@ class Profile extends StatefulWidget {
   _ProfileState createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileState extends State<Profile>  {
   User user;
   bool isLoading = false;
   int postCount = 0;
@@ -60,7 +61,7 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('FlutterSocial'),
+        title: Text('WOOBLE'),
         actions: [
           widget.profileId == firebaseAuth.currentUser.uid
               ? Center(
@@ -70,7 +71,7 @@ class _ProfileState extends State<Profile> {
                       onTap: () {
                         firebaseAuth.signOut();
                         Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => Register()));
+                            CupertinoPageRoute(builder: (_) => Register()));
                       },
                       child: Text(
                         'Log Out',
@@ -157,7 +158,7 @@ class _ProfileState extends State<Profile> {
                                             Text(
                                               user?.email,
                                               style: TextStyle(
-                                                color: Color(0xff4D4D4D),
+                                                // color: Color(0xff4D4D4D),
                                                 fontSize: 10.0,
                                               ),
                                             ),
@@ -166,19 +167,26 @@ class _ProfileState extends State<Profile> {
                                       ],
                                     ),
                                     widget.profileId == currentUserId()
-                                        ? Column(
-                                            children: [
-                                              Icon(
-                                                  CupertinoIcons
-                                                      .person_alt_circle,
-                                                  color: Theme.of(context)
-                                                      .accentColor),
-                                              Text(
-                                                'User',
-                                                style:
-                                                    TextStyle(fontSize: 12.0),
-                                              )
-                                            ],
+                                        ? InkWell(
+                                            onTap: () {
+                                              Navigator.of(context).push(
+                                                CupertinoPageRoute(
+                                                  builder: (_) => Setting(),
+                                                ),
+                                              );
+                                            },
+                                            child: Column(
+                                              children: [
+                                                Icon(CupertinoIcons.settings,
+                                                    color: Theme.of(context)
+                                                        .accentColor),
+                                                Text(
+                                                  'settings',
+                                                  style:
+                                                      TextStyle(fontSize: 11.5),
+                                                )
+                                              ],
+                                            ),
                                           )
                                         : buildLikeButton()
                                   ],
@@ -196,7 +204,7 @@ class _ProfileState extends State<Profile> {
                                   child: Text(
                                     user?.bio,
                                     style: TextStyle(
-                                      color: Color(0xff4D4D4D),
+                                      //    color: Color(0xff4D4D4D),
                                       fontSize: 10.0,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -293,26 +301,31 @@ class _ProfileState extends State<Profile> {
               ),
             ),
           ),
-          SliverList(delegate:
-              SliverChildBuilderDelegate((BuildContext context, int index) {
-            if (index > 0) return null;
-            return Column(children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Row(
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                if (index > 0) return null;
+                return Column(
                   children: [
-                    Text(
-                      'All Posts',
-                      style: TextStyle(fontWeight: FontWeight.w900),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            'All Posts',
+                            style: TextStyle(fontWeight: FontWeight.w900),
+                          ),
+                          Spacer(),
+                          buildIcons(),
+                        ],
+                      ),
                     ),
-                    Spacer(),
-                    buildIcons(),
+                    buildPostView()
                   ],
-                ),
-              ),
-              buildPostView()
-            ]);
-          }))
+                );
+              },
+            ),
+          )
         ],
       ),
     );
@@ -370,7 +383,7 @@ class _ProfileState extends State<Profile> {
           text: "Edit Profile",
           function: () {
             Navigator.of(context).push(
-              MaterialPageRoute(
+              CupertinoPageRoute(
                 builder: (_) => EditProfile(
                   user: user,
                 ),
@@ -551,36 +564,34 @@ class _ProfileState extends State<Profile> {
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
           List<QueryDocumentSnapshot> docs = snapshot?.data?.docs ?? [];
-          return  GestureDetector(
-              onTap: () {
-                if (docs.isEmpty) {
-                  favUsersRef.add({
-                    'userId': currentUserId(),
-                    'postId': widget.profileId,
-                    'dateCreated': Timestamp.now(),
-                  });
-                } else {
-                  favUsersRef.doc(docs[0].id).delete();
-                }
-              },
+          return GestureDetector(
+            onTap: () {
+              if (docs.isEmpty) {
+                favUsersRef.add({
+                  'userId': currentUserId(),
+                  'postId': widget.profileId,
+                  'dateCreated': Timestamp.now(),
+                });
+              } else {
+                favUsersRef.doc(docs[0].id).delete();
+              }
+            },
             child: Container(
-              decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey
-                          .withOpacity(0.2),
-                      spreadRadius: 3.0,
-                      blurRadius: 5.0,
-                    )
-                  ],
-                  color: Colors.white,
-                  shape: BoxShape.circle),
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 3.0,
+                  blurRadius: 5.0,
+                )
+              ], color: Colors.white, shape: BoxShape.circle),
               child: Padding(
                 padding: EdgeInsets.all(3.0),
-                  child: Icon(
-                    docs.isEmpty ? CupertinoIcons.heart : CupertinoIcons.heart_fill,
-                    color: Colors.red,
-                  ),
+                child: Icon(
+                  docs.isEmpty
+                      ? CupertinoIcons.heart
+                      : CupertinoIcons.heart_fill,
+                  color: Colors.red,
+                ),
               ),
             ),
           );

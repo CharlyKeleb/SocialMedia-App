@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -46,7 +47,7 @@ class _RegisterState extends State<Register> {
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (_) => Login()));
+                        .push(CupertinoPageRoute(builder: (_) => Login()));
                   },
                   child: Text(
                     'Login',

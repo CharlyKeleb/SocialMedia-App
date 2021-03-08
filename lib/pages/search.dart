@@ -60,6 +60,7 @@ class _SearchState extends State<Search> {
     filteredUsers.removeAt(index);
   }
 
+
   @override
   void initState() {
     getUsers();
@@ -83,7 +84,7 @@ class _SearchState extends State<Search> {
           height: 35.0,
           width: MediaQuery.of(context).size.width - 100,
           decoration: BoxDecoration(
-            color: Colors.grey[300],
+            color: Colors.black26,
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: Padding(
@@ -162,16 +163,36 @@ class _SearchState extends State<Search> {
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => Conversation(
-                              userId: doc.id,
-                              chatId: 'newChat',
-                            ),
-                          ));
+                        context,
+                        CupertinoPageRoute(
+                          builder: (_) => Conversation(
+                            userId: doc.id,
+                            chatId: 'newChat',
+                          ),
+                        ),
+                      );
                     },
-                    child: Icon(CupertinoIcons.chat_bubble_fill,
-                        color: Theme.of(context).accentColor),
+                    // child: Icon(CupertinoIcons.chat_bubble_fill,
+                    //     color: Theme.of(context).accentColor),
+                    child: Container(
+                      height: 30.0,
+                      width: 60.0,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).accentColor,
+                        borderRadius: BorderRadius.circular(3.0),
+                        // border:
+                        //     Border.all(color: Theme.of(context).accentColor),
+                      ),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text('Message',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 Divider(),
@@ -189,9 +210,10 @@ class _SearchState extends State<Search> {
 
   showProfile(BuildContext context, {String profileId}) {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => Profile(profileId: profileId),
-        ));
+      context,
+      CupertinoPageRoute(
+        builder: (_) => Profile(profileId: profileId),
+      ),
+    );
   }
 }

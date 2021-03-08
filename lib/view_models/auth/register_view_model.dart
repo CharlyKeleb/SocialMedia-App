@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/auth/register/profile_pic.dart';
@@ -37,7 +38,7 @@ class RegisterViewModel extends ChangeNotifier {
           print(success);
           if (success) {
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => ProfilePicture()));
+                CupertinoPageRoute(builder: (_) => ProfilePicture()));
           }
         } catch (e) {
           loading = false;

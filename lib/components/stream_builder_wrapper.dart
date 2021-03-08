@@ -36,6 +36,8 @@ class StreamBuilderWrapper extends StatelessWidget {
               ? Padding(
                   padding: const EdgeInsets.only(top: 100.0),
                   child: Container(
+                    height: 60.0,
+                    width: 100.0,
                     child: Center(
                       child: Text('No Posts'),
                     ),

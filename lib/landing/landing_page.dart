@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/auth/login/login.dart';
 import 'package:social_media_app/auth/register/register.dart';
@@ -50,7 +51,7 @@ class _LandingState extends State<Landing> {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
+                    CupertinoPageRoute(
                       builder: (_) => Login(),
                     ),
                   );
@@ -84,7 +85,7 @@ class _LandingState extends State<Landing> {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => Register()));
+                      CupertinoPageRoute(builder: (_) => Register()));
                 },
                 child: Container(
                   height: 45.0,

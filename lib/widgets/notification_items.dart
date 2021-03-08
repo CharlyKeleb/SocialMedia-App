@@ -20,18 +20,18 @@ class ActivityItems extends StatefulWidget {
 class _ActivityItemsState extends State<ActivityItems> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Dismissible(
-          key: ObjectKey("${widget.activity}"),
-          background: stackBehindDismiss(),
-          direction: DismissDirection.endToStart,
-          onDismissed: (v) {
-            delete();
-          },
-          child: ListTile(
+    return Dismissible(
+      key: ObjectKey("${widget.activity}"),
+      background: stackBehindDismiss(),
+      direction: DismissDirection.endToStart,
+      onDismissed: (v) {
+        delete();
+      },
+      child: Column(
+        children: [
+          ListTile(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
+              Navigator.of(context).push(CupertinoPageRoute(
                 builder: (_) => ViewActivityDetails(activity: widget.activity),
               ));
             },
@@ -64,9 +64,9 @@ class _ActivityItemsState extends State<ActivityItems> {
             ),
             trailing: previewConfiguration(),
           ),
-        ),
-        Divider(),
-      ],
+          Divider(),
+        ],
+      ),
     );
   }
 
@@ -89,7 +89,10 @@ class _ActivityItemsState extends State<ActivityItems> {
         .doc(widget.activity.postId)
         .get()
         .then((doc) => {
-              if (doc.exists) {doc.reference.delete()}
+              if (doc.exists)
+                {
+                  doc.reference.delete(),
+                }
             });
   }
 

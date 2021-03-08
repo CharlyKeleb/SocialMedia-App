@@ -71,10 +71,13 @@ class _ConversationState extends State<Conversation> {
         key: viewModel.scaffoldKey,
         appBar: AppBar(
           leading: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(Icons.keyboard_backspace)),
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.keyboard_backspace,
+            ),
+          ),
           elevation: 0.0,
           titleSpacing: 0,
           title: buildUserName(),
