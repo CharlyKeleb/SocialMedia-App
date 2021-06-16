@@ -25,11 +25,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-    <string>We need to access your camera to snap photo</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>We need this permission to get your Location.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>We need to access your Photos for your to select a photo</string>
+	<string>We need to access your camera to snap photo</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need this permission to get your Location.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need to access your Photos for your to select a photo</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
