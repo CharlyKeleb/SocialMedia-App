@@ -140,7 +140,7 @@ class AuthService {
 
 class AuthResponse {
   final String accessToken;
-  final String expiresIn;
+  final int expiresIn;
   final String tokenType;
 
   AuthResponse({this.accessToken, this.expiresIn, this.tokenType});
