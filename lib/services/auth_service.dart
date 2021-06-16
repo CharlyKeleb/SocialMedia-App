@@ -54,7 +54,7 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
-          'email': '$email',
+          'username': '$email',
           'password': '$password'
         }),
 
@@ -89,7 +89,7 @@ class AuthService {
     } else {
       // If the server did not return a 201 CREATED response,
       // then throw an exception.
-      throw Exception('Failed to create album.');
+      throw Exception('Failed to Login' + "${response.body}");
     }
     //log
     return true;
