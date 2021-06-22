@@ -95,7 +95,7 @@ class _RegisterState extends State<Register> {
               viewModel.setEmail(val);
             },
             focusNode: viewModel.emailFN,
-            // nextFocusNode: viewModel.genderFN,
+            nextFocusNode: viewModel.genderFN,
           ),
           SizedBox(height: 20.0),
           Container(
@@ -115,17 +115,17 @@ class _RegisterState extends State<Register> {
                   onChanged: (String newValue) {
                     setState(() {
                       dropdownValue = newValue;
+                      viewModel.setGender(newValue);
                     });
                   },
+                focusNode: viewModel.genderFN,
+                // nextFocusNode: viewModel.passFN,
                   items: <String>['Gender', 'male', 'female', 'secret'].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
                     );
                   }).toList(),
-                // onSaved: (String val) {
-                //   viewModel.setGender(val);
-                // },
                 // focusNode: viewModel.genderFN,
                 // nextFocusNode: viewModel.passwordFN,
               ),
