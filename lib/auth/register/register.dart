@@ -17,6 +17,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   String dropdownValue = 'Gender';
+  bool isChecked = false;
   @override
   Widget build(BuildContext context) {
     RegisterViewModel viewModel = Provider.of<RegisterViewModel>(context);
@@ -97,6 +98,33 @@ class _RegisterState extends State<Register> {
             focusNode: viewModel.emailFN,
             nextFocusNode: viewModel.genderFN,
           ),
+          SizedBox(height: 20.0),
+          // Container(
+          //     height: 45.0,
+          //     // width: 180.0,
+          //     child:
+              ListView(
+                children: <Widget>[
+                  new Container(
+                  decoration: new BoxDecoration(
+                  color: Colors.white
+              ),              ),
+                    child: new ListTile(
+                    title: Text('Showing Email as public'),
+                    trailing: Checkbox(
+                      checkColor: Color.fromARGB(255, 255, 255, 255),
+                      value: isChecked,
+                      onChanged: (value) {
+                        setState(() {
+                          isChecked = value;
+                        });
+                      }
+                    )
+                  )
+                ]
+              ),
+          // ),
+
           SizedBox(height: 20.0),
           Container(
             height: 45.0,

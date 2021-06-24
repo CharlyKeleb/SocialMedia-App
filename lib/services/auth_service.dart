@@ -16,34 +16,56 @@ class AuthService {
 
   Future<bool> createUser(
       {String name,
-      User user,
+       // String password_confirmation,
       String email,
       String gender,
       String password}) async {
-    var res = await firebaseAuth.createUserWithEmailAndPassword(
-      email: '$email',
-      password: '$password',
+
+    final response = await http.post(
+      Uri.parse('http://api.99huaren.local:3001/api/register'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'name': '$name',
+        'email': '$email',
+        'gender': '$gender',
+        'password': '$password',
+        // 'password_confirmation': '$password_confirmation',
+      }),
     );
-    if (res.user != null) {
-      await saveUserToFirestore(name, res.user, email, gender);
+
+    if (response.statusCode == 201) {
       return true;
     } else {
+      print(response.body);
       return false;
     }
+
+    // var res = await firebaseAuth.createUserWithEmailAndPassword(
+    //   email: '$email',
+    //   password: '$password',
+    // );
+    // if (res.user != null) {
+    //   await saveUserToFirestore(name, res.user, email, gender);
+    //   return true;
+    // } else {
+    //   return false;
+    // }
   }
 
-  saveUserToFirestore(
-      String name, User user, String email, String gender) async {
-    await usersRef.doc(user.uid).set({
-      'username': name,
-      'email': email,
-      'time': Timestamp.now(),
-      'id': user.uid,
-      'bio': "",
-      'gender': gender,
-      'photoUrl': user.photoURL ?? ''
-    });
-  }
+  // saveUserToFirestore(
+  //     String name, User user, String email, String gender) async {
+  //   await usersRef.doc(user.uid).set({
+  //     'username': name,
+  //     'email': email,
+  //     'time': Timestamp.now(),
+  //     'id': user.uid,
+  //     'bio': "",
+  //     'gender': gender,
+  //     'photoUrl': user.photoURL ?? ''
+  //   });
+  // }
 
   Future<bool> loginUser({String email, String password}) async {
     // use http to login user to 99huaren's back end service.
@@ -153,3 +175,4 @@ class AuthResponse {
     );
   }
 }
+
