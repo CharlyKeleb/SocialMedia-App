@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:social_media_app/models/register.dart';
 import 'package:social_media_app/services/user_service.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:http/http.dart' as http;
@@ -14,25 +15,14 @@ class AuthService {
     return user;
   }
 
-  Future<bool> createUser(
-      {String name,
-       // String password_confirmation,
-      String email,
-      String gender,
-      String password}) async {
+  Future<bool> createUser(Register registerModel) async {
 
     final response = await http.post(
       Uri.parse('http://api.99huaren.local:3001/api/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>{
-        'name': '$name',
-        'email': '$email',
-        'gender': '$gender',
-        'password': '$password',
-        // 'password_confirmation': '$password_confirmation',
-      }),
+      body: jsonEncode(registerModel.toJson()),
     );
 
     if (response.statusCode == 201) {

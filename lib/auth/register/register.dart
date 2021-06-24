@@ -103,26 +103,16 @@ class _RegisterState extends State<Register> {
           //     height: 45.0,
           //     // width: 180.0,
           //     child:
-              ListView(
-                children: <Widget>[
-                  new Container(
-                  decoration: new BoxDecoration(
-                  color: Colors.white
-              ),              ),
-                    child: new ListTile(
-                    title: Text('Showing Email as public'),
-                    trailing: Checkbox(
+          Container(
+              decoration: new BoxDecoration(color: Colors.white),
+              child: Checkbox(
                       checkColor: Color.fromARGB(255, 255, 255, 255),
-                      value: isChecked,
+                      value: false,
                       onChanged: (value) {
                         setState(() {
-                          isChecked = value;
+                          viewModel.setPublicEmail(value);
                         });
-                      }
-                    )
-                  )
-                ]
-              ),
+                      })),
           // ),
 
           SizedBox(height: 20.0),
