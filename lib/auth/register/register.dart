@@ -104,12 +104,14 @@ class _RegisterState extends State<Register> {
           //     // width: 180.0,
           //     child:
           Container(
-              decoration: new BoxDecoration(color: Colors.white),
-              child: Checkbox(
-                      checkColor: Color.fromARGB(255, 255, 255, 255),
-                      value: false,
-                      onChanged: (value) {
+              // decoration: new BoxDecoration(color: Colors.white),
+              // child: Checkbox(
+                  child: new Checkbox(
+                      // checkColor: Color.fromARGB(255, 255, 255, 255),
+                      value: isChecked,
+                      onChanged: (bool value) {
                         setState(() {
+                          isChecked = value;
                           viewModel.setPublicEmail(value);
                         });
                       })),
