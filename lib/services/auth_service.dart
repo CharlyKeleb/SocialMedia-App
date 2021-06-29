@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:social_media_app/models/register.dart';
 import 'package:social_media_app/services/user_service.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:http/http.dart' as http;
@@ -14,36 +15,47 @@ class AuthService {
     return user;
   }
 
-  Future<bool> createUser(
-      {String name,
-      User user,
-      String email,
-      String country,
-      String password}) async {
-    var res = await firebaseAuth.createUserWithEmailAndPassword(
-      email: '$email',
-      password: '$password',
+  Future<bool> createUser(Register registerModel) async {
+
+    final response = await http.post(
+      Uri.parse('http://api.99huaren.local:3001/api/register'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(registerModel.toJson()),
     );
-    if (res.user != null) {
-      await saveUserToFirestore(name, res.user, email, country);
+
+    if (response.statusCode == 201) {
       return true;
     } else {
+      print(response.body);
       return false;
     }
+
+    // var res = await firebaseAuth.createUserWithEmailAndPassword(
+    //   email: '$email',
+    //   password: '$password',
+    // );
+    // if (res.user != null) {
+    //   await saveUserToFirestore(name, res.user, email, gender);
+    //   return true;
+    // } else {
+    //   return false;
+    // }
   }
 
-  saveUserToFirestore(
-      String name, User user, String email, String country) async {
-    await usersRef.doc(user.uid).set({
-      'username': name,
-      'email': email,
-      'time': Timestamp.now(),
-      'id': user.uid,
-      'bio': "",
-      'country': country,
-      'photoUrl': user.photoURL ?? ''
-    });
-  }
+  // saveUserToFirestore(
+  //     String name, User user, String email, String gender) async {
+  //   await usersRef.doc(user.uid).set({
+  //     'username': name,
+  //     'email': email,
+  //     'time': Timestamp.now(),
+  //     'id': user.uid,
+  //     'bio': "",
+  //     'gender': gender,
+  //     'photoUrl': user.photoURL ?? ''
+  //   });
+  // }
 
   Future<bool> loginUser({String email, String password}) async {
     // use http to login user to 99huaren's back end service.
@@ -153,3 +165,4 @@ class AuthResponse {
     );
   }
 }
+
