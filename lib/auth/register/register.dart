@@ -16,6 +16,8 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  String dropdownValue = 'Gender';
+  bool isChecked = false;
   @override
   Widget build(BuildContext context) {
     RegisterViewModel viewModel = Provider.of<RegisterViewModel>(context);
@@ -94,20 +96,59 @@ class _RegisterState extends State<Register> {
               viewModel.setEmail(val);
             },
             focusNode: viewModel.emailFN,
-            nextFocusNode: viewModel.countryFN,
+            nextFocusNode: viewModel.genderFN,
           ),
           SizedBox(height: 20.0),
-          TextFormBuilder(
-            enabled: !viewModel.loading,
-            prefix: Feather.map_pin,
-            hintText: "Country",
-            textInputAction: TextInputAction.next,
-            validateFunction: Validations.validateName,
-            onSaved: (String val) {
-              viewModel.setCountry(val);
-            },
-            focusNode: viewModel.countryFN,
-            nextFocusNode: viewModel.passFN,
+          // Container(
+          //     height: 45.0,
+          //     // width: 180.0,
+          //     child:
+          Container(
+              // decoration: new BoxDecoration(color: Colors.white),
+              // child: Checkbox(
+                  child: new Checkbox(
+                      // checkColor: Color.fromARGB(255, 255, 255, 255),
+                      value: isChecked,
+                      onChanged: (bool value) {
+                        setState(() {
+                          isChecked = value;
+                          viewModel.setPublicEmail(value);
+                        });
+                      })),
+          // ),
+
+          SizedBox(height: 20.0),
+          Container(
+            height: 45.0,
+            width: 180.0,
+            child:
+              DropdownButton<String>(
+                  value: dropdownValue,
+                  // icon: const Icon(Icons.arrow_downward),
+                  // iconSize: 24,
+                  // elevation: 16,
+                  // style: const TextStyle(color: Colors.white),
+                  underline: Container(
+                    height: 4,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      dropdownValue = newValue;
+                      viewModel.setGender(newValue);
+                    });
+                  },
+                focusNode: viewModel.genderFN,
+                // nextFocusNode: viewModel.passFN,
+                  items: <String>['Gender', 'male', 'female', 'secret'].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                // focusNode: viewModel.genderFN,
+                // nextFocusNode: viewModel.passwordFN,
+              ),
           ),
           SizedBox(height: 20.0),
           PasswordFormBuilder(

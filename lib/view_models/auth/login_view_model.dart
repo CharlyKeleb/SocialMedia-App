@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:social_media_app/screens/mainscreen.dart';
 import 'package:social_media_app/services/auth_service.dart';
+import 'package:social_media_app/services/user_service.dart';
 import 'package:social_media_app/utils/validation.dart';
 
 class LoginViewModel extends ChangeNotifier {
@@ -32,8 +36,13 @@ class LoginViewModel extends ChangeNotifier {
         );
         print(success);
         if (success) {
-          Navigator.of(context).pushReplacement(
-              CupertinoPageRoute(builder: (_) => TabScreen()));
+          final storage = new FlutterSecureStorage();
+          final userJson = storage.read(key: 'logged_in_user');
+          final user = LoggedUser.fromJson(jsonDecode(await userJson));
+
+          showInSnackBar(user.email);
+          // Navigator.of(context).pushReplacement(
+          //     CupertinoPageRoute(builder: (_) => TabScreen()));
         }
       } catch (e) {
         loading = false;
