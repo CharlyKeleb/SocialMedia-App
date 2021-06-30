@@ -11,6 +11,7 @@ import 'package:social_media_app/models/user.dart';
 import 'package:social_media_app/pages/profile.dart';
 import 'package:social_media_app/screens/comment.dart';
 import 'package:social_media_app/screens/view_image.dart';
+import 'package:social_media_app/services/post_service.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -24,13 +25,15 @@ class UserPost extends StatelessWidget {
     return firebaseAuth.currentUser.uid;
   }
 
+  final PostService services = PostService();
+
   @override
   Widget build(BuildContext context) {
     return CustomCard(
       onTap: null,
       borderRadius: BorderRadius.circular(10.0),
       child: OpenContainer(
-        //transitionType: ContainerTransitionType.fade,
+        transitionType: ContainerTransitionType.fadeThrough,
         openBuilder: (BuildContext context, VoidCallback _) {
           return ViewImage(post: post);
         },
@@ -54,13 +57,13 @@ class UserPost extends StatelessWidget {
                     ),
                     child: CustomImage(
                       imageUrl: post?.mediaUrl ?? '',
-                      height: 250.0,
+                      height: 300.0,
                       fit: BoxFit.cover,
                       width: double.infinity,
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal:5.0),
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -79,7 +82,7 @@ class UserPost extends StatelessWidget {
                                   );
                                 },
                                 child: Icon(
-                                   CupertinoIcons.chat_bubble,
+                                  CupertinoIcons.chat_bubble,
                                   size: 25.0,
                                 ),
                               ),
@@ -130,7 +133,7 @@ class UserPost extends StatelessWidget {
                           ],
                         ),
                         Visibility(
-                          visible: post.description!= null &&
+                          visible: post.description != null &&
                               post.description.toString().isNotEmpty,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 5.0, top: 3.0),
@@ -148,9 +151,8 @@ class UserPost extends StatelessWidget {
                         SizedBox(height: 3.0),
                         Padding(
                           padding: const EdgeInsets.all(3.0),
-                          child: Text(
-                      timeago.format(post.timestamp.toDate()),style:TextStyle(fontSize:10.0)
-                    ),
+                          child: Text(timeago.format(post.timestamp.toDate()),
+                              style: TextStyle(fontSize: 10.0)),
                         ),
                         // SizedBox(height: 5.0),
                       ],
@@ -186,7 +188,7 @@ class UserPost extends StatelessWidget {
                 addLikesToNotification();
               } else {
                 likesRef.doc(docs[0].id).delete();
-                removeLikeFromNotification();
+                services.removeLikeFromNotification(post.ownerId, post.postId, currentUserId());
               }
             },
             icon: docs.isEmpty
@@ -210,38 +212,13 @@ class UserPost extends StatelessWidget {
     if (isNotMe) {
       DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
       user = UserModel.fromJson(doc.data());
-      notificationRef
-          .doc(post.ownerId)
-          .collection('notifications')
-          .doc(post.postId)
-          .set({
-        "type": "like",
-        "username": user.username,
-        "userId": currentUserId(),
-        "userDp": user.photoUrl,
-        "postId": post.postId,
-        "mediaUrl": post.mediaUrl,
-        "timestamp": timestamp,
-      });
+      services.addLikesToNotification(
+        "like", user.username,currentUserId(),post.postId,post.mediaUrl,post.ownerId,user.photoUrl
+      );
     }
   }
 
-  removeLikeFromNotification() async {
-    bool isNotMe = currentUserId() != post.ownerId;
-
-    if (isNotMe) {
-      DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
-      user = UserModel.fromJson(doc.data());
-      notificationRef
-          .doc(post.ownerId)
-          .collection('notifications')
-          .doc(post.postId)
-          .get()
-          .then((doc) => {
-                if (doc.exists) {doc.reference.delete()}
-              });
-    }
-  }
+ 
 
   buildLikesCount(BuildContext context, int count) {
     return Padding(
@@ -265,18 +242,6 @@ class UserPost extends StatelessWidget {
       ),
     );
   }
-  // buildCommentsCount(BuildContext context, int count) {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(left: 7.0),
-  //     child: Text(
-  //       '$count comments',
-  //       style: TextStyle(
-  //         color: Theme.of(context).textTheme.caption.color.withOpacity(0.4),
-  //         fontSize: 10.0,
-  //       ),
-  //     ),
-  //   );
-  // }
 
   buildUser(BuildContext context) {
     bool isMe = currentUserId() == post.ownerId;
@@ -300,8 +265,7 @@ class UserPost extends StatelessWidget {
                   ),
                 ),
                 child: GestureDetector(
-                             onTap: () => showProfile(context, profileId: user?.id),
-
+                  onTap: () => showProfile(context, profileId: user?.id),
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10.0),
                     child: Row(
@@ -354,7 +318,7 @@ class UserPost extends StatelessWidget {
     );
   }
 
-showProfile(BuildContext context, {String profileId}) {
+  showProfile(BuildContext context, {String profileId}) {
     Navigator.push(
       context,
       CupertinoPageRoute(
@@ -363,5 +327,3 @@ showProfile(BuildContext context, {String profileId}) {
     );
   }
 }
-
-

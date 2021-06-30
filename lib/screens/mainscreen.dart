@@ -20,13 +20,13 @@ class _TabScreenState extends State<TabScreen> {
   List pages = [
     {
       'title': 'Home',
-      'icon': CupertinoIcons.home,
+      'icon': Feather.home,
       'page': Timeline(),
       'index': 0,
     },
     {
       'title': 'Search',
-      'icon': CupertinoIcons.search,
+      'icon': Feather.search,
       'page': Search(),
       'index': 1,
     },
@@ -103,7 +103,6 @@ class _TabScreenState extends State<TabScreen> {
       width: 45.0,
       // ignore: missing_required_param
       child: FabContainer(
-        // page: Publication(),
         icon: Feather.plus,
         mini: true,
       ),

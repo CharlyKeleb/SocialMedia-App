@@ -94,7 +94,7 @@ class _SearchState extends State<Search> {
                 controller: searchController,
                 textAlignVertical: TextAlignVertical.center,
                 maxLength: 10,
-                maxLengthEnforced: true,
+                maxLengthEnforcement: MaxLengthEnforcement.enforced,
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(20),
                 ],

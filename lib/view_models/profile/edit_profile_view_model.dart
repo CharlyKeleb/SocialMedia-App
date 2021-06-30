@@ -55,7 +55,7 @@ class EditProfileViewModel extends ChangeNotifier {
     if (!form.validate()) {
       validate = true;
       notifyListeners();
-      showInSnackBar('Please fix the errors in red before submitting.');
+      showInSnackBar('Please fix the errors in red before submitting.',context);
     } else {
       try {
         loading = true;
@@ -82,7 +82,7 @@ class EditProfileViewModel extends ChangeNotifier {
     }
   }
 
-  pickImage({bool camera = false}) async {
+  pickImage({bool camera = false,BuildContext context}) async {
     loading = true;
     notifyListeners();
     try {
@@ -115,7 +115,7 @@ class EditProfileViewModel extends ChangeNotifier {
     } catch (e) {
       loading = false;
       notifyListeners();
-      showInSnackBar('Cancelled');
+      showInSnackBar('Cancelled',context);
     }
   }
 
@@ -124,8 +124,8 @@ class EditProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void showInSnackBar(String value) {
-    scaffoldKey.currentState.removeCurrentSnackBar();
-    scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(value)));
+ void showInSnackBar(String value,context) {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
   }
 }

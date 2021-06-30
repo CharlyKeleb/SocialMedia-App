@@ -46,7 +46,7 @@ class _CreatePostState extends State<CreatePost> {
             actions: [
               GestureDetector(
                 onTap: () async {
-                  await viewModel.uploadPosts();
+                  await viewModel.uploadPosts(context);
                   Navigator.pop(context);
                   viewModel.resetPost();
                 },

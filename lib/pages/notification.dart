@@ -49,21 +49,22 @@ class _ActivitiesState extends State<Activities> {
 
   getActivities() {
     return ActivityStreamWrapper(
-        shrinkWrap: true,
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        stream: notificationRef
-            .doc(currentUserId())
-            .collection('notifications')
-            .orderBy('timestamp', descending: true)
-            .limit(20)
-            .snapshots(),
-        physics: NeverScrollableScrollPhysics(),
-        itemBuilder: (_, DocumentSnapshot snapshot) {
-          ActivityModel activities = ActivityModel.fromJson(snapshot.data());
-          return ActivityItems(
-            activity: activities,
-          );
-        });
+      shrinkWrap: true,
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      stream: notificationRef
+          .doc(currentUserId())
+          .collection('notifications')
+          .orderBy('timestamp', descending: true)
+          .limit(20)
+          .snapshots(),
+      physics: NeverScrollableScrollPhysics(),
+      itemBuilder: (_, DocumentSnapshot snapshot) {
+        ActivityModel activities = ActivityModel.fromJson(snapshot.data());
+        return ActivityItems(
+          activity: activities,
+        );
+      },
+    );
   }
 
   deleteAllItems() async {
@@ -72,10 +73,12 @@ class _ActivitiesState extends State<Activities> {
         .doc(firebaseAuth.currentUser.uid)
         .collection('notifications')
         .get();
-    notificationsSnap.docs.forEach((doc) {
-      if (doc.exists) {
-        doc.reference.delete();
-      }
-    });
+    notificationsSnap.docs.forEach(
+      (doc) {
+        if (doc.exists) {
+          doc.reference.delete();
+        }
+      },
+    );
   }
 }

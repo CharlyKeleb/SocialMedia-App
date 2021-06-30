@@ -177,7 +177,7 @@ class _ProfileState extends State<Profile>  {
                                             },
                                             child: Column(
                                               children: [
-                                                Icon(CupertinoIcons.settings,
+                                                Icon(Feather.settings,
                                                     color: Theme.of(context)
                                                         .accentColor),
                                                 Text(

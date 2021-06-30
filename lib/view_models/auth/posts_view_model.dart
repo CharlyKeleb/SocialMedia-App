@@ -41,7 +41,8 @@ class PostsViewModel extends ChangeNotifier {
   String imgLink;
   bool edit = false;
   String id;
-//controllers
+
+  //controllers
   TextEditingController locationTEC = TextEditingController();
 
   //Setters
@@ -89,7 +90,7 @@ class PostsViewModel extends ChangeNotifier {
   }
 
   //Functions
-  pickImage({bool camera = false}) async {
+  pickImage({bool camera = false, BuildContext context}) async {
     loading = true;
     notifyListeners();
     try {
@@ -122,7 +123,7 @@ class PostsViewModel extends ChangeNotifier {
     } catch (e) {
       loading = false;
       notifyListeners();
-      showInSnackBar('Cancelled');
+      showInSnackBar('Cancelled',context);
     }
   }
 
@@ -150,7 +151,7 @@ class PostsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  uploadPosts() async {
+  uploadPosts(BuildContext context) async {
     try {
       loading = true;
       notifyListeners();
@@ -162,14 +163,14 @@ class PostsViewModel extends ChangeNotifier {
       print(e);
       loading = false;
       resetPost();
-      showInSnackBar('Uploaded successfully!');
+      showInSnackBar('Uploaded successfully!',context);
       notifyListeners();
     }
   }
 
   uploadProfilePicture(BuildContext context) async {
     if (mediaUrl == null) {
-      showInSnackBar('Please select an image');
+      showInSnackBar('Please select an image',context);
     } else {
       try {
         loading = true;
@@ -183,7 +184,7 @@ class PostsViewModel extends ChangeNotifier {
       } catch (e) {
         print(e);
         loading = false;
-        showInSnackBar('Uploaded successfully!');
+        showInSnackBar('Uploaded successfully!',context);
         notifyListeners();
       }
     }
@@ -197,8 +198,8 @@ class PostsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void showInSnackBar(String value) {
-    scaffoldKey.currentState.removeCurrentSnackBar();
-    scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(value)));
+void showInSnackBar(String value,context) {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
   }
 }

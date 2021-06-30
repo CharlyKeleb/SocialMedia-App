@@ -72,10 +72,15 @@ class _ProfilePictureState extends State<ProfilePicture> {
               ),
               SizedBox(height: 10.0),
               Center(
-                child: RaisedButton(
-                  color: Theme.of(context).accentColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Theme.of(context).accentColor),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
                   ),
                   child: Center(
                     child: Text('done'.toUpperCase()),

@@ -21,7 +21,7 @@ class LoginViewModel extends ChangeNotifier {
     if (!form.validate()) {
       validate = true;
       notifyListeners();
-      showInSnackBar('Please fix the errors in red before submitting.');
+      showInSnackBar('Please fix the errors in red before submitting.',context);
     } else {
       loading = true;
       notifyListeners();
@@ -39,28 +39,28 @@ class LoginViewModel extends ChangeNotifier {
         loading = false;
         notifyListeners();
         print(e);
-        showInSnackBar('${auth.handleFirebaseAuthError(e.toString())}');
+        showInSnackBar('${auth.handleFirebaseAuthError(e.toString())}',context);
       }
       loading = false;
       notifyListeners();
     }
   }
 
-  forgotPassword() async {
+  forgotPassword(BuildContext context) async {
     loading = true;
     notifyListeners();
     FormState form = formKey.currentState;
     form.save();
     print(Validations.validateEmail(email));
     if (Validations.validateEmail(email) != null) {
-      showInSnackBar('Please input a valid email to reset your password.');
+      showInSnackBar('Please input a valid email to reset your password.',context);
     } else {
       try {
         await auth.forgotPassword(email);
         showInSnackBar('Please check your email for instructions '
-            'to reset your password');
+            'to reset your password', context);
       } catch (e) {
-        showInSnackBar('${e.toString()}');
+        showInSnackBar('${e.toString()}', context);
       }
     }
     loading = false;
@@ -77,8 +77,8 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void showInSnackBar(String value) {
-    scaffoldKey.currentState.removeCurrentSnackBar();
-    scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(value)));
+  void showInSnackBar(String value,context) {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
   }
 }

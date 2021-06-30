@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> {
     WidgetsBinding.instance.addObserver(LifecycleEventHandler(
       detachedCallBack: () => UserService().setUserStatus(false),
       resumeCallBack: () => UserService().setUserStatus(true),
-    ));
+    ),);
   }
 
   @override
@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(
             title: Constants.appName,
             debugShowCheckedModeBanner: false,
-            theme:notifier.dark ? Constants.darkTheme : Constants.lightTheme,
+            theme: notifier.dark ? Constants.darkTheme : Constants.lightTheme,
             home: StreamBuilder(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (BuildContext context, AsyncSnapshot<User> snapshot) {

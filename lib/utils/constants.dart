@@ -21,7 +21,9 @@ class Constants {
     backgroundColor: lightBG,
     primaryColor: lightPrimary,
     accentColor: lightAccent,
-    cursorColor: lightAccent,
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: lightAccent,
+    ),
     scaffoldBackgroundColor: lightBG,
     bottomAppBarTheme: BottomAppBarTheme(
       elevation: 0,
@@ -38,7 +40,6 @@ class Constants {
         ),
       ),
     ),
-     
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -48,8 +49,10 @@ class Constants {
     primaryColor: darkPrimary,
     accentColor: darkAccent,
     scaffoldBackgroundColor: darkBG,
-    cursorColor: darkAccent,
-     bottomAppBarTheme: BottomAppBarTheme(
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: darkAccent,
+    ),
+    bottomAppBarTheme: BottomAppBarTheme(
       elevation: 0,
       color: darkBG,
     ),
@@ -86,24 +89,24 @@ class ThemeNotifier extends ChangeNotifier {
     _darkTheme = true;
     _loadfromPrefs();
   }
-  toggleTheme(){
+  toggleTheme() {
     _darkTheme = !_darkTheme;
     _saveToPrefs();
     notifyListeners();
   }
 
-  _initPrefs()async{
-    if(_prefs == null)
-      _prefs = await SharedPreferences.getInstance();
+  _initPrefs() async {
+    if (_prefs == null) _prefs = await SharedPreferences.getInstance();
   }
-  _loadfromPrefs()async{
+
+  _loadfromPrefs() async {
     await _initPrefs();
     _darkTheme = _prefs.getBool(key) ?? true;
     notifyListeners();
   }
-  _saveToPrefs()async{
+
+  _saveToPrefs() async {
     await _initPrefs();
     _prefs.setBool(key, _darkTheme);
   }
 }
-

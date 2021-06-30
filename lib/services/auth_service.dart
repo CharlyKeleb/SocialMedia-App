@@ -8,6 +8,7 @@ class AuthService {
     return user;
   }
 
+//create a firebase user 
   Future<bool> createUser(
       {String name,
       User user,
@@ -26,6 +27,7 @@ class AuthService {
     }
   }
 
+//this will save the details inputted by the user to firestore.
   saveUserToFirestore(
       String name, User user, String email, String country) async {
     await usersRef.doc(user.uid).set({
@@ -39,6 +41,8 @@ class AuthService {
     });
   }
 
+
+//function to login a user with his email and password
   Future<bool> loginUser({String email, String password}) async {
     var res = await firebaseAuth.signInWithEmailAndPassword(
       email: '$email',

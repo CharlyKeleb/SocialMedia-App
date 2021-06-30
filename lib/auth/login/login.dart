@@ -18,6 +18,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
+    
     LoginViewModel viewModel = Provider.of<LoginViewModel>(context);
 
     return ModalProgressHUD(
@@ -123,7 +124,7 @@ class _LoginState extends State<Login> {
             child: Padding(
               padding: EdgeInsets.only(right: 10.0),
               child: InkWell(
-                onTap: () => viewModel.forgotPassword(),
+                onTap: () => viewModel.forgotPassword(context),
                 child: Container(
                   width: 130,
                   height: 40,
@@ -135,7 +136,7 @@ class _LoginState extends State<Login> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ), 
+                  ),
                 ),
               ),
             ),
@@ -144,12 +145,19 @@ class _LoginState extends State<Login> {
           Container(
             height: 45.0,
             width: 180.0,
-            child: RaisedButton(
-              highlightElevation: 4.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(40.0),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40.0),
+                  ),
+                ),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  Theme.of(context).accentColor,
+                ),
+                
               ),
-              color: Theme.of(context).accentColor,
+              // highlightElevation: 4.0,
               child: Text(
                 'Log in'.toUpperCase(),
                 style: TextStyle(

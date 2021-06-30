@@ -27,7 +27,7 @@ class _RegisterState extends State<Register> {
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
           children: [
-            SizedBox(height:10.0),
+            SizedBox(height: 10.0),
             Text(
               'Welcome to Wooble Social App..\nCreate a new account and connect with friends',
               style: TextStyle(
@@ -142,11 +142,16 @@ class _RegisterState extends State<Register> {
           Container(
             height: 45.0,
             width: 180.0,
-            child: RaisedButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(40.0),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40.0),
+                  ),
+                ),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Theme.of(context).accentColor),
               ),
-              color: Theme.of(context).accentColor,
               child: Text(
                 'sign up'.toUpperCase(),
                 style: TextStyle(

@@ -1,14 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:social_media_app/components/stream_story_builder.dart';
+import 'package:social_media_app/models/post.dart';
+import 'package:social_media_app/utils/firebase.dart';
 
 class StoryItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return Container(
       height: 130.0,
-      child: ListView.builder(
-        itemCount: 5,
+      child: StreamStoriesWrapper(
+        reverse: true,
         scrollDirection: Axis.horizontal,
-        itemBuilder: (BuildContext context, int index) {
+        stream: storyRef.snapshots(),
+        itemBuilder: (BuildContext context, DocumentSnapshot snapshot) {
+           PostModel story = PostModel.fromJson(snapshot.data());
           return Padding(
             padding: const EdgeInsets.only(left: 10.0),
             child: Stack(
@@ -19,7 +27,7 @@ class StoryItems extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
                     image: DecorationImage(
-                      image: AssetImage('assets/images/cm0.jpeg'),
+                      image: NetworkImage(story.mediaUrl),
                       fit: BoxFit.cover,
                     ),
                   ),

@@ -130,7 +130,7 @@ class ChatItem extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           DocumentSnapshot snap = snapshot.data;
-          Map usersReads = snap.data()['reads'] ?? {};
+          Map usersReads = snap.get('reads') ?? {};
           int readCount = usersReads[currentUserId] ?? 0;
           int counter = messageCount - readCount;
           if (counter == 0) {

@@ -39,17 +39,17 @@ class ConversationViewModel extends ChangeNotifier {
   }
 
   pickImage({int source, BuildContext context, String chatId}) async {
-    File image = source == 0
-        ? await ImagePicker.pickImage(
-      source: ImageSource.camera,
-    )
-        : await ImagePicker.pickImage(
-      source: ImageSource.gallery,
-    );
+    PickedFile pickedFile = source == 0
+        ? await picker.getImage(
+            source: ImageSource.camera,
+          )
+        : await picker.getImage(
+            source: ImageSource.gallery,
+          );
 
-    if (image != null) {
+    if (pickedFile != null) {
       File croppedFile = await ImageCropper.cropImage(
-        sourcePath: image.path,
+        sourcePath: pickedFile.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
           CropAspectRatioPreset.ratio3x2,
@@ -75,15 +75,19 @@ class ConversationViewModel extends ChangeNotifier {
         uploadingImage = true;
         image = croppedFile;
         notifyListeners();
-        showInSnackBar("Uploading image...");
+        showInSnackBar("Uploading image...", context);
         String imageUrl = await chatService.uploadImage(croppedFile, chatId);
         return imageUrl;
       }
     }
   }
 
-  void showInSnackBar(String value) {
-    scaffoldKey.currentState.removeCurrentSnackBar();
-    scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(value)));
+  void showInSnackBar(String value, context) {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(value),
+      ),
+    );
   }
 }

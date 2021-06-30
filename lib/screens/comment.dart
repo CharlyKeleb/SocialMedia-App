@@ -5,6 +5,7 @@ import 'package:social_media_app/components/stream_comments_wrapper.dart';
 import 'package:social_media_app/models/comments.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/models/user.dart';
+import 'package:social_media_app/services/post_service.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/cached_image.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -20,6 +21,7 @@ class Comments extends StatefulWidget {
 class _CommentsState extends State<Comments> {
   UserModel user;
 
+  PostService services = PostService();
   final DateTime timestamp = DateTime.now();
   TextEditingController commentsTEC = TextEditingController();
 
@@ -106,7 +108,16 @@ class _CommentsState extends State<Comments> {
                           maxLines: null,
                         ),
                         trailing: GestureDetector(
-                          onTap: addComments,
+                          onTap: () async {
+                            await services.uploadComment(
+                              currentUserId(),
+                              commentsTEC.text,
+                              widget.post.postId,
+                              widget.post.ownerId,
+                              widget.post.mediaUrl,
+                            );
+                            commentsTEC.clear();
+                          },
                           child: Padding(
                             padding: const EdgeInsets.only(right: 10.0),
                             child: Icon(
@@ -130,8 +141,8 @@ class _CommentsState extends State<Comments> {
   buildFullPost() {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment:MainAxisAlignment.start,
-      crossAxisAlignment:CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           height: 250.0,
@@ -141,11 +152,10 @@ class _CommentsState extends State<Comments> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
-           
             children: [
               Column(
-                mainAxisAlignment:MainAxisAlignment.start,
-      crossAxisAlignment:CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     widget.post.description,
@@ -185,67 +195,8 @@ class _CommentsState extends State<Comments> {
             ],
           ),
         ),
-        // ListTile(
-        //     contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
-        //     title: Text(
-        //       widget.post.description,
-        //       style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
-        //     ),
-        //     subtitle: Padding(
-        //       padding: const EdgeInsets.only(top: 8.0),
-        //       child: Row(
-        //         children: [
-        //           Text(
-        //             timeago.format(widget.post.timestamp.toDate()),style:TextStyle(),
-        //           ),
-        //           SizedBox(width: 3.0),
-        //           StreamBuilder(
-        //             stream: likesRef
-        //                 .where('postId', isEqualTo: widget.post.postId)
-        //                 .snapshots(),
-        //             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        //               if (snapshot.hasData) {
-        //                 QuerySnapshot snap = snapshot.data;
-        //                 List<DocumentSnapshot> docs = snap.docs;
-        //                 return buildLikesCount(context, docs?.length ?? 0);
-        //               } else {
-        //                 return buildLikesCount(context, 0);
-        //               }
-        //             },
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //     trailing: buildLikeButton()),
       ],
     );
-  }
-
-  addComments() async {
-    DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
-    user = UserModel.fromJson(doc.data());
-    commentRef.doc(widget.post.postId).collection("comments").add({
-      "username": user.username,
-      "comment": commentsTEC.text,
-      "timestamp": timestamp,
-      "userDp": user.photoUrl,
-      "userId": user.id,
-    });
-
-    bool isNotMe = widget.post.ownerId != currentUserId();
-    if (isNotMe) {
-      notificationRef.doc(widget.post.ownerId).collection('notifications').add({
-        "type": "comment",
-        "commentData": commentsTEC.text,
-        "username": user.username,
-        "userId": user.id,
-        "userDp": user.photoUrl,
-        "postId": widget.post.postId,
-        "mediaUrl": widget.post.mediaUrl,
-        "timestamp": timestamp,
-      });
-    }
-    commentsTEC.clear();
   }
 
   buildComments() {

@@ -31,6 +31,18 @@ class _SettingState extends State<Setting> {
         padding: EdgeInsets.all(10.0),
         child: ListView(
           children: <Widget>[
+             ListTile(
+               onTap: _showDialog(context),
+              title: Text(
+                "About",
+                style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              subtitle: Text("About this app"),
+              trailing: Icon(Icons.error)
+            ),
+            Divider(),
             ListTile(
               title: Text(
                 "Dark Mode",
@@ -49,20 +61,28 @@ class _SettingState extends State<Setting> {
                 ),
               ),
             ),
-            Divider(),
-            SizedBox(height: 10.0),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "This is an open source full functional social media app built with flutter also with the help of firebase for backend services\n Pull Requests are welcome www.github.com/Charles052/SocialMedia-App",
-                ),
-              ],
-            ),
           ],
         ),
       ),
+    );
+  }
+  _showDialog(context){
+    return showDialog<void>(
+      context: context,
+      builder:(BuildContext context){
+        return AlertDialog(
+          title: const Text('About',textAlign: TextAlign.center),
+          content: Text('A full functional Social Media Application Made by CharlyKeleb'),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Navigator.pop(context);
+              },
+              child: const Text('Close')
+            )
+          ],
+        );
+      }
     );
   }
 }
