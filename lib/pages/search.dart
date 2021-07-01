@@ -60,7 +60,6 @@ class _SearchState extends State<Search> {
     filteredUsers.removeAt(index);
   }
 
-
   @override
   void initState() {
     getUsers();
@@ -172,24 +171,24 @@ class _SearchState extends State<Search> {
                         ),
                       );
                     },
-                    // child: Icon(CupertinoIcons.chat_bubble_fill,
-                    //     color: Theme.of(context).accentColor),
                     child: Container(
                       height: 30.0,
-                      width: 60.0,
+                      width: 62.0,
                       decoration: BoxDecoration(
                         color: Theme.of(context).accentColor,
                         borderRadius: BorderRadius.circular(3.0),
-                        // border:
-                        //     Border.all(color: Theme.of(context).accentColor),
                       ),
                       child: Center(
                         child: Padding(
                           padding: const EdgeInsets.all(5.0),
-                          child: Text('Message',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
+                          child: Text(
+                            'Message',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                     ),

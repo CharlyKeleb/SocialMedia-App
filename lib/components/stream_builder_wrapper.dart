@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:paginate_firestore/paginate_firestore.dart';
 import 'package:social_media_app/widgets/indicators.dart';
 
 typedef ItemBuilder<T> = Widget Function(
@@ -14,6 +15,7 @@ class StreamBuilderWrapper extends StatelessWidget {
   final bool shrinkWrap;
   final ScrollPhysics physics;
   final EdgeInsets padding;
+  final Query query;
 
   const StreamBuilderWrapper({
     Key key,
@@ -21,6 +23,7 @@ class StreamBuilderWrapper extends StatelessWidget {
     @required this.itemBuilder,
     this.scrollDirection = Axis.vertical,
     this.shrinkWrap = false,
+    this.query,
     this.physics = const ClampingScrollPhysics(),
     this.padding = const EdgeInsets.only(bottom: 2.0, left: 2.0),
   }) : super(key: key);
@@ -31,7 +34,7 @@ class StreamBuilderWrapper extends StatelessWidget {
       stream: stream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          var list = snapshot.data.documents.toList();
+          var list = snapshot.data.docs.toList();
           return list.length == 0
               ? Padding(
                   padding: const EdgeInsets.only(top: 100.0),
@@ -53,6 +56,7 @@ class StreamBuilderWrapper extends StatelessWidget {
                     return itemBuilder(context, list[index]);
                   },
                 );
+
         } else {
           return circularProgress(context);
         }

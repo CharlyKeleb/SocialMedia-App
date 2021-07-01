@@ -23,7 +23,8 @@ class RegisterViewModel extends ChangeNotifier {
     if (!form.validate()) {
       validate = true;
       notifyListeners();
-      showInSnackBar('Please fix the errors in red before submitting.',context);
+      showInSnackBar(
+          'Please fix the errors in red before submitting.', context);
     } else {
       if (password == cPassword) {
         loading = true;
@@ -38,18 +39,22 @@ class RegisterViewModel extends ChangeNotifier {
           print(success);
           if (success) {
             Navigator.of(context).pushReplacement(
-                CupertinoPageRoute(builder: (_) => ProfilePicture()));
+              CupertinoPageRoute(
+                builder: (_) => ProfilePicture(),
+              ),
+            );
           }
         } catch (e) {
           loading = false;
           notifyListeners();
           print(e);
-          showInSnackBar('${auth.handleFirebaseAuthError(e.toString())}',context);
+          showInSnackBar(
+              '${auth.handleFirebaseAuthError(e.toString())}', context);
         }
         loading = false;
         notifyListeners();
       } else {
-        showInSnackBar('The passwords does not match',context);
+        showInSnackBar('The passwords does not match', context);
       }
     }
   }
@@ -79,7 +84,7 @@ class RegisterViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void showInSnackBar(String value,context) {
+  void showInSnackBar(String value, context) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
   }

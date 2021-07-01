@@ -28,7 +28,7 @@ class _LoginState extends State<Login> {
         backgroundColor: Colors.white,
         key: viewModel.scaffoldKey,
         body: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 15.0),
+          padding: EdgeInsets.symmetric(horizontal: 15.0,vertical: 20.0),
           children: [
             SizedBox(height: 60.0),
             Container(

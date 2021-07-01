@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:paginate_firestore/bloc/pagination_listeners.dart';
+import 'package:paginate_firestore/paginate_firestore.dart';
 import 'package:social_media_app/chats/recent_chats.dart';
 import 'package:social_media_app/components/stream_builder_wrapper.dart';
 import 'package:social_media_app/models/post.dart';
@@ -9,6 +11,8 @@ import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/userpost.dart';
 
 class Timeline extends StatelessWidget {
+  PaginateRefreshedChangeListener refreshedChangeListener =
+      PaginateRefreshedChangeListener();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -45,19 +49,28 @@ class Timeline extends StatelessWidget {
         shrinkWrap: true,
         padding: EdgeInsets.symmetric(horizontal: 10.0),
         children: [
-          StreamBuilderWrapper(
-            shrinkWrap: true,
-            stream: postRef.orderBy('timestamp', descending: true).limit(3).snapshots(),
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (_, DocumentSnapshot snapshot) {
-              internetChecker(context);
-              PostModel posts = PostModel.fromJson(snapshot.data());
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
-                child: UserPost(post: posts),
-              );
+          RefreshIndicator(
+            child: PaginateFirestore(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilderType: PaginateBuilderType.listView,
+              isLive: true,
+              itemsPerPage: 5,
+              query: postRef.orderBy('timestamp', descending: true),
+              listeners: [refreshedChangeListener],
+              itemBuilder: (index, context, snapshot) {
+                PostModel posts = PostModel.fromJson(snapshot.data());
+                internetChecker(context);
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: UserPost(post: posts),
+                );
+              },
+            ),
+            onRefresh: () async {
+              refreshedChangeListener.refreshed = true;
             },
-          ),
+          )
         ],
       ),
     );
@@ -66,7 +79,7 @@ class Timeline extends StatelessWidget {
   internetChecker(context) async {
     bool result = await DataConnectionChecker().hasConnection;
     if (result == false) {
-      showInSnackBar('No Internet Connecton', context);
+      showInSnackBar('No Internet Connection', context);
     }
   }
 

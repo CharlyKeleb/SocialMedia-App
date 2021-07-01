@@ -27,7 +27,7 @@ class Chats extends StatelessWidget {
         stream: userChatsStream('${viewModel.user?.uid ?? ""}'),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List chatList = snapshot.data.documents;
+            List chatList = snapshot.data.docs;
             if (chatList.isNotEmpty) {
               return ListView.separated(
                 itemCount: chatList.length,

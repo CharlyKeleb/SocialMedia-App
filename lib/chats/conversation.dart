@@ -91,7 +91,7 @@ class _ConversationState extends State<Conversation> {
                   stream: messageListStream(widget.chatId),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      List messages = snapshot.data.documents;
+                      List messages = snapshot.data.docs;
                       viewModel.setReadCount(
                           widget.chatId, user, messages.length);
                       return ListView.builder(
