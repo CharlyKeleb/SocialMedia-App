@@ -56,7 +56,7 @@ class Timeline extends StatelessWidget {
               itemBuilderType: PaginateBuilderType.listView,
               isLive: true,
               itemsPerPage: 5,
-              query: postRef.orderBy('timestamp', descending: true),
+              query: postRef.orderBy('timestamp', descending: true).limit(10),
               listeners: [refreshedChangeListener],
               itemBuilder: (index, context, snapshot) {
                 PostModel posts = PostModel.fromJson(snapshot.data());
