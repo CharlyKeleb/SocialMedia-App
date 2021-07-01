@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/auth/register/profile_pic.dart';
-import 'package:social_media_app/models/register.dart';
 import 'package:social_media_app/services/auth_service.dart';
 
 class RegisterViewModel extends ChangeNotifier {
@@ -10,10 +9,10 @@ class RegisterViewModel extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool validate = false;
   bool loading = false;
-  Register registerModel = new Register();
+  String username, email, country, password, cPassword;
   FocusNode usernameFN = FocusNode();
   FocusNode emailFN = FocusNode();
-  FocusNode genderFN = FocusNode();
+  FocusNode countryFN = FocusNode();
   FocusNode passFN = FocusNode();
   FocusNode cPassFN = FocusNode();
   AuthService auth = AuthService();
@@ -26,18 +25,20 @@ class RegisterViewModel extends ChangeNotifier {
       notifyListeners();
       showInSnackBar('Please fix the errors in red before submitting.');
     } else {
-      if (registerModel.password == registerModel.passwordConfirmation) {
+      if (password == cPassword) {
         loading = true;
         notifyListeners();
         try {
           bool success = await auth.createUser(
-           registerModel
+            name: username,
+            email: email,
+            password: password,
+            country: country,
           );
           print(success);
           if (success) {
-            showInSnackBar('user created');
-            // Navigator.of(context).pushReplacement(
-            //     CupertinoPageRoute(builder: (_) => ProfilePicture()));
+            Navigator.of(context).pushReplacement(
+                CupertinoPageRoute(builder: (_) => ProfilePicture()));
           }
         } catch (e) {
           loading = false;
@@ -54,32 +55,27 @@ class RegisterViewModel extends ChangeNotifier {
   }
 
   setEmail(val) {
-    registerModel.email = val;
-    notifyListeners();
-  }
-
-  setPublicEmail(val) {
-    registerModel.publicEmail = val;
+    email = val;
     notifyListeners();
   }
 
   setPassword(val) {
-    registerModel.password = val;
+    password = val;
     notifyListeners();
   }
 
   setName(val) {
-    registerModel.username = val;
+    username = val;
     notifyListeners();
   }
 
   setConfirmPass(val) {
-    registerModel.passwordConfirmation = val;
+    cPassword = val;
     notifyListeners();
   }
 
-  setGender(val) {
-    registerModel.gender = val;
+  setCountry(val) {
+    country = val;
     notifyListeners();
   }
 
