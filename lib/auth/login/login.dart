@@ -18,7 +18,6 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
-    
     LoginViewModel viewModel = Provider.of<LoginViewModel>(context);
 
     return ModalProgressHUD(
@@ -28,7 +27,7 @@ class _LoginState extends State<Login> {
         backgroundColor: Colors.white,
         key: viewModel.scaffoldKey,
         body: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 15.0,vertical: 20.0),
+          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
           children: [
             SizedBox(height: 60.0),
             Container(
@@ -155,7 +154,6 @@ class _LoginState extends State<Login> {
                 backgroundColor: MaterialStateProperty.all<Color>(
                   Theme.of(context).accentColor,
                 ),
-                
               ),
               // highlightElevation: 4.0,
               child: Text(

@@ -26,6 +26,7 @@ Star⭐ the repo if you like what you see😉.
    * Add your own bio
  * Notifications Feed showing recent likes / comments of your posts + new followers
  * Swipe to delete notification
+ * Dark Mode Support
  * Used Provider to manage state
  
 
@@ -84,12 +85,10 @@ Double check install instructions for both
 
 # What's Next?
  - [] Animations(liking image)
- - [] Stories
+ - [] Stories['under development]
  - [] Saving posts
- - [] Sending voice notes
- - [] Uploading videos and sending videos
- - [] Video Calling / Audio Calling 'after getting 1k stars'
- - [] Dark Mode support
+ - [] Video Calling ['under development']
+
 
 ## 🤓 Author(s)
 **Charly Keleb Charles042** [![Twitter Follow](https://img.shields.io/twitter/follow/Charlykeleb.svg?style=social)](https://twitter.com/Charlykeleb)
