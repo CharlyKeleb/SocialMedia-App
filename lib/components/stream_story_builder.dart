@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:social_media_app/posts/create_story.dart';
-import 'package:social_media_app/view_models/posts/story_view_model.dart';
 import 'package:social_media_app/widgets/indicators.dart';
 
 typedef ItemBuilder<T> = Widget Function(

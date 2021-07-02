@@ -9,7 +9,7 @@ import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/userpost.dart';
 
 class Timeline extends StatelessWidget {
-  PaginateRefreshedChangeListener refreshedChangeListener =
+ final  PaginateRefreshedChangeListener refreshedChangeListener =
       PaginateRefreshedChangeListener();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 

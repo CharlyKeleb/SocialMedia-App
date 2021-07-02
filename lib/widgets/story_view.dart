@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:social_media_app/components/stream_story_builder.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/utils/firebase.dart';
