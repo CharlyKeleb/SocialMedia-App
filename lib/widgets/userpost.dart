@@ -68,7 +68,7 @@ class UserPost extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 5.0),
+                          padding: const EdgeInsets.only(left: 0.0),
                           child: Row(
                             children: [
                               buildLikeButton(),

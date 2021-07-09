@@ -37,7 +37,7 @@ class Chats extends StatelessWidget {
                     stream: messageListStream(chatListSnapshot.id),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        List messages = snapshot.data.documents;
+                        List messages = snapshot.data.docs;
                         Message message = Message.fromJson(
                           messages.first.data(),
                         );

@@ -24,10 +24,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(LifecycleEventHandler(
-      detachedCallBack: () => UserService().setUserStatus(false),
-      resumeCallBack: () => UserService().setUserStatus(true),
-    ),);
+    WidgetsBinding.instance.addObserver(
+      LifecycleEventHandler(
+        detachedCallBack: () => UserService().setUserStatus(false),
+        resumeCallBack: () => UserService().setUserStatus(true),
+      ),
+    );
   }
 
   @override

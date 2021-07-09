@@ -32,14 +32,13 @@ class _SettingState extends State<Setting> {
         child: ListView(
           children: <Widget>[
              ListTile(
-               onTap: _showDialog(context),
               title: Text(
                 "About",
                 style: TextStyle(
                   fontWeight: FontWeight.w900,
                 ),
               ),
-              subtitle: Text("About this app"),
+              subtitle: Text("A Fully Functional Social Media Application Made by CharlyKeleb"),
               trailing: Icon(Icons.error)
             ),
             Divider(),
@@ -64,25 +63,6 @@ class _SettingState extends State<Setting> {
           ],
         ),
       ),
-    );
-  }
-  _showDialog(context){
-    return showDialog<void>(
-      context: context,
-      builder:(BuildContext context){
-        return AlertDialog(
-          title: const Text('About',textAlign: TextAlign.center),
-          content: Text('A full functional Social Media Application Made by CharlyKeleb'),
-          actions: [
-            TextButton(
-              onPressed: (){
-                Navigator.pop(context);
-              },
-              child: const Text('Close')
-            )
-          ],
-        );
-      }
     );
   }
 }
