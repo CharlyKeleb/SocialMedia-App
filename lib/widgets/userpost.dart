@@ -63,7 +63,7 @@ class UserPost extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    padding: EdgeInsets.symmetric(horizontal: 3.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -136,9 +136,9 @@ class UserPost extends StatelessWidget {
                           visible: post.description != null &&
                               post.description.toString().isNotEmpty,
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 5.0, top: 3.0),
+                            padding: const EdgeInsets.only(left: 10.0, top: 3.0),
                             child: Text(
-                              '${post.description}',
+                              '${post?.description ?? ""}',
                               style: TextStyle(
                                 color:
                                     Theme.of(context).textTheme.caption.color,
@@ -188,7 +188,8 @@ class UserPost extends StatelessWidget {
                 addLikesToNotification();
               } else {
                 likesRef.doc(docs[0].id).delete();
-                services.removeLikeFromNotification(post.ownerId, post.postId, currentUserId());
+                services.removeLikeFromNotification(
+                    post.ownerId, post.postId, currentUserId());
               }
             },
             icon: docs.isEmpty
@@ -212,13 +213,10 @@ class UserPost extends StatelessWidget {
     if (isNotMe) {
       DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
       user = UserModel.fromJson(doc.data());
-      services.addLikesToNotification(
-        "like", user.username,currentUserId(),post.postId,post.mediaUrl,post.ownerId,user.photoUrl
-      );
+      services.addLikesToNotification("like", user.username, currentUserId(),
+          post.postId, post.mediaUrl, post.ownerId, user.photoUrl);
     }
   }
-
- 
 
   buildLikesCount(BuildContext context, int count) {
     return Padding(
@@ -275,8 +273,8 @@ class UserPost extends StatelessWidget {
                             ? CircleAvatar(
                                 radius: 14.0,
                                 backgroundColor: Color(0xff4D4D4D),
-                                backgroundImage:
-                                    CachedNetworkImageProvider(user.photoUrl),
+                                backgroundImage: CachedNetworkImageProvider(
+                                    user?.photoUrl ?? ""),
                               )
                             : CircleAvatar(
                                 radius: 14.0,
@@ -288,7 +286,7 @@ class UserPost extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${post.username}',
+                              '${post?.username ?? ""}',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xff4D4D4D),
@@ -296,7 +294,7 @@ class UserPost extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              '${post.location == null ? 'Wooble' : post.location}',
+                              '${post?.location ?? 'Wooble'}',
                               style: TextStyle(
                                 fontSize: 10.0,
                                 color: Color(0xff4D4D4D),

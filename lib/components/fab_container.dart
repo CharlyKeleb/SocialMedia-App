@@ -1,9 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:social_media_app/posts/create_story.dart';
-import 'package:social_media_app/view_models/posts/story_view_model.dart';
 import '../posts/create_post.dart';
 
 class FabContainer extends StatelessWidget {
@@ -15,7 +12,6 @@ class FabContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    StoryViewModel viewModel = Provider.of<StoryViewModel>(context);
     return OpenContainer(
       transitionType: ContainerTransitionType.fade,
       openBuilder: (BuildContext context, VoidCallback _) {
@@ -36,7 +32,7 @@ class FabContainer extends StatelessWidget {
             color: Theme.of(context).accentColor,
           ),
           onPressed: () {
-            chooseUpload(context, viewModel);
+            chooseUpload(context);
           },
           mini: mini,
         );
@@ -44,7 +40,7 @@ class FabContainer extends StatelessWidget {
     );
   }
 
-  chooseUpload(BuildContext context, StoryViewModel viewModel) {
+  chooseUpload(BuildContext context) {
     return showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -61,7 +57,7 @@ class FabContainer extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Center(
                   child: Text(
-                    'SELECT',
+                    'Create Post',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -72,30 +68,17 @@ class FabContainer extends StatelessWidget {
               Divider(),
               ListTile(
                 leading: Icon(
-                  CupertinoIcons.chart_pie_fill,
-                  size: 25.0,
-                ),
-                title: Text('Post on status'),
-                onTap: () async {
-                  await viewModel.pickImage(camera: false);
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => CreateStory(viewModel: viewModel),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(
                   CupertinoIcons.camera_on_rectangle,
                   size: 25.0,
                 ),
                 title: Text('Make a Post'),
                 onTap: () {
                   Navigator.pop(context);
-
-                  Navigator.of(context)
-                      .push(CupertinoPageRoute(builder: (_) => CreatePost()));
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (_) => CreatePost(),
+                    ),
+                  );
                 },
               ),
             ],
