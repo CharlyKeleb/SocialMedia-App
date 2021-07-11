@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:social_media_app/chats/recent_chats.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/utils/firebase.dart';
@@ -15,9 +14,6 @@ class Timeline extends StatefulWidget {
 }
 
 class _TimelineState extends State<Timeline> {
-  final PaginateRefreshedChangeListener refreshedChangeListener =
-      PaginateRefreshedChangeListener();
-
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<DocumentSnapshot> post = [];
@@ -72,7 +68,7 @@ class _TimelineState extends State<Timeline> {
     _scrollController?.addListener(() {
       double maxScroll = _scrollController.position.maxScrollExtent;
       double currentScroll = _scrollController.position.pixels;
-      double delta = MediaQuery.of(context).size.height * 0.20;
+      double delta = MediaQuery.of(context).size.height * 0.25;
       if (maxScroll - currentScroll <= delta) {
         getPosts();
       }
@@ -115,6 +111,7 @@ class _TimelineState extends State<Timeline> {
               controller: _scrollController,
               itemCount: post.length,
               itemBuilder: (context, index) {
+                internetChecker(context);
                 PostModel posts = PostModel.fromJson(post[index].data());
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
