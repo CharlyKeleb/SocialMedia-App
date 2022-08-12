@@ -15,12 +15,12 @@ class EditProfileViewModel extends ChangeNotifier {
   bool loading = false;
   UserService userService = UserService();
   final picker = ImagePicker();
-  UserModel user;
-  String country;
-  String username;
-  String bio;
-  File image;
-  String imgLink;
+  UserModel? user;
+  String? country;
+  String? username;
+  String? bio;
+  File? image;
+  String? imgLink;
 
   setUser(UserModel val) {
     user = val;
@@ -50,18 +50,19 @@ class EditProfileViewModel extends ChangeNotifier {
   }
 
   editProfile(BuildContext context) async {
-    FormState form = formKey.currentState;
+    FormState form = formKey.currentState!;
     form.save();
     if (!form.validate()) {
       validate = true;
       notifyListeners();
-      showInSnackBar('Please fix the errors in red before submitting.',context);
+      showInSnackBar(
+          'Please fix the errors in red before submitting.', context);
     } else {
       try {
         loading = true;
         notifyListeners();
         bool success = await userService.updateProfile(
-        //  user: user,
+          //  user: user,
           image: image,
           username: username,
           bio: bio,
@@ -82,15 +83,15 @@ class EditProfileViewModel extends ChangeNotifier {
     }
   }
 
-  pickImage({bool camera = false,BuildContext context}) async {
+  pickImage({bool camera = false, BuildContext? context}) async {
     loading = true;
     notifyListeners();
     try {
-      PickedFile pickedFile = await picker.getImage(
+      PickedFile? pickedFile = await picker.getImage(
         source: camera ? ImageSource.camera : ImageSource.gallery,
       );
-      File croppedFile = await ImageCropper.cropImage(
-        sourcePath: pickedFile.path,
+      CroppedFile? croppedFile = await ImageCropper().cropImage(
+        sourcePath: pickedFile!.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
           CropAspectRatioPreset.ratio3x2,
@@ -98,24 +99,26 @@ class EditProfileViewModel extends ChangeNotifier {
           CropAspectRatioPreset.ratio4x3,
           CropAspectRatioPreset.ratio16x9
         ],
-        androidUiSettings: AndroidUiSettings(
-          toolbarTitle: 'Crop Image',
-          toolbarColor: Constants.lightAccent,
-          toolbarWidgetColor: Colors.white,
-          initAspectRatio: CropAspectRatioPreset.original,
-          lockAspectRatio: false,
-        ),
-        iosUiSettings: IOSUiSettings(
-          minimumAspectRatio: 1.0,
-        ),
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: 'Crop Image',
+            toolbarColor: Constants.lightAccent,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false,
+          ),
+          IOSUiSettings(
+            minimumAspectRatio: 1.0,
+          ),
+        ],
       );
-      image = File(croppedFile.path);
+      image = File(croppedFile!.path);
       loading = false;
       notifyListeners();
     } catch (e) {
       loading = false;
       notifyListeners();
-      showInSnackBar('Cancelled',context);
+      showInSnackBar('Cancelled', context);
     }
   }
 
@@ -124,7 +127,7 @@ class EditProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
- void showInSnackBar(String value,context) {
+  void showInSnackBar(String value, context) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
   }

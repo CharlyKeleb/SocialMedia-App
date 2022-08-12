@@ -8,18 +8,18 @@ typedef ItemBuilder<T> = Widget Function(
 );
 
 class StreamBuilderWrapper extends StatelessWidget {
-  final Stream<dynamic> stream;
+  final Stream<QuerySnapshot<Object?>>? stream;
   final ItemBuilder<DocumentSnapshot> itemBuilder;
   final Axis scrollDirection;
   final bool shrinkWrap;
   final ScrollPhysics physics;
   final EdgeInsets padding;
-  final Query query;
+  final Query? query;
 
   const StreamBuilderWrapper({
-    Key key,
-    @required this.stream,
-    @required this.itemBuilder,
+    Key? key,
+    required this.stream,
+    required this.itemBuilder,
     this.scrollDirection = Axis.vertical,
     this.shrinkWrap = false,
     this.query,
@@ -29,11 +29,11 @@ class StreamBuilderWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilder<QuerySnapshot>(
       stream: stream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          var list = snapshot.data.docs.toList();
+          var list = snapshot.data!.docs.toList();
           return list.length == 0
               ? Padding(
                   padding: const EdgeInsets.only(top: 100.0),

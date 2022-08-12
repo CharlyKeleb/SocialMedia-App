@@ -18,7 +18,7 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  User user;
+  User? user;
   TextEditingController searchController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -27,7 +27,7 @@ class _SearchState extends State<Search> {
   bool loading = true;
 
   currentUserId() {
-    return firebaseAuth.currentUser.uid;
+    return firebaseAuth.currentUser!.uid;
   }
 
   getUsers() async {
@@ -45,13 +45,13 @@ class _SearchState extends State<Search> {
       filteredUsers = users;
     } else {
       List userSearch = users.where((userSnap) {
-        Map user = userSnap.data();
+        Map user = userSnap.data() as Map<String, dynamic>;
         String userName = user['username'];
         return userName.toLowerCase().contains(query.toLowerCase());
       }).toList();
 
       setState(() {
-        filteredUsers = userSearch;
+        filteredUsers = userSearch as List<DocumentSnapshot<Object?>>;
       });
     }
   }
@@ -136,7 +136,8 @@ class _SearchState extends State<Search> {
           itemCount: filteredUsers.length,
           itemBuilder: (BuildContext context, int index) {
             DocumentSnapshot doc = filteredUsers[index];
-            UserModel user = UserModel.fromJson(doc.data());
+            UserModel user =
+                UserModel.fromJson(doc.data() as Map<String, dynamic>);
             if (doc.id == currentUserId()) {
               Timer(Duration(milliseconds: 500), () {
                 setState(() {
@@ -147,16 +148,18 @@ class _SearchState extends State<Search> {
             return Column(
               children: [
                 ListTile(
-                  onTap: () => showProfile(context, profileId: user?.id),
+                  onTap: () => showProfile(context, profileId: user.id!),
                   contentPadding: EdgeInsets.symmetric(horizontal: 25.0),
                   leading: CircleAvatar(
                     radius: 35.0,
-                    backgroundImage: NetworkImage(user?.photoUrl),
+                    backgroundImage: NetworkImage(user.photoUrl!),
                   ),
-                  title: Text(user?.username,
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  title: Text(
+                    user.username!,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   subtitle: Text(
-                    user?.email,
+                    user.email!,
                   ),
                   trailing: GestureDetector(
                     onTap: () {
@@ -175,7 +178,7 @@ class _SearchState extends State<Search> {
                       height: 30.0,
                       width: 62.0,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                         borderRadius: BorderRadius.circular(3.0),
                       ),
                       child: Center(
@@ -207,7 +210,7 @@ class _SearchState extends State<Search> {
     }
   }
 
-  showProfile(BuildContext context, {String profileId}) {
+  showProfile(BuildContext context, {String? profileId}) {
     Navigator.push(
       context,
       CupertinoPageRoute(

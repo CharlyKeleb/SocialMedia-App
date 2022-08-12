@@ -20,7 +20,6 @@ class Constants {
     fontFamily: 'Lato-Regular',
     backgroundColor: lightBG,
     primaryColor: lightPrimary,
-    accentColor: lightAccent,
     textSelectionTheme: TextSelectionThemeData(
       cursorColor: lightAccent,
     ),
@@ -40,6 +39,9 @@ class Constants {
         ),
       ),
     ),
+    colorScheme: ColorScheme.fromSwatch().copyWith(
+      secondary: lightAccent,
+    ),
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -47,7 +49,6 @@ class Constants {
     brightness: Brightness.dark,
     backgroundColor: darkBG,
     primaryColor: darkPrimary,
-    accentColor: darkAccent,
     scaffoldBackgroundColor: darkBG,
     textSelectionTheme: TextSelectionThemeData(
       cursorColor: darkAccent,
@@ -67,6 +68,7 @@ class Constants {
         ),
       ),
     ),
+    colorScheme: ColorScheme.fromSwatch().copyWith(secondary: darkAccent),
   );
 
   static List<T> map<T>(List list, Function handler) {
@@ -76,37 +78,5 @@ class Constants {
     }
 
     return result;
-  }
-}
-
-class ThemeNotifier extends ChangeNotifier {
-  final String key = 'theme';
-  SharedPreferences _prefs;
-  bool _darkTheme;
-  bool get dark => _darkTheme;
-
-  ThemeNotifier() {
-    _darkTheme = true;
-    _loadfromPrefs();
-  }
-  toggleTheme() {
-    _darkTheme = !_darkTheme;
-    _saveToPrefs();
-    notifyListeners();
-  }
-
-  _initPrefs() async {
-    if (_prefs == null) _prefs = await SharedPreferences.getInstance();
-  }
-
-  _loadfromPrefs() async {
-    await _initPrefs();
-    _darkTheme = _prefs.getBool(key) ?? true;
-    notifyListeners();
-  }
-
-  _saveToPrefs() async {
-    await _initPrefs();
-    _prefs.setBool(key, _darkTheme);
   }
 }

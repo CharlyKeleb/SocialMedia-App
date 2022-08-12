@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CommentModel {
-  String username;
-  String comment;
-  Timestamp timestamp;
-  String userDp;
-  String userId;
+  String? username;
+  String? comment;
+  Timestamp? timestamp;
+  String? userDp;
+  String? userId;
 
   CommentModel({
     this.username,

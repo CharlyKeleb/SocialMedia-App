@@ -9,7 +9,7 @@ class RegisterViewModel extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool validate = false;
   bool loading = false;
-  String username, email, country, password, cPassword;
+  String? username, email, country, password, cPassword;
   FocusNode usernameFN = FocusNode();
   FocusNode emailFN = FocusNode();
   FocusNode countryFN = FocusNode();
@@ -18,7 +18,7 @@ class RegisterViewModel extends ChangeNotifier {
   AuthService auth = AuthService();
 
   register(BuildContext context) async {
-    FormState form = formKey.currentState;
+    FormState form = formKey.currentState!;
     form.save();
     if (!form.validate()) {
       validate = true;

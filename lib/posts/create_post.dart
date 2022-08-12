@@ -19,7 +19,7 @@ class _CreatePostState extends State<CreatePost> {
   @override
   Widget build(BuildContext context) {
     currentUserId() {
-      return firebaseAuth.currentUser.uid;
+      return firebaseAuth.currentUser!.uid;
     }
 
     PostsViewModel viewModel = Provider.of<PostsViewModel>(context);
@@ -57,7 +57,7 @@ class _CreatePostState extends State<CreatePost> {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15.0,
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                 ),
@@ -72,18 +72,19 @@ class _CreatePostState extends State<CreatePost> {
                 stream: usersRef.doc(currentUserId()).snapshots(),
                 builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                   if (snapshot.hasData) {
-                    UserModel user = UserModel.fromJson(snapshot.data.data());
+                    UserModel user = UserModel.fromJson(
+                        snapshot.data!.data() as Map<String, dynamic>);
                     return ListTile(
                       leading: CircleAvatar(
                         radius: 25.0,
-                        backgroundImage: NetworkImage(user?.photoUrl),
+                        backgroundImage: NetworkImage(user.photoUrl!),
                       ),
                       title: Text(
-                        user?.username,
+                        user.username!,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
-                        user?.email,
+                        user.email!,
                       ),
                     );
                   }
@@ -101,7 +102,7 @@ class _CreatePostState extends State<CreatePost> {
                       Radius.circular(5.0),
                     ),
                     border: Border.all(
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                   child: viewModel.imgLink != null
@@ -116,12 +117,13 @@ class _CreatePostState extends State<CreatePost> {
                               child: Text(
                                 'Upload a Photo',
                                 style: TextStyle(
-                                  color: Theme.of(context).accentColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                               ),
                             )
                           : Image.file(
-                              viewModel.mediaUrl,
+                              viewModel.mediaUrl!,
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.width - 30,
                               fit: BoxFit.cover,
@@ -175,7 +177,7 @@ class _CreatePostState extends State<CreatePost> {
                     size: 25.0,
                   ),
                   iconSize: 30.0,
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).colorScheme.secondary,
                   onPressed: () => viewModel.getLocation(),
                 ),
               ),

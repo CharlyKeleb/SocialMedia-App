@@ -8,6 +8,7 @@ import 'package:social_media_app/services/user_service.dart';
 import 'package:social_media_app/utils/config.dart';
 import 'package:social_media_app/utils/constants.dart';
 import 'package:social_media_app/utils/providers.dart';
+import 'package:social_media_app/view_models/theme/theme_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,20 +37,20 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: providers,
-      child: Consumer<ThemeNotifier>(
-        builder: (context, ThemeNotifier notifier, child) {
+      child: Consumer<ThemeProvider>(
+        builder: (context, ThemeProvider notifier, Widget? child) {
           return MaterialApp(
             title: Constants.appName,
             debugShowCheckedModeBanner: false,
             theme: notifier.dark ? Constants.darkTheme : Constants.lightTheme,
             home: StreamBuilder(
               stream: FirebaseAuth.instance.authStateChanges(),
-              builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+              builder: ((BuildContext context, snapshot) {
                 if (snapshot.hasData) {
                   return TabScreen();
                 } else
                   return Landing();
-              },
+              }),
             ),
           );
         },

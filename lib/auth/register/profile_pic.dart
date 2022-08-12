@@ -58,12 +58,12 @@ class _ProfilePictureState extends State<ProfilePicture> {
                               child: Text(
                                 'upload your profile picture',
                                 style: TextStyle(
-                                  color: Theme.of(context).accentColor,
+                                  color: Theme.of(context).colorScheme.secondary,
                                 ),
                               ),
                             )
                           : Image.file(
-                              viewModel.mediaUrl,
+                              viewModel.mediaUrl!,
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.width - 30,
                               fit: BoxFit.cover,
@@ -75,7 +75,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
                 child: ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                        Theme.of(context).accentColor),
+                        Theme.of(context).colorScheme.secondary),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),

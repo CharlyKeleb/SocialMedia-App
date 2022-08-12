@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class TextTime extends StatefulWidget {
-  final Widget child;
+  final Widget? child;
 
   const TextTime({this.child});
 
@@ -24,6 +24,6 @@ class _TextTimeState extends State<TextTime> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return widget.child!;
   }
 }

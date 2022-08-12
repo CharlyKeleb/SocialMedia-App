@@ -24,9 +24,9 @@ class _TimelineState extends State<Timeline> {
 
   int documentLimit = 10;
 
-  DocumentSnapshot lastDocument;
+  DocumentSnapshot? lastDocument;
 
-  ScrollController _scrollController;
+  ScrollController? _scrollController;
 
   getPosts() async {
     if (!hasMore) {
@@ -47,7 +47,7 @@ class _TimelineState extends State<Timeline> {
     } else {
       querySnapshot = await postRef
           .orderBy('timestamp', descending: false)
-          .startAfterDocument(lastDocument)
+          .startAfterDocument(lastDocument!)
           .limit(documentLimit)
           .get();
     }
@@ -66,8 +66,8 @@ class _TimelineState extends State<Timeline> {
     super.initState();
     getPosts();
     _scrollController?.addListener(() {
-      double maxScroll = _scrollController.position.maxScrollExtent;
-      double currentScroll = _scrollController.position.pixels;
+      double maxScroll = _scrollController!.position.maxScrollExtent;
+      double currentScroll = _scrollController!.position.pixels;
       double delta = MediaQuery.of(context).size.height * 0.25;
       if (maxScroll - currentScroll <= delta) {
         getPosts();
@@ -91,7 +91,7 @@ class _TimelineState extends State<Timeline> {
             icon: Icon(
               CupertinoIcons.chat_bubble_2_fill,
               size: 30.0,
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
             ),
             onPressed: () {
               Navigator.push(
@@ -112,7 +112,9 @@ class _TimelineState extends State<Timeline> {
               itemCount: post.length,
               itemBuilder: (context, index) {
                 internetChecker(context);
-                PostModel posts = PostModel.fromJson(post[index].data());
+                PostModel posts = PostModel.fromJson(
+                  post[index].data() as Map<String, dynamic>,
+                );
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: UserPost(post: posts),

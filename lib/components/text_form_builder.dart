@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:social_media_app/components/custom_card.dart';
 
 class TextFormBuilder extends StatefulWidget {
-  final String initialValue;
-  final bool enabled;
-  final String hintText;
-  final TextInputType textInputType;
-  final TextEditingController controller;
-  final TextInputAction textInputAction;
+  final String? initialValue;
+  final bool? enabled;
+  final String? hintText;
+  final TextInputType? textInputType;
+  final TextEditingController? controller;
+  final TextInputAction? textInputAction;
   final bool obscureText;
-  final FocusNode focusNode, nextFocusNode;
-  final VoidCallback submitAction;
-  final FormFieldValidator<String> validateFunction;
-  final void Function(String) onSaved, onChange;
-  final Key key;
-  final IconData prefix;
-  final IconData suffix;
+  final FocusNode? focusNode, nextFocusNode;
+  final VoidCallback? submitAction;
+  final FormFieldValidator<String>? validateFunction;
+  final void Function(String)? onSaved, onChange;
+  final Key? key;
+  final IconData? prefix;
+  final IconData? suffix;
 
   TextFormBuilder(
       {this.prefix,
@@ -40,7 +40,7 @@ class TextFormBuilder extends StatefulWidget {
 }
 
 class _TextFormBuilderState extends State<TextFormBuilder> {
-  String error;
+  String? error;
 
   @override
   Widget build(BuildContext context) {
@@ -54,17 +54,18 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
             child: Container(
               child: Theme(
                 data: ThemeData(
-                  primaryColor: Theme.of(context).accentColor,
-                  accentColor: Theme.of(context).accentColor,
+                  primaryColor: Theme.of(context).colorScheme.secondary,
+                  colorScheme: ColorScheme.fromSwatch().copyWith(
+                      secondary: Theme.of(context).colorScheme.secondary),
                 ),
                 child: TextFormField(
                   textCapitalization: TextCapitalization.sentences,
                   initialValue: widget.initialValue,
                   enabled: widget.enabled,
                   onChanged: (val) {
-                    error = widget.validateFunction(val);
+                    error = widget.validateFunction!(val);
                     setState(() {});
-                    widget.onSaved(val);
+                    widget.onSaved!(val);
                   },
                   style: TextStyle(
                     fontSize: 15.0,
@@ -75,40 +76,41 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
                   keyboardType: widget.textInputType,
                   validator: widget.validateFunction,
                   onSaved: (val) {
-                    error = widget.validateFunction(val);
+                    error = widget.validateFunction!(val);
                     setState(() {});
-                    widget.onSaved(val);
+                    widget.onSaved!(val!);
                   },
                   textInputAction: widget.textInputAction,
                   focusNode: widget.focusNode,
                   onFieldSubmitted: (String term) {
                     if (widget.nextFocusNode != null) {
-                      widget.focusNode.unfocus();
+                      widget.focusNode!.unfocus();
                       FocusScope.of(context).requestFocus(widget.nextFocusNode);
                     } else {
-                      widget.submitAction();
+                      widget.submitAction!();
                     }
                   },
                   decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        widget.prefix,
-                        size: 15.0,
-                      ),
-                      suffixIcon: Icon(
-                        widget.suffix,
-                        size: 15.0,
-                      ),
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: widget.hintText,
-                      hintStyle: TextStyle(
-                        color: Colors.grey[400],
-                      ),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                      border: border(context),
-                      enabledBorder: border(context),
-                      focusedBorder: focusBorder(context),
-                      errorStyle: TextStyle(height: 0.0, fontSize: 0.0)),
+                    prefixIcon: Icon(
+                      widget.prefix,
+                      size: 15.0,
+                    ),
+                    suffixIcon: Icon(
+                      widget.suffix,
+                      size: 15.0,
+                    ),
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: widget.hintText,
+                    hintStyle: TextStyle(
+                      color: Colors.grey[400],
+                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+                    border: border(context),
+                    enabledBorder: border(context),
+                    focusedBorder: focusBorder(context),
+                    errorStyle: TextStyle(height: 0.0, fontSize: 0.0),
+                  ),
                 ),
               ),
             ),
@@ -150,7 +152,7 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
         Radius.circular(30.0),
       ),
       borderSide: BorderSide(
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).colorScheme.secondary,
         width: 1.0,
       ),
     );
