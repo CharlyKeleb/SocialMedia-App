@@ -5,74 +5,31 @@ import 'package:flutter/cupertino.dart';
 import 'package:social_media_app/chats/recent_chats.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/utils/firebase.dart';
-import 'package:social_media_app/widgets/indicators.dart';
 import 'package:social_media_app/widgets/userpost.dart';
 
-class Timeline extends StatefulWidget {
+class Feeds extends StatefulWidget {
   @override
-  _TimelineState createState() => _TimelineState();
+  _FeedsState createState() => _FeedsState();
 }
 
-class _TimelineState extends State<Timeline> {
+class _FeedsState extends State<Feeds> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  List<DocumentSnapshot> post = [];
-
-  bool isLoading = false;
-
-  bool hasMore = true;
-
-  int documentLimit = 10;
-
-  DocumentSnapshot? lastDocument;
-
-  ScrollController? _scrollController;
-
-  getPosts() async {
-    if (!hasMore) {
-      print('No New Posts');
-    }
-    if (isLoading) {
-      return CircularProgressIndicator();
-    }
-    setState(() {
-      isLoading = true;
-    });
-    QuerySnapshot querySnapshot;
-    if (lastDocument == null) {
-      querySnapshot = await postRef
-          .orderBy('timestamp', descending: false)
-          .limit(documentLimit)
-          .get();
-    } else {
-      querySnapshot = await postRef
-          .orderBy('timestamp', descending: false)
-          .startAfterDocument(lastDocument!)
-          .limit(documentLimit)
-          .get();
-    }
-    if (querySnapshot.docs.length < documentLimit) {
-      hasMore = false;
-    }
-    lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
-    post.addAll(querySnapshot.docs);
-    setState(() {
-      isLoading = false;
-    });
-  }
+  int page = 5;
+  bool loadingMore = false;
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
-    super.initState();
-    getPosts();
-    _scrollController?.addListener(() {
-      double maxScroll = _scrollController!.position.maxScrollExtent;
-      double currentScroll = _scrollController!.position.pixels;
-      double delta = MediaQuery.of(context).size.height * 0.25;
-      if (maxScroll - currentScroll <= delta) {
-        getPosts();
+    scrollController.addListener(() async {
+      if (scrollController.position.atEdge &&
+          scrollController.position.pixels == 0) {
+        setState(() {
+          page = page + 10;
+        });
       }
     });
+    super.initState();
   }
 
   @override
@@ -105,22 +62,31 @@ class _TimelineState extends State<Timeline> {
           SizedBox(width: 20.0),
         ],
       ),
-      body: isLoading
-          ? circularProgress(context)
-          : ListView.builder(
-              controller: _scrollController,
-              itemCount: post.length,
+      body: FutureBuilder(
+        future:
+            postRef.orderBy('timestamp', descending: false).limit(page).get(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            var snap = snapshot.data;
+            List docs = snap!.docs;
+            return ListView.builder(
+              controller: scrollController,
+              itemCount: docs.length,
               itemBuilder: (context, index) {
                 internetChecker(context);
-                PostModel posts = PostModel.fromJson(
-                  post[index].data() as Map<String, dynamic>,
-                );
+                PostModel posts = PostModel.fromJson(docs[index].data());
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: UserPost(post: posts),
                 );
               },
-            ),
+            );
+          } else
+            return Center(
+              child: Text('No Feeds'),
+            );
+        },
+      ),
     );
   }
 

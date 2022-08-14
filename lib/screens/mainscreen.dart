@@ -21,7 +21,7 @@ class _TabScreenState extends State<TabScreen> {
     {
       'title': 'Home',
       'icon': Feather.home,
-      'page': Timeline(),
+      'page': Feeds(),
       'index': 0,
     },
     {
