@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:social_media_app/auth/register/register.dart';
 import 'package:social_media_app/components/stream_builder_wrapper.dart';
 import 'package:social_media_app/components/stream_grid_wrapper.dart';
@@ -94,7 +94,7 @@ class _ProfileState extends State<Profile> {
             floating: false,
             toolbarHeight: 5.0,
             collapsedHeight: 6.0,
-            expandedHeight: 220.0,
+            expandedHeight: 225.0,
             flexibleSpace: FlexibleSpaceBar(
               background: StreamBuilder(
                 stream: usersRef.doc(widget.profileId).snapshots(),
@@ -183,7 +183,7 @@ class _ProfileState extends State<Profile> {
                                             child: Column(
                                               children: [
                                                 Icon(
-                                                  Feather.settings,
+                                                  Ionicons.settings_outline,
                                                   color: Theme.of(context)
                                                       .colorScheme
                                                       .secondary,
@@ -347,7 +347,7 @@ class _ProfileState extends State<Profile> {
   buildIcons() {
     if (isToggle) {
       return IconButton(
-          icon: Icon(Feather.list),
+          icon: Icon(Ionicons.list),
           onPressed: () {
             setState(() {
               isToggle = false;

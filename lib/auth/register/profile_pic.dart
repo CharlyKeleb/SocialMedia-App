@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/components/custom_image.dart';
 import 'package:social_media_app/view_models/auth/posts_view_model.dart';
@@ -20,14 +20,15 @@ class _ProfilePictureState extends State<ProfilePicture> {
         viewModel.resetPost();
         return true;
       },
-      child: ModalProgressHUD(
+      child: LoadingOverlay(
         progressIndicator: circularProgress(context),
-        inAsyncCall: viewModel.loading,
+        isLoading: viewModel.loading,
         child: Scaffold(
           key: viewModel.scaffoldKey,
           appBar: AppBar(
             title: Text('Add a profile picture'),
             centerTitle: true,
+            automaticallyImplyLeading: false,
           ),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -43,7 +44,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
                       Radius.circular(3.0),
                     ),
                     border: Border.all(
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                   child: viewModel.imgLink != null
@@ -56,7 +57,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
                       : viewModel.mediaUrl == null
                           ? Center(
                               child: Text(
-                                'upload your profile picture',
+                                'Tap to add your profile picture',
                                 style: TextStyle(
                                   color: Theme.of(context).colorScheme.secondary,
                                 ),
@@ -82,8 +83,11 @@ class _ProfilePictureState extends State<ProfilePicture> {
                       ),
                     ),
                   ),
-                  child: Center(
-                    child: Text('done'.toUpperCase()),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Center(
+                      child: Text('done'.toUpperCase()),
+                    ),
                   ),
                   onPressed: () => viewModel.uploadProfilePicture(context),
                 ),
@@ -111,7 +115,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Text(
-                  'Select'.toUpperCase(),
+                  'Select from'.toUpperCase(),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -119,7 +123,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
               ),
               Divider(),
               ListTile(
-                leading: Icon(Feather.camera),
+                leading: Icon(Ionicons.camera_outline),
                 title: Text('Camera'),
                 onTap: () {
                   Navigator.pop(context);
@@ -127,7 +131,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
                 },
               ),
               ListTile(
-                leading: Icon(Feather.image),
+                leading: Icon(Ionicons.image),
                 title: Text('Gallery'),
                 onTap: () {
                   Navigator.pop(context);

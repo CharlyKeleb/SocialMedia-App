@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:ionicons/ionicons.dart';
 
 //import 'package:like_button/like_button.dart';
 import 'package:social_media_app/models/post.dart';
@@ -169,7 +169,7 @@ class _PostsState extends State<Posts> {
       ),
       trailing: isMe
           ? IconButton(
-              icon: Icon(Feather.more_horizontal),
+              icon: Icon(Ionicons.ellipsis_horizontal_outline),
               onPressed: () => handleDelete(context),
             )
           : IconButton(

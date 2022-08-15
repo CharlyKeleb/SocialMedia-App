@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:social_media_app/chats/conversation.dart';
 import 'package:social_media_app/models/user.dart';
 import 'package:social_media_app/pages/profile.dart';
@@ -17,7 +18,7 @@ class Search extends StatefulWidget {
   _SearchState createState() => _SearchState();
 }
 
-class _SearchState extends State<Search> {
+class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
   User? user;
   TextEditingController searchController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -83,7 +84,7 @@ class _SearchState extends State<Search> {
           height: 35.0,
           width: MediaQuery.of(context).size.width - 100,
           decoration: BoxDecoration(
-            color: Colors.black26,
+            color: Colors.grey.withOpacity(0.3),
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: Padding(
@@ -106,7 +107,8 @@ class _SearchState extends State<Search> {
                     onTap: () {
                       searchController.clear();
                     },
-                    child: Icon(Feather.x, size: 12.0, color: Colors.black),
+                    child: Icon(Ionicons.close_outline,
+                        size: 12.0, color: Colors.black),
                   ),
                   contentPadding: EdgeInsets.only(bottom: 10.0, left: 10.0),
                   border: InputBorder.none,
@@ -152,7 +154,7 @@ class _SearchState extends State<Search> {
                   contentPadding: EdgeInsets.symmetric(horizontal: 25.0),
                   leading: CircleAvatar(
                     radius: 35.0,
-                    backgroundImage: NetworkImage(user.photoUrl!),
+                    backgroundImage: CachedNetworkImageProvider(user.photoUrl!),
                   ),
                   title: Text(
                     user.username!,
@@ -218,4 +220,8 @@ class _SearchState extends State<Search> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

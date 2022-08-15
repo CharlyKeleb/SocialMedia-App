@@ -6,8 +6,8 @@ import 'package:social_media_app/services/auth_service.dart';
 import 'package:social_media_app/utils/validation.dart';
 
 class LoginViewModel extends ChangeNotifier {
-  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool validate = false;
   bool loading = false;
   String? email, password;

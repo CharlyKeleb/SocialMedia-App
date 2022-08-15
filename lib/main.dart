@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/components/life_cycle_event_handler.dart';
 import 'package:social_media_app/landing/landing_page.dart';
@@ -42,7 +43,9 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(
             title: Constants.appName,
             debugShowCheckedModeBanner: false,
-            theme: notifier.dark ? Constants.darkTheme : Constants.lightTheme,
+            theme: themeData(
+              notifier.dark ? Constants.darkTheme : Constants.lightTheme,
+            ),
             home: StreamBuilder(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: ((BuildContext context, snapshot) {
@@ -57,4 +60,13 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+
+  ThemeData themeData(ThemeData theme) {
+    return theme.copyWith(
+      textTheme: GoogleFonts.nunitoTextTheme(
+        theme.textTheme,
+      ),
+    );
+  }
 }
+

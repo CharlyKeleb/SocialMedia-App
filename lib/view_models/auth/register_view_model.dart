@@ -5,8 +5,8 @@ import 'package:social_media_app/auth/register/profile_pic.dart';
 import 'package:social_media_app/services/auth_service.dart';
 
 class RegisterViewModel extends ChangeNotifier {
-  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool validate = false;
   bool loading = false;
   String? username, email, country, password, cPassword;

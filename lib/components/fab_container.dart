@@ -8,7 +8,7 @@ class FabContainer extends StatelessWidget {
   final IconData icon;
   final bool mini;
 
-  FabContainer({ this.page, required this.icon, this.mini = false});
+  FabContainer({this.page, required this.icon, this.mini = false});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class FabContainer extends StatelessWidget {
           backgroundColor: Theme.of(context).primaryColor,
           child: Icon(
             icon,
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).colorScheme.secondary,
           ),
           onPressed: () {
             chooseUpload(context);
@@ -60,8 +60,9 @@ class FabContainer extends StatelessWidget {
                     'Create Post',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).accentColor),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
                 ),
               ),

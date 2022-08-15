@@ -50,6 +50,9 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomCard(
+            onTap: () {
+              print('clicked');
+            },
             borderRadius: BorderRadius.circular(40.0),
             child: Container(
               child: Theme(
@@ -59,7 +62,7 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
                       secondary: Theme.of(context).colorScheme.secondary),
                 ),
                 child: TextFormField(
-                  textCapitalization: TextCapitalization.sentences,
+                  textCapitalization: TextCapitalization.none,
                   initialValue: widget.initialValue,
                   enabled: widget.enabled,
                   onChanged: (val) {
@@ -94,12 +97,14 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
                     prefixIcon: Icon(
                       widget.prefix,
                       size: 15.0,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                     suffixIcon: Icon(
                       widget.suffix,
                       size: 15.0,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
-                    fillColor: Colors.white,
+                    // fillColor: Colors.white,
                     filled: true,
                     hintText: widget.hintText,
                     hintStyle: TextStyle(

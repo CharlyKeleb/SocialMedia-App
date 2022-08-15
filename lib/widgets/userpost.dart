@@ -30,7 +30,7 @@ class UserPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      onTap: null,
+      onTap: (){},
       borderRadius: BorderRadius.circular(10.0),
       child: OpenContainer(
         transitionType: ContainerTransitionType.fadeThrough,

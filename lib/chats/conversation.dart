@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/components/chat_bubble.dart';
 import 'package:social_media_app/models/enum/message_type.dart';
@@ -101,7 +101,8 @@ class _ConversationState extends State<Conversation> {
                         reverse: true,
                         itemBuilder: (BuildContext context, int index) {
                           Message message = Message.fromJson(
-                              messages.reversed.toList()[index].data());
+                            messages.reversed.toList()[index].data(),
+                          );
                           return ChatBubble(
                             message: '${message.content}',
                             time: message.time!,
@@ -128,7 +129,7 @@ class _ConversationState extends State<Conversation> {
                         IconButton(
                           icon: Icon(
                             CupertinoIcons.photo_on_rectangle,
-                            color: Theme.of(context).accentColor,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                           onPressed: () => showPhotoOptions(viewModel, user),
                         ),
@@ -158,8 +159,8 @@ class _ConversationState extends State<Conversation> {
                         ),
                         IconButton(
                           icon: Icon(
-                            Feather.send,
-                            color: Theme.of(context).accentColor,
+                            Ionicons.send,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                           onPressed: () {
                             if (messageController.text.isNotEmpty) {

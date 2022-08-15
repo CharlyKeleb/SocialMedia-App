@@ -64,71 +64,74 @@ class _CommentsState extends State<Comments> {
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                ),
-                constraints: BoxConstraints(
-                  maxHeight: 190.0,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Flexible(
-                      child: ListTile(
-                        contentPadding: EdgeInsets.all(0),
-                        title: TextField(
-                          textCapitalization: TextCapitalization.sentences,
-                          controller: commentsTEC,
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            color: Theme.of(context).textTheme.headline6!.color,
-                          ),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10.0),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            hintText: "Write your comment...",
-                            hintStyle: TextStyle(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  constraints: BoxConstraints(
+                    maxHeight: 190.0,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Flexible(
+                        child: ListTile(
+                          contentPadding: EdgeInsets.all(0),
+                          title: TextField(
+                            textCapitalization: TextCapitalization.sentences,
+                            controller: commentsTEC,
+                            style: TextStyle(
                               fontSize: 15.0,
-                              color:
-                                  Theme.of(context).textTheme.headline6!.color,
+                              color: Theme.of(context).textTheme.headline6!.color,
                             ),
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(10.0),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              hintText: "Write your comment...",
+                              hintStyle: TextStyle(
+                                fontSize: 15.0,
+                                color:
+                                    Theme.of(context).textTheme.headline6!.color,
+                              ),
+                            ),
+                            maxLines: null,
                           ),
-                          maxLines: null,
-                        ),
-                        trailing: GestureDetector(
-                          onTap: () async {
-                            await services.uploadComment(
-                              currentUserId(),
-                              commentsTEC.text,
-                              widget.post!.postId!,
-                              widget.post!.ownerId!,
-                              widget.post!.mediaUrl!,
-                            );
-                            commentsTEC.clear();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 10.0),
-                            child: Icon(
-                              Icons.send,
-                              color: Theme.of(context).colorScheme.secondary,
+                          trailing: GestureDetector(
+                            onTap: () async {
+                              await services.uploadComment(
+                                currentUserId(),
+                                commentsTEC.text,
+                                widget.post!.postId!,
+                                widget.post!.ownerId!,
+                                widget.post!.mediaUrl!,
+                              );
+                              commentsTEC.clear();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: Icon(
+                                Icons.send,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

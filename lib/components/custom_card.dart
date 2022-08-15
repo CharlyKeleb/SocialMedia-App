@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
   final Widget? child;
-  final Function()? onTap;
+  final Function() onTap;
   final BorderRadius? borderRadius;
   final bool elevated;
 
   CustomCard({
-    @required this.child,
-    this.onTap,
+    Key? key,
+    required this.child,
+    required this.onTap,
     this.borderRadius,
     this.elevated = true,
   });
@@ -30,7 +31,7 @@ class CustomCard extends StatelessWidget {
         borderRadius: borderRadius,
         child: InkWell(
           borderRadius: borderRadius,
-          onTap: onTap!,
+          onTap: onTap,
           child: child,
         ),
       ),

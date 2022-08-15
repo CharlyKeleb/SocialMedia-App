@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/models/user.dart';
 import 'package:social_media_app/utils/firebase.dart';
@@ -30,6 +30,7 @@ class _ViewImageState extends State<ViewImage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Center(
         child: buildImage(context),
       ),
@@ -39,7 +40,7 @@ class _ViewImageState extends State<ViewImage> {
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Container(
-              height: 40.0,
+              height: 50.0,
               width: MediaQuery.of(context).size.width,
               child: Row(children: [
                 Column(
@@ -51,7 +52,7 @@ class _ViewImageState extends State<ViewImage> {
                     SizedBox(height: 3.0),
                     Row(
                       children: [
-                        Icon(Feather.clock, size: 13.0),
+                        Icon(Ionicons.alarm_outline, size: 13.0),
                         SizedBox(width: 3.0),
                         Text(timeago.format(widget.post!.timestamp!.toDate())),
                       ],

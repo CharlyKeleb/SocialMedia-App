@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:social_media_app/chats/recent_chats.dart';
@@ -64,7 +63,7 @@ class _FeedsState extends State<Feeds> {
       ),
       body: FutureBuilder(
         future:
-            postRef.orderBy('timestamp', descending: false).limit(page).get(),
+            postRef.orderBy('timestamp', descending: true).limit(page).get(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
             var snap = snapshot.data;
@@ -73,7 +72,6 @@ class _FeedsState extends State<Feeds> {
               controller: scrollController,
               itemCount: docs.length,
               itemBuilder: (context, index) {
-                internetChecker(context);
                 PostModel posts = PostModel.fromJson(docs[index].data());
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -88,17 +86,5 @@ class _FeedsState extends State<Feeds> {
         },
       ),
     );
-  }
-
-  internetChecker(context) async {
-    bool result = await DataConnectionChecker().hasConnection;
-    if (result == false) {
-      showInSnackBar('No Internet Connection', context);
-    }
-  }
-
-  void showInSnackBar(String value, context) {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
   }
 }

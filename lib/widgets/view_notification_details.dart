@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:social_media_app/models/notification.dart';
 import 'package:social_media_app/pages/profile.dart';
 import 'package:social_media_app/widgets/indicators.dart';
@@ -53,7 +53,7 @@ class _ViewActivityDetailsState extends State<ViewActivityDetails> {
             ),
             subtitle: Row(
               children: [
-                Icon(Feather.clock, size: 13.0),
+                Icon(Ionicons.alarm_outline, size: 13.0),
                 SizedBox(width: 3.0),
                 Text(
                   timeago.format(widget.activity!.timestamp!.toDate()),
