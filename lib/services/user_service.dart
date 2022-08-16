@@ -6,10 +6,9 @@ import 'package:social_media_app/services/services.dart';
 import 'package:social_media_app/utils/firebase.dart';
 
 class UserService extends Service {
-  
   //get the authenticated uis
   String currentUid() {
-    return firebaseAuth.currentUser.uid;
+    return firebaseAuth.currentUser!.uid;
   }
 
 //tells when the user is online or not and updates the last seen for the messages
@@ -22,23 +21,22 @@ class UserService extends Service {
     }
   }
 
-
 //updates user profile in the Edit Profile Screen
   updateProfile(
-      {File image, String username, String bio, String country}) async {
+      {File? image, String? username, String? bio, String? country}) async {
     DocumentSnapshot doc = await usersRef.doc(currentUid()).get();
-    var users = UserModel.fromJson(doc.data());
-    users?.username = username;
-    users?.bio = bio;
-    users?.country = country;
+    var users = UserModel.fromJson(doc.data() as Map<String, dynamic>);
+    users.username = username;
+    users.bio = bio;
+    users.country = country;
     if (image != null) {
-      users?.photoUrl = await uploadImage(profilePic, image);
+      users.photoUrl = await uploadImage(profilePic, image);
     }
     await usersRef.doc(currentUid()).update({
       'username': username,
       'bio': bio,
       'country': country,
-      "photoUrl": users?.photoUrl ?? '',
+      "photoUrl": users.photoUrl ?? '',
     });
 
     return true;

@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:social_media_app/components/custom_card.dart';
 
 class PasswordFormBuilder extends StatefulWidget {
-  final String initialValue;
-  final bool enabled;
-  final String hintText;
-  final TextInputType textInputType;
-  final TextEditingController controller;
-  final TextInputAction textInputAction;
-  final FocusNode focusNode, nextFocusNode;
-  final VoidCallback submitAction;
+  final String? initialValue;
+  final bool? enabled;
+  final String? hintText;
+  final TextInputType? textInputType;
+  final TextEditingController? controller;
+  final TextInputAction? textInputAction;
+  final FocusNode? focusNode, nextFocusNode;
+  final VoidCallback? submitAction;
   final bool obscureText;
-  final FormFieldValidator<String> validateFunction;
-  final void Function(String) onSaved, onChange;
-  final Key key;
-  final IconData prefix;
-  final IconData suffix;
+  final FormFieldValidator<String>? validateFunction;
+  final void Function(String)? onSaved, onChange;
+  final Key? key;
+  final IconData? prefix;
+  final IconData? suffix;
 
   PasswordFormBuilder(
       {this.prefix,
@@ -41,7 +41,7 @@ class PasswordFormBuilder extends StatefulWidget {
 }
 
 class _PasswordFormBuilderState extends State<PasswordFormBuilder> {
-  String error;
+  String? error;
   bool obscureText = false;
 
   @override
@@ -52,20 +52,24 @@ class _PasswordFormBuilderState extends State<PasswordFormBuilder> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomCard(
+            onTap: () {
+              print('clicked');
+            },
             borderRadius: BorderRadius.circular(40.0),
             child: Container(
               child: Theme(
                 data: ThemeData(
-                  primaryColor: Theme.of(context).accentColor,
-                  accentColor: Theme.of(context).accentColor,
+                  primaryColor: Theme.of(context).colorScheme.secondary,
+                  colorScheme: ColorScheme.fromSwatch().copyWith(
+                      secondary: Theme.of(context).colorScheme.secondary),
                 ),
                 child: TextFormField(
                   initialValue: widget.initialValue,
                   enabled: widget.enabled,
                   onChanged: (val) {
-                    error = widget.validateFunction(val);
+                    error = widget.validateFunction!(val);
                     setState(() {});
-                    widget.onSaved(val);
+                    widget.onSaved!(val);
                   },
                   style: TextStyle(
                     fontSize: 15.0,
@@ -77,35 +81,37 @@ class _PasswordFormBuilderState extends State<PasswordFormBuilder> {
                   keyboardType: widget.textInputType,
                   validator: widget.validateFunction,
                   onSaved: (val) {
-                    error = widget.validateFunction(val);
+                    error = widget.validateFunction!(val);
                     setState(() {});
-                    widget.onSaved(val);
+                    widget.onSaved!(val!);
                   },
                   textInputAction: widget.textInputAction,
                   focusNode: widget.focusNode,
                   onFieldSubmitted: (String term) {
                     if (widget.nextFocusNode != null) {
-                      widget.focusNode.unfocus();
+                      widget.focusNode!.unfocus();
                       FocusScope.of(context).requestFocus(widget.nextFocusNode);
                     } else {
-                      widget.submitAction();
+                      widget.submitAction!();
                     }
                   },
                   decoration: InputDecoration(
                     prefixIcon: Icon(
                       widget.prefix,
                       size: 15.0,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                     suffixIcon: GestureDetector(
                       onTap: () {
                         setState(() => obscureText = !obscureText);
                       },
                       child: Icon(
-                        obscureText ? widget.suffix : Feather.eye_off,
+                        obscureText ? widget.suffix : Ionicons.eye_off_outline,
                         size: 15.0,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                     ),
-                    fillColor: Colors.white,
+                    // fillColor: Colors.white,
                     filled: true,
                     hintText: widget.hintText,
                     hintStyle: TextStyle(
@@ -158,7 +164,7 @@ class _PasswordFormBuilderState extends State<PasswordFormBuilder> {
         Radius.circular(30.0),
       ),
       borderSide: BorderSide(
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).colorScheme.secondary,
         width: 1.0,
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:social_media_app/components/fab_container.dart';
 import 'package:social_media_app/pages/notification.dart';
 import 'package:social_media_app/pages/profile.dart';
@@ -20,19 +20,19 @@ class _TabScreenState extends State<TabScreen> {
   List pages = [
     {
       'title': 'Home',
-      'icon': Feather.home,
-      'page': Timeline(),
+      'icon': Ionicons.home,
+      'page': Feeds(),
       'index': 0,
     },
     {
       'title': 'Search',
-      'icon': Feather.search,
+      'icon': Ionicons.search,
       'page': Search(),
       'index': 1,
     },
     {
       'title': 'unsee',
-      'icon': Feather.plus_circle,
+      'icon': Ionicons.add_circle,
       'page': Text('nes'),
       'index': 2,
     },
@@ -45,7 +45,7 @@ class _TabScreenState extends State<TabScreen> {
     {
       'title': 'Profile',
       'icon': CupertinoIcons.person,
-      'page': Profile(profileId: firebaseAuth.currentUser.uid),
+      'page': Profile(profileId: firebaseAuth.currentUser!.uid),
       'index': 4,
     },
   ];
@@ -84,7 +84,7 @@ class _TabScreenState extends State<TabScreen> {
                           item['icon'],
                           color: item['index'] != _page
                               ? Colors.grey
-                              : Theme.of(context).accentColor,
+                              : Theme.of(context).colorScheme.secondary,
                           size: 20.0,
                         ),
                         onPressed: () => navigationTapped(item['index']),
@@ -103,7 +103,7 @@ class _TabScreenState extends State<TabScreen> {
       width: 45.0,
       // ignore: missing_required_param
       child: FabContainer(
-        icon: Feather.plus,
+        icon: Ionicons.add_outline,
         mini: true,
       ),
     );

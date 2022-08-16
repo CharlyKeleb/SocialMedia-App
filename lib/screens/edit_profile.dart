@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/components/text_form_builder.dart';
 import 'package:social_media_app/models/user.dart';
@@ -11,7 +11,7 @@ import 'package:social_media_app/view_models/profile/edit_profile_view_model.dar
 import 'package:social_media_app/widgets/indicators.dart';
 
 class EditProfile extends StatefulWidget {
-  final UserModel user;
+  final UserModel? user;
 
   const EditProfile({this.user});
 
@@ -20,18 +20,18 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  UserModel user;
+  UserModel? user;
 
   String currentUid() {
-    return firebaseAuth.currentUser.uid;
+    return firebaseAuth.currentUser!.uid;
   }
 
   @override
   Widget build(BuildContext context) {
     EditProfileViewModel viewModel = Provider.of<EditProfileViewModel>(context);
-    return ModalProgressHUD(
+    return LoadingOverlay(
       progressIndicator: circularProgress(context),
-      inAsyncCall: viewModel.loading,
+      isLoading: viewModel.loading,
       child: Scaffold(
         key: viewModel.scaffoldKey,
         appBar: AppBar(
@@ -48,7 +48,7 @@ class _EditProfileState extends State<EditProfile> {
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 15.0,
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                 ),
@@ -82,7 +82,7 @@ class _EditProfileState extends State<EditProfile> {
                           padding: const EdgeInsets.all(1.0),
                           child: CircleAvatar(
                             radius: 65.0,
-                            backgroundImage: NetworkImage(viewModel.imgLink),
+                            backgroundImage: NetworkImage(viewModel.imgLink!),
                           ),
                         )
                       : viewModel.image == null
@@ -91,14 +91,14 @@ class _EditProfileState extends State<EditProfile> {
                               child: CircleAvatar(
                                 radius: 65.0,
                                 backgroundImage:
-                                    NetworkImage(widget.user.photoUrl),
+                                    NetworkImage(widget.user!.photoUrl!),
                               ),
                             )
                           : Padding(
                               padding: const EdgeInsets.all(1.0),
                               child: CircleAvatar(
                                 radius: 65.0,
-                                backgroundImage: FileImage(viewModel.image),
+                                backgroundImage: FileImage(viewModel.image!),
                               ),
                             ),
                 ),
@@ -124,8 +124,8 @@ class _EditProfileState extends State<EditProfile> {
           children: [
             TextFormBuilder(
               enabled: !viewModel.loading,
-              initialValue: widget.user.username,
-              prefix: Feather.user,
+              initialValue: widget.user!.username,
+              prefix: Ionicons.person_outline,
               hintText: "Username",
               textInputAction: TextInputAction.next,
               validateFunction: Validations.validateName,
@@ -135,9 +135,9 @@ class _EditProfileState extends State<EditProfile> {
             ),
             SizedBox(height: 10.0),
             TextFormBuilder(
-              initialValue: widget.user.country,
+              initialValue: widget.user!.country,
               enabled: !viewModel.loading,
-              prefix: Feather.map_pin,
+              prefix: Ionicons.pin_outline,
               hintText: "Country",
               textInputAction: TextInputAction.next,
               validateFunction: Validations.validateName,
@@ -152,16 +152,16 @@ class _EditProfileState extends State<EditProfile> {
             ),
             TextFormField(
               maxLines: null,
-              initialValue: widget.user.bio,
+              initialValue: widget.user!.bio,
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (String value) {
-                if (value.length > 1000) {
+              validator: (String? value) {
+                if (value!.length > 1000) {
                   return 'Bio must be short';
                 }
                 return null;
               },
-              onSaved: (String val) {
-                viewModel.setBio(val);
+              onSaved: (String? val) {
+                viewModel.setBio(val!);
               },
               onChanged: (String val) {
                 viewModel.setBio(val);

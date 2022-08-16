@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomImage extends StatelessWidget {
-  final String imageUrl;
+  final String? imageUrl;
   final double height;
   final double width;
   final BoxFit fit;

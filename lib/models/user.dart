@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
-  String username;
-  String email;
-  String photoUrl;
-  String country;
-  String bio;
-  String id;
-  Timestamp signedUpAt;
-  Timestamp lastSeen;
-  bool isOnline;
+  String? username;
+  String? email;
+  String? photoUrl;
+  String? country;
+  String? bio;
+  String? id;
+  Timestamp? signedUpAt;
+  Timestamp? lastSeen;
+  bool? isOnline;
 
   UserModel(
       {this.username,

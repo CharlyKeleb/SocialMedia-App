@@ -9,7 +9,6 @@ import 'package:social_media_app/utils/firebase.dart';
 class ChatService {
   FirebaseStorage storage = FirebaseStorage.instance;
 
-
   sendMessage(Message message, String chatId) async {
     //will send message to chats collection with the usersId
     await chatRef.doc("$chatId").collection("messages").add(message.toJson());
@@ -17,10 +16,8 @@ class ChatService {
     await chatRef.doc("$chatId").update({"lastTextTime": Timestamp.now()});
   }
 
-
-
   Future<String> sendFirstMessage(Message message, String recipient) async {
-    User user = firebaseAuth.currentUser;
+    User user = firebaseAuth.currentUser!;
     DocumentReference ref = await chatRef.add({
       'users': [recipient, user.uid],
     });
@@ -37,12 +34,11 @@ class ChatService {
     return imageUrl;
   }
 
-
 //determine if a user has read a chat and updates how many messages are unread
   setUserRead(String chatId, User user, int count) async {
     DocumentSnapshot snap = await chatRef.doc(chatId).get();
     Map reads = snap.get('reads') ?? {};
-    reads[user?.uid] = count;
+    reads[user.uid] = count;
     await chatRef.doc(chatId).update({'reads': reads});
   }
 
@@ -50,7 +46,7 @@ class ChatService {
   setUserTyping(String chatId, User user, bool userTyping) async {
     DocumentSnapshot snap = await chatRef.doc(chatId).get();
     Map typing = snap.get('typing') ?? {};
-    typing[user?.uid] = userTyping;
+    typing[user.uid] = userTyping;
     await chatRef.doc(chatId).update({
       'typing': typing,
     });

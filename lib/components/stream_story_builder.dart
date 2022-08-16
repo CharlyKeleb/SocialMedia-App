@@ -8,19 +8,19 @@ typedef ItemBuilder<T> = Widget Function(
 );
 
 class StreamStoriesWrapper extends StatelessWidget {
-  final Stream<dynamic> stream;
+  final Stream<QuerySnapshot<Object?>>? stream;
   final ItemBuilder<DocumentSnapshot> itemBuilder;
   final Axis scrollDirection;
   final bool shrinkWrap;
-  final bool reverse;
+  final bool? reverse;
   final ScrollPhysics physics;
   final EdgeInsets padding;
   
 
   const StreamStoriesWrapper({
-    Key key,
-    @required this.stream,
-    @required this.itemBuilder,
+    Key? key,
+    required this.stream,
+    required this.itemBuilder,
     this.scrollDirection = Axis.vertical,
     this.shrinkWrap = false,
     this.reverse,
@@ -30,11 +30,11 @@ class StreamStoriesWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilder<QuerySnapshot>(
       stream: stream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          var list = snapshot.data.docs.toList();
+          var list = snapshot.data!.docs.toList();
           return list.length == 0
               ? SizedBox()
               : ListView.builder(
@@ -42,7 +42,7 @@ class StreamStoriesWrapper extends StatelessWidget {
                   scrollDirection: scrollDirection,
                   itemCount: list.length + 1,
                   shrinkWrap: shrinkWrap,
-                  reverse: reverse,
+                  reverse: reverse!,
                   physics: physics,
                   itemBuilder: (BuildContext context, int index) {
                     if (index == list.length) {

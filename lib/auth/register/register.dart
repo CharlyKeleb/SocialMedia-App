@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/auth/login/login.dart';
 import 'package:social_media_app/components/password_text_field.dart';
@@ -19,21 +20,21 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     RegisterViewModel viewModel = Provider.of<RegisterViewModel>(context);
-    return ModalProgressHUD(
+    return LoadingOverlay(
       progressIndicator: circularProgress(context),
-      inAsyncCall: viewModel.loading,
+      isLoading: viewModel.loading,
       child: Scaffold(
         key: viewModel.scaffoldKey,
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
           children: [
-            SizedBox(height: 10.0),
+            SizedBox(height: MediaQuery.of(context).size.height / 10),
             Text(
-              'Welcome to Wooble Social App..\nCreate a new account and connect with friends',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.0,
-                  fontFamily: 'Roboto-Regular'),
+              'Welcome to Wooble Social App\nCreate a new account and connect with friends',
+              style: GoogleFonts.nunitoSans(
+                fontWeight: FontWeight.bold,
+                fontSize: 25.0,
+              ),
             ),
             SizedBox(height: 30.0),
             buildForm(viewModel, context),
@@ -45,15 +46,12 @@ class _RegisterState extends State<Register> {
                   'Already have an account  ',
                 ),
                 GestureDetector(
-                  onTap: () {
-                    Navigator.of(context)
-                        .push(CupertinoPageRoute(builder: (_) => Login()));
-                  },
+                  onTap: () => Navigator.pop(context),
                   child: Text(
                     'Login',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                 ),
@@ -73,7 +71,7 @@ class _RegisterState extends State<Register> {
         children: [
           TextFormBuilder(
             enabled: !viewModel.loading,
-            prefix: Feather.user,
+            prefix: Ionicons.person_outline,
             hintText: "Username",
             textInputAction: TextInputAction.next,
             validateFunction: Validations.validateName,
@@ -86,7 +84,7 @@ class _RegisterState extends State<Register> {
           SizedBox(height: 20.0),
           TextFormBuilder(
             enabled: !viewModel.loading,
-            prefix: Feather.mail,
+            prefix: Ionicons.mail_outline,
             hintText: "Email",
             textInputAction: TextInputAction.next,
             validateFunction: Validations.validateEmail,
@@ -99,7 +97,7 @@ class _RegisterState extends State<Register> {
           SizedBox(height: 20.0),
           TextFormBuilder(
             enabled: !viewModel.loading,
-            prefix: Feather.map_pin,
+            prefix: Ionicons.pin_outline,
             hintText: "Country",
             textInputAction: TextInputAction.next,
             validateFunction: Validations.validateName,
@@ -112,8 +110,8 @@ class _RegisterState extends State<Register> {
           SizedBox(height: 20.0),
           PasswordFormBuilder(
             enabled: !viewModel.loading,
-            prefix: Feather.lock,
-            suffix: Feather.eye,
+            prefix: Ionicons.lock_closed_outline,
+            suffix: Ionicons.eye_outline,
             hintText: "Password",
             textInputAction: TextInputAction.next,
             validateFunction: Validations.validatePassword,
@@ -127,7 +125,7 @@ class _RegisterState extends State<Register> {
           SizedBox(height: 20.0),
           PasswordFormBuilder(
             enabled: !viewModel.loading,
-            prefix: Feather.lock,
+            prefix: Ionicons.lock_open_outline,
             hintText: "Confirm Password",
             textInputAction: TextInputAction.done,
             validateFunction: Validations.validatePassword,
@@ -150,7 +148,7 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
                 backgroundColor: MaterialStateProperty.all<Color>(
-                    Theme.of(context).accentColor),
+                    Theme.of(context).colorScheme.secondary),
               ),
               child: Text(
                 'sign up'.toUpperCase(),

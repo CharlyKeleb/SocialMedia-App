@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:social_media_app/models/enum/message_type.dart';
 
 class Message {
-  String content;
-  String senderUid;
-  MessageType type;
-  Timestamp time;
+  String? content;
+  String? senderUid;
+  MessageType? type;
+  Timestamp? time;
 
   Message({this.content, this.senderUid, this.type, this.time});
 

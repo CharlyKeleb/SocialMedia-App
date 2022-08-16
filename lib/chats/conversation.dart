@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/components/chat_bubble.dart';
 import 'package:social_media_app/models/enum/message_type.dart';
@@ -18,7 +18,7 @@ class Conversation extends StatefulWidget {
   final String userId;
   final String chatId;
 
-  const Conversation({@required this.userId, @required this.chatId});
+  const Conversation({required this.userId, required this.chatId});
 
   @override
   _ConversationState createState() => _ConversationState();
@@ -29,7 +29,7 @@ class _ConversationState extends State<Conversation> {
   ScrollController scrollController = ScrollController();
   TextEditingController messageController = TextEditingController();
   bool isFirst = false;
-  String chatId;
+  String? chatId;
 
   @override
   void initState() {
@@ -66,7 +66,7 @@ class _ConversationState extends State<Conversation> {
     viewModel.setUser();
     var user = Provider.of<UserViewModel>(context, listen: true).user;
     return Consumer<ConversationViewModel>(
-        builder: (BuildContext context, viewModel, Widget child) {
+        builder: (BuildContext context, viewModel, Widget? child) {
       return Scaffold(
         key: viewModel.scaffoldKey,
         appBar: AppBar(
@@ -87,11 +87,11 @@ class _ConversationState extends State<Conversation> {
           child: Column(
             children: [
               Flexible(
-                child: StreamBuilder(
+                child: StreamBuilder<QuerySnapshot>(
                   stream: messageListStream(widget.chatId),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      List messages = snapshot.data.docs;
+                      List messages = snapshot.data!.docs;
                       viewModel.setReadCount(
                           widget.chatId, user, messages.length);
                       return ListView.builder(
@@ -101,12 +101,14 @@ class _ConversationState extends State<Conversation> {
                         reverse: true,
                         itemBuilder: (BuildContext context, int index) {
                           Message message = Message.fromJson(
-                              messages.reversed.toList()[index].data());
+                            messages.reversed.toList()[index].data(),
+                          );
                           return ChatBubble(
-                              message: '${message.content}',
-                              time: message?.time,
-                              isMe: message?.senderUid == user?.uid,
-                              type: message?.type);
+                            message: '${message.content}',
+                            time: message.time!,
+                            isMe: message.senderUid == user!.uid,
+                            type: message.type!,
+                          );
                         },
                       );
                     } else {
@@ -127,7 +129,7 @@ class _ConversationState extends State<Conversation> {
                         IconButton(
                           icon: Icon(
                             CupertinoIcons.photo_on_rectangle,
-                            color: Theme.of(context).accentColor,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                           onPressed: () => showPhotoOptions(viewModel, user),
                         ),
@@ -138,7 +140,7 @@ class _ConversationState extends State<Conversation> {
                             style: TextStyle(
                               fontSize: 15.0,
                               color:
-                                  Theme.of(context).textTheme.headline6.color,
+                                  Theme.of(context).textTheme.headline6!.color,
                             ),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10.0),
@@ -146,8 +148,10 @@ class _ConversationState extends State<Conversation> {
                               border: InputBorder.none,
                               hintText: "Type your message",
                               hintStyle: TextStyle(
-                                color:
-                                    Theme.of(context).textTheme.headline6.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headline6!
+                                    .color,
                               ),
                             ),
                             maxLines: null,
@@ -155,8 +159,8 @@ class _ConversationState extends State<Conversation> {
                         ),
                         IconButton(
                           icon: Icon(
-                            Feather.send,
-                            color: Theme.of(context).accentColor,
+                            Ionicons.send,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                           onPressed: () {
                             if (messageController.text.isNotEmpty) {
@@ -196,15 +200,18 @@ class _ConversationState extends State<Conversation> {
       stream: usersRef.doc('${widget.userId}').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          DocumentSnapshot documentSnapshot = snapshot.data;
-          UserModel user = UserModel.fromJson(documentSnapshot.data());
+          DocumentSnapshot documentSnapshot =
+              snapshot.data as DocumentSnapshot<Object?>;
+          UserModel user = UserModel.fromJson(
+            documentSnapshot.data() as Map<String, dynamic>,
+          );
           return InkWell(
             child: Row(
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
                   child: Hero(
-                    tag: user.email,
+                    tag: user.email!,
                     child: CircleAvatar(
                       radius: 25.0,
                       backgroundImage: CachedNetworkImageProvider(
@@ -230,13 +237,14 @@ class _ConversationState extends State<Conversation> {
                         stream: chatRef.doc('${widget.chatId}').snapshots(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            DocumentSnapshot snap = snapshot.data;
-                            Map data = snap.data() ?? {};
-                            Map usersTyping = data['typing'] ?? {};
+                            DocumentSnapshot? snap =
+                                snapshot.data as DocumentSnapshot<Object?>;
+                            Map? data = snap.data() as Map<dynamic, dynamic>?;
+                            Map? usersTyping = data?['typing'] ?? {};
                             return Text(
                               _buildOnlineText(
                                 user,
-                                usersTyping[widget.userId] ?? false,
+                                usersTyping![widget.userId] ?? false,
                               ),
                               style: TextStyle(
                                 fontWeight: FontWeight.w400,
@@ -293,11 +301,11 @@ class _ConversationState extends State<Conversation> {
   }
 
   sendMessage(ConversationViewModel viewModel, var user,
-      {bool isImage = false, int imageType}) async {
+      {bool isImage = false, int? imageType}) async {
     String msg;
     if (isImage) {
       msg = await viewModel.pickImage(
-        source: imageType,
+        source: imageType!,
         context: context,
         chatId: widget.chatId,
       );

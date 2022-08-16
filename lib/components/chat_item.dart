@@ -10,16 +10,16 @@ import 'package:social_media_app/utils/firebase.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ChatItem extends StatelessWidget {
-  final String userId;
-  final Timestamp time;
-  final String msg;
-  final int messageCount;
-  final String chatId;
-  final MessageType type;
-  final String currentUserId;
+  final String? userId;
+  final Timestamp? time;
+  final String? msg;
+  final int? messageCount;
+  final String? chatId;
+  final MessageType? type;
+  final String? currentUserId;
 
   ChatItem({
-    Key key,
+    Key? key,
     @required this.userId,
     @required this.time,
     @required this.msg,
@@ -35,8 +35,11 @@ class ChatItem extends StatelessWidget {
       stream: usersRef.doc('$userId').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          DocumentSnapshot documentSnapshot = snapshot.data;
-          UserModel user = UserModel.fromJson(documentSnapshot.data());
+          DocumentSnapshot documentSnapshot =
+              snapshot.data as DocumentSnapshot<Object?>;
+          UserModel user = UserModel.fromJson(
+            documentSnapshot.data() as Map<String, dynamic>,
+          );
 
           return ListTile(
             contentPadding:
@@ -45,7 +48,7 @@ class ChatItem extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   backgroundImage: CachedNetworkImageProvider(
-                    '${user?.photoUrl}',
+                    '${user.photoUrl}',
                   ),
                   radius: 25.0,
                 ),
@@ -62,7 +65,7 @@ class ChatItem extends StatelessWidget {
                     child: Center(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: user?.isOnline ?? false
+                          color: user.isOnline ?? false
                               ? Color(0xff00d72f)
                               : Colors.grey,
                           borderRadius: BorderRadius.circular(6),
@@ -93,7 +96,7 @@ class ChatItem extends StatelessWidget {
                 SizedBox(height: 10),
                 TextTime(
                   child: Text(
-                    "${timeago.format(time.toDate())}",
+                    "${timeago.format(time!.toDate())}",
                     style: TextStyle(
                       fontWeight: FontWeight.w300,
                       fontSize: 11,
@@ -109,8 +112,8 @@ class ChatItem extends StatelessWidget {
                 CupertinoPageRoute(
                   builder: (BuildContext context) {
                     return Conversation(
-                      userId: userId,
-                      chatId: chatId,
+                      userId: userId!,
+                      chatId: chatId!,
                     );
                   },
                 ),
@@ -132,14 +135,14 @@ class ChatItem extends StatelessWidget {
           DocumentSnapshot snap = snapshot.data;
           Map usersReads = snap.get('reads') ?? {};
           int readCount = usersReads[currentUserId] ?? 0;
-          int counter = messageCount - readCount;
+          int counter = messageCount! - readCount;
           if (counter == 0) {
             return SizedBox();
           } else {
             return Container(
               padding: EdgeInsets.all(1),
               decoration: BoxDecoration(
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 borderRadius: BorderRadius.circular(6),
               ),
               constraints: BoxConstraints(

@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 import '../posts/create_post.dart';
 
 class FabContainer extends StatelessWidget {
-  final Widget page;
+  final Widget? page;
   final IconData icon;
   final bool mini;
 
-  FabContainer({@required this.page, @required this.icon, this.mini = false});
+  FabContainer({this.page, required this.icon, this.mini = false});
 
   @override
   Widget build(BuildContext context) {
     return OpenContainer(
       transitionType: ContainerTransitionType.fade,
       openBuilder: (BuildContext context, VoidCallback _) {
-        return page;
+        return page!;
       },
       closedElevation: 4.0,
       closedShape: const RoundedRectangleBorder(
@@ -29,7 +29,7 @@ class FabContainer extends StatelessWidget {
           backgroundColor: Theme.of(context).primaryColor,
           child: Icon(
             icon,
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).colorScheme.secondary,
           ),
           onPressed: () {
             chooseUpload(context);
@@ -60,8 +60,9 @@ class FabContainer extends StatelessWidget {
                     'Create Post',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).accentColor),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
                 ),
               ),

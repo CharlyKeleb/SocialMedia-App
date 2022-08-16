@@ -4,23 +4,23 @@ import 'package:social_media_app/utils/firebase.dart';
 
 class AuthService {
   User getCurrentUser() {
-    User user = firebaseAuth.currentUser;
+    User user = firebaseAuth.currentUser!;
     return user;
   }
 
-//create a firebase user 
+//create a firebase user
   Future<bool> createUser(
-      {String name,
-      User user,
-      String email,
-      String country,
-      String password}) async {
+      {String? name,
+      User? user,
+      String? email,
+      String? country,
+      String? password}) async {
     var res = await firebaseAuth.createUserWithEmailAndPassword(
       email: '$email',
       password: '$password',
     );
     if (res.user != null) {
-      await saveUserToFirestore(name, res.user, email, country);
+      await saveUserToFirestore(name!, res.user!, email!, country!);
       return true;
     } else {
       return false;
@@ -37,13 +37,13 @@ class AuthService {
       'id': user.uid,
       'bio': "",
       'country': country,
-      'photoUrl': user.photoURL ?? ''
+      'photoUrl': user.photoURL ?? '',
+      'gender': '',
     });
   }
 
-
 //function to login a user with his email and password
-  Future<bool> loginUser({String email, String password}) async {
+  Future<bool> loginUser({String? email, String? password}) async {
     var res = await firebaseAuth.signInWithEmailAndPassword(
       email: '$email',
       password: '$password',

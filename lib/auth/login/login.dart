@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/auth/register/register.dart';
 import 'package:social_media_app/components/password_text_field.dart';
@@ -20,16 +20,16 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     LoginViewModel viewModel = Provider.of<LoginViewModel>(context);
 
-    return ModalProgressHUD(
+    return LoadingOverlay(
       progressIndicator: circularProgress(context),
-      inAsyncCall: viewModel.loading,
+      isLoading: viewModel.loading,
       child: Scaffold(
         backgroundColor: Colors.white,
         key: viewModel.scaffoldKey,
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
           children: [
-            SizedBox(height: 60.0),
+            SizedBox(height: MediaQuery.of(context).size.height / 5),
             Container(
               height: 170.0,
               width: MediaQuery.of(context).size.width,
@@ -53,7 +53,7 @@ class _LoginState extends State<Login> {
                 style: TextStyle(
                   fontSize: 12.0,
                   fontWeight: FontWeight.w300,
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
             ),
@@ -64,16 +64,20 @@ class _LoginState extends State<Login> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('Don\'t have an account?'),
+                SizedBox(width: 5.0),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context)
-                        .push(CupertinoPageRoute(builder: (_) => Register()));
+                    Navigator.of(context).push(
+                      CupertinoPageRoute(
+                        builder: (_) => Register(),
+                      ),
+                    );
                   },
                   child: Text(
-                    'Sign up',
+                    'Sign Up',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                 ),
@@ -93,7 +97,7 @@ class _LoginState extends State<Login> {
         children: [
           TextFormBuilder(
             enabled: !viewModel.loading,
-            prefix: Feather.mail,
+            prefix: Ionicons.mail_outline,
             hintText: "Email",
             textInputAction: TextInputAction.next,
             validateFunction: Validations.validateEmail,
@@ -106,8 +110,8 @@ class _LoginState extends State<Login> {
           SizedBox(height: 15.0),
           PasswordFormBuilder(
             enabled: !viewModel.loading,
-            prefix: Feather.lock,
-            suffix: Feather.eye,
+            prefix: Ionicons.lock_closed_outline,
+            suffix: Ionicons.eye_outline,
             hintText: "Password",
             textInputAction: TextInputAction.done,
             validateFunction: Validations.validatePassword,
@@ -152,7 +156,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 backgroundColor: MaterialStateProperty.all<Color>(
-                  Theme.of(context).accentColor,
+                  Theme.of(context).colorScheme.secondary,
                 ),
               ),
               // highlightElevation: 4.0,

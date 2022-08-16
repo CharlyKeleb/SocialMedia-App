@@ -3,6 +3,9 @@ Wooble is a fully functional social media app with multiple features built with 
 
 Star⭐ the repo if you like what you see😉.
 
+## ✨ I HAVE RESUMED MAKING UPDATES TO THIS PROJECTS.. 
+* Scroll down to "What's Next" to see the features i will be adding!.
+
 ## ✨ Requirements
 * Any Operating System (ie. MacOS X, Linux, Windows)
 * Any IDE with Flutter SDK installed (ie. IntelliJ, Android Studio, VSCode etc)
@@ -81,13 +84,15 @@ Double check install instructions for both
    - Firestore Plugin
      -  https://pub.dartlang.org/packages/cloud_firestore
 
-- You can also use my firebase if you wish
 
 # What's Next?
  - [] Animations(liking image)
  - [] Stories['under development]
  - [] Saving posts
  - [] Video Calling ['under development']
+ - [] Audio Calling
+ - [] Reels
+ - [] Sending and Uploading Videos
 
 
 ## 🤓 Author(s)

@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:social_media_app/chats/conversation.dart';
 import 'package:social_media_app/models/user.dart';
 import 'package:social_media_app/pages/profile.dart';
@@ -17,8 +18,8 @@ class Search extends StatefulWidget {
   _SearchState createState() => _SearchState();
 }
 
-class _SearchState extends State<Search> {
-  User user;
+class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
+  User? user;
   TextEditingController searchController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -27,7 +28,7 @@ class _SearchState extends State<Search> {
   bool loading = true;
 
   currentUserId() {
-    return firebaseAuth.currentUser.uid;
+    return firebaseAuth.currentUser!.uid;
   }
 
   getUsers() async {
@@ -45,13 +46,13 @@ class _SearchState extends State<Search> {
       filteredUsers = users;
     } else {
       List userSearch = users.where((userSnap) {
-        Map user = userSnap.data();
+        Map user = userSnap.data() as Map<String, dynamic>;
         String userName = user['username'];
         return userName.toLowerCase().contains(query.toLowerCase());
       }).toList();
 
       setState(() {
-        filteredUsers = userSearch;
+        filteredUsers = userSearch as List<DocumentSnapshot<Object?>>;
       });
     }
   }
@@ -83,7 +84,7 @@ class _SearchState extends State<Search> {
           height: 35.0,
           width: MediaQuery.of(context).size.width - 100,
           decoration: BoxDecoration(
-            color: Colors.black26,
+            color: Colors.grey.withOpacity(0.3),
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: Padding(
@@ -106,7 +107,8 @@ class _SearchState extends State<Search> {
                     onTap: () {
                       searchController.clear();
                     },
-                    child: Icon(Feather.x, size: 12.0, color: Colors.black),
+                    child: Icon(Ionicons.close_outline,
+                        size: 12.0, color: Colors.black),
                   ),
                   contentPadding: EdgeInsets.only(bottom: 10.0, left: 10.0),
                   border: InputBorder.none,
@@ -136,7 +138,8 @@ class _SearchState extends State<Search> {
           itemCount: filteredUsers.length,
           itemBuilder: (BuildContext context, int index) {
             DocumentSnapshot doc = filteredUsers[index];
-            UserModel user = UserModel.fromJson(doc.data());
+            UserModel user =
+                UserModel.fromJson(doc.data() as Map<String, dynamic>);
             if (doc.id == currentUserId()) {
               Timer(Duration(milliseconds: 500), () {
                 setState(() {
@@ -147,16 +150,18 @@ class _SearchState extends State<Search> {
             return Column(
               children: [
                 ListTile(
-                  onTap: () => showProfile(context, profileId: user?.id),
+                  onTap: () => showProfile(context, profileId: user.id!),
                   contentPadding: EdgeInsets.symmetric(horizontal: 25.0),
                   leading: CircleAvatar(
                     radius: 35.0,
-                    backgroundImage: NetworkImage(user?.photoUrl),
+                    backgroundImage: CachedNetworkImageProvider(user.photoUrl!),
                   ),
-                  title: Text(user?.username,
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  title: Text(
+                    user.username!,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   subtitle: Text(
-                    user?.email,
+                    user.email!,
                   ),
                   trailing: GestureDetector(
                     onTap: () {
@@ -175,7 +180,7 @@ class _SearchState extends State<Search> {
                       height: 30.0,
                       width: 62.0,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                         borderRadius: BorderRadius.circular(3.0),
                       ),
                       child: Center(
@@ -207,7 +212,7 @@ class _SearchState extends State<Search> {
     }
   }
 
-  showProfile(BuildContext context, {String profileId}) {
+  showProfile(BuildContext context, {String? profileId}) {
     Navigator.push(
       context,
       CupertinoPageRoute(
@@ -215,4 +220,8 @@ class _SearchState extends State<Search> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

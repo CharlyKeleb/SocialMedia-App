@@ -8,7 +8,7 @@ typedef ItemBuilder<T> = Widget Function(
 );
 
 class ActivityStreamWrapper extends StatelessWidget {
-  final Stream<dynamic> stream;
+  final Stream<QuerySnapshot<Object?>>? stream;
   final ItemBuilder<DocumentSnapshot> itemBuilder;
   final Axis scrollDirection;
   final bool shrinkWrap;
@@ -16,9 +16,9 @@ class ActivityStreamWrapper extends StatelessWidget {
   final EdgeInsets padding;
 
   const ActivityStreamWrapper({
-    Key key,
-    @required this.stream,
-    @required this.itemBuilder,
+    Key? key,
+    required this.stream,
+    required this.itemBuilder,
     this.scrollDirection = Axis.vertical,
     this.shrinkWrap = false,
     this.physics = const ClampingScrollPhysics(),
@@ -27,11 +27,11 @@ class ActivityStreamWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilder<QuerySnapshot>(
       stream: stream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          var list = snapshot.data.docs.toList();
+          var list = snapshot.data!.docs.toList();
           return list.length == 0
               ? Container(
                   child: Center(

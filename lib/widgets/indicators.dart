@@ -5,7 +5,7 @@ Center circularProgress(context) {
   return Center(
     child: SpinKitFadingCircle(
       size: 40.0,
-      color: Theme.of(context).accentColor,
+      color: Theme.of(context).colorScheme.secondary,
     ),
   );
 }
@@ -13,7 +13,8 @@ Center circularProgress(context) {
 Container linearProgress(context) {
   return Container(
     child: LinearProgressIndicator(
-      valueColor: AlwaysStoppedAnimation(Theme.of(context).accentColor),
+      valueColor:
+          AlwaysStoppedAnimation(Theme.of(context).colorScheme.secondary),
     ),
   );
 }

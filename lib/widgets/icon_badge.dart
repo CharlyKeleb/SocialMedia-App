@@ -4,10 +4,10 @@ import 'package:social_media_app/utils/firebase.dart';
 
 class IconBadge extends StatefulWidget {
   final IconData icon;
-  final double size;
-  final Color color;
+  final double? size;
+  final Color? color;
 
-  IconBadge({Key key, @required this.icon, this.size, this.color})
+  IconBadge({Key? key, required this.icon, this.size, this.color})
       : super(key: key);
 
   @override
@@ -52,14 +52,14 @@ class _IconBadgeState extends State<IconBadge> {
   buildCount() {
     StreamBuilder(
       stream: notificationRef
-          .doc(firebaseAuth.currentUser.uid)
+          .doc(firebaseAuth.currentUser!.uid)
           .collection('notifications')
           .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
-          QuerySnapshot snap = snapshot.data;
+          QuerySnapshot snap = snapshot.data!;
           List<DocumentSnapshot> docs = snap.docs;
-          return buildTextWidget(docs?.length ?? 0.toString());
+          return buildTextWidget(docs.length.toString());
         } else {
           return buildTextWidget(0.toString());
         }

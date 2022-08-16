@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/auth/login/login.dart';
-import 'package:social_media_app/auth/register/register.dart';
 
 class Landing extends StatefulWidget {
   @override
@@ -66,7 +65,7 @@ class _LandingState extends State<Landing> {
                       begin: Alignment.topRight,
                       end: Alignment.bottomLeft,
                       colors: [
-                        Theme.of(context).accentColor,
+                        Theme.of(context).colorScheme.secondary,
                         Color(0xff597FDB),
                       ],
                     ),
@@ -85,7 +84,10 @@ class _LandingState extends State<Landing> {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).pushReplacement(
-                      CupertinoPageRoute(builder: (_) => Register()));
+                    CupertinoPageRoute(
+                      builder: (_) => Login(),
+                    ),
+                  );
                 },
                 child: Container(
                   height: 45.0,
@@ -97,7 +99,7 @@ class _LandingState extends State<Landing> {
                       begin: Alignment.topRight,
                       end: Alignment.bottomLeft,
                       colors: [
-                        Theme.of(context).accentColor,
+                        Theme.of(context).colorScheme.secondary,
                         Color(0xff597FDB),
                       ],
                     ),
