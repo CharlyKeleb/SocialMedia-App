@@ -3,9 +3,6 @@ Wooble is a fully functional social media app with multiple features built with 
 
 Star⭐ the repo if you like what you see😉.
 
-## ✨ I HAVE RESUMED MAKING UPDATES TO THIS PROJECTS.. 
-* Scroll down to "What's Next" to see the features i will be adding!.
-
 ## ✨ Requirements
 * Any Operating System (ie. MacOS X, Linux, Windows)
 * Any IDE with Flutter SDK installed (ie. IntelliJ, Android Studio, VSCode etc)
