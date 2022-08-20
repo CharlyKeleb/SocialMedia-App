@@ -83,7 +83,6 @@ Double check install instructions for both
 
 
 # What's Next?
- - [] Animations(liking image)
  - [] Stories['under development]
  - [] Saving posts
  - [] Video Calling ['under development']
