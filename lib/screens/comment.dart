@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:like_button/like_button.dart';
 import 'package:social_media_app/components/stream_comments_wrapper.dart';
 import 'package:social_media_app/models/comments.dart';
 import 'package:social_media_app/models/post.dart';
@@ -84,7 +86,8 @@ class _CommentsState extends State<Comments> {
                             controller: commentsTEC,
                             style: TextStyle(
                               fontSize: 15.0,
-                              color: Theme.of(context).textTheme.headline6!.color,
+                              color:
+                                  Theme.of(context).textTheme.headline6!.color,
                             ),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10.0),
@@ -103,8 +106,10 @@ class _CommentsState extends State<Comments> {
                               hintText: "Write your comment...",
                               hintStyle: TextStyle(
                                 fontSize: 15.0,
-                                color:
-                                    Theme.of(context).textTheme.headline6!.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headline6!
+                                    .color,
                               ),
                             ),
                             maxLines: null,
@@ -257,29 +262,64 @@ class _CommentsState extends State<Comments> {
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
           List<QueryDocumentSnapshot> docs = snapshot.data?.docs ?? [];
-          return IconButton(
-            onPressed: () {
-              if (docs.isEmpty) {
-                likesRef.add({
-                  'userId': currentUserId(),
-                  'postId': widget.post!.postId,
-                  'dateCreated': Timestamp.now(),
-                });
-                addLikesToNotification();
-              } else {
-                likesRef.doc(docs[0].id).delete();
+          // return IconButton(
+          //   onPressed: () {
+          //     if (docs.isEmpty) {
+          //       likesRef.add({
+          //         'userId': currentUserId(),
+          //         'postId': widget.post!.postId,
+          //         'dateCreated': Timestamp.now(),
+          //       });
+          //       addLikesToNotification();
+          //     } else {
+          //       likesRef.doc(docs[0].id).delete();
+          //
+          //       removeLikeFromNotification();
+          //     }
+          //   },
+          //   icon: docs.isEmpty
+          //       ? Icon(
+          //           CupertinoIcons.heart,
+          //         )
+          //       : Icon(
+          //           CupertinoIcons.heart_fill,
+          //           color: Colors.red,
+          //         ),
+          // );
+          ///added animated like button
+          Future<bool> onLikeButtonTapped(bool isLiked) async {
+            if (docs.isEmpty) {
+              likesRef.add({
+                'userId': currentUserId(),
+                'postId': widget.post!.postId,
+                'dateCreated': Timestamp.now(),
+              });
+              addLikesToNotification();
+              return !isLiked;
+            } else {
+              likesRef.doc(docs[0].id).delete();
+              removeLikeFromNotification();
+              return isLiked;
+            }
+          }
 
-                removeLikeFromNotification();
-              }
+          return LikeButton(
+            onTap: onLikeButtonTapped,
+            size: 25.0,
+            circleColor:
+                CircleColor(start: Color(0xffFFC0CB), end: Color(0xffff0000)),
+            bubblesColor: BubblesColor(
+                dotPrimaryColor: Color(0xffFFA500),
+                dotSecondaryColor: Color(0xffd8392b),
+                dotThirdColor: Color(0xffFF69B4),
+                dotLastColor: Color(0xffff8c00)),
+            likeBuilder: (bool isLiked) {
+              return Icon(
+                docs.isEmpty ? Ionicons.heart_outline : Ionicons.heart,
+                color: docs.isEmpty ? Colors.grey : Colors.red,
+                size: 25,
+              );
             },
-            icon: docs.isEmpty
-                ? Icon(
-                    CupertinoIcons.heart,
-                  )
-                : Icon(
-                    CupertinoIcons.heart_fill,
-                    color: Colors.red,
-                  ),
           );
         }
         return Container();
