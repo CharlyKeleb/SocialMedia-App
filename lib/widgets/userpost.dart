@@ -3,6 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:like_button/like_button.dart';
 import 'package:social_media_app/components/custom_card.dart';
 import 'package:social_media_app/components/custom_image.dart';
 import 'package:social_media_app/models/post.dart';
@@ -30,7 +32,7 @@ class UserPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      onTap: (){},
+      onTap: () {},
       borderRadius: BorderRadius.circular(10.0),
       child: OpenContainer(
         transitionType: ContainerTransitionType.fadeThrough,
@@ -44,7 +46,9 @@ class UserPost extends StatelessWidget {
           ),
         ),
         onClosed: (v) {},
-        closedColor: Theme.of(context).cardColor,
+        closedColor: Theme
+            .of(context)
+            .cardColor,
         closedBuilder: (BuildContext context, VoidCallback openContainer) {
           return Stack(
             children: [
@@ -57,14 +61,16 @@ class UserPost extends StatelessWidget {
                     ),
                     child: CustomImage(
                       imageUrl: post?.mediaUrl ?? '',
-                      height: 300.0,
+                      height: 350.0,
                       fit: BoxFit.cover,
                       width: double.infinity,
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 3.0),
+                    padding:
+                    EdgeInsets.symmetric(horizontal: 3.0, vertical: 5.0),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
@@ -72,6 +78,7 @@ class UserPost extends StatelessWidget {
                           child: Row(
                             children: [
                               buildLikeButton(),
+                              SizedBox(width: 5.0),
                               InkWell(
                                 borderRadius: BorderRadius.circular(10.0),
                                 onTap: () {
@@ -89,11 +96,14 @@ class UserPost extends StatelessWidget {
                             ],
                           ),
                         ),
+                        SizedBox(height: 5.0),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Flexible(
                               child: Padding(
-                                padding: const EdgeInsets.only(left: 5.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: StreamBuilder(
                                   stream: likesRef
                                       .where('postId', isEqualTo: post!.postId)
@@ -134,15 +144,22 @@ class UserPost extends StatelessWidget {
                         ),
                         Visibility(
                           visible: post!.description != null &&
-                              post!.description.toString().isNotEmpty,
+                              post!
+                                  .description
+                                  .toString()
+                                  .isNotEmpty,
                           child: Padding(
                             padding:
-                                const EdgeInsets.only(left: 10.0, top: 3.0),
+                            const EdgeInsets.only(left: 5.0, top: 3.0),
                             child: Text(
                               '${post?.description ?? ""}',
                               style: TextStyle(
                                 color:
-                                    Theme.of(context).textTheme.caption!.color,
+                                Theme
+                                    .of(context)
+                                    .textTheme
+                                    .caption!
+                                    .color,
                                 fontSize: 15.0,
                               ),
                               maxLines: 2,
@@ -152,8 +169,10 @@ class UserPost extends StatelessWidget {
                         SizedBox(height: 3.0),
                         Padding(
                           padding: const EdgeInsets.all(3.0),
-                          child: Text(timeago.format(post!.timestamp!.toDate()),
-                              style: TextStyle(fontSize: 10.0)),
+                          child: Text(
+                            timeago.format(post!.timestamp!.toDate()),
+                            style: TextStyle(fontSize: 10.0),
+                          ),
                         ),
                         // SizedBox(height: 5.0),
                       ],
@@ -178,29 +197,70 @@ class UserPost extends StatelessWidget {
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
           List<QueryDocumentSnapshot> docs = snapshot.data?.docs ?? [];
-          return IconButton(
-            onPressed: () {
-              if (docs.isEmpty) {
-                likesRef.add({
-                  'userId': currentUserId(),
-                  'postId': post!.postId,
-                  'dateCreated': Timestamp.now(),
-                });
-                addLikesToNotification();
-              } else {
-                likesRef.doc(docs[0].id).delete();
-                services.removeLikeFromNotification(
-                    post!.ownerId!, post!.postId!, currentUserId());
-              }
+
+          ///replaced this with an animated like button
+          // return IconButton(
+          //   onPressed: () {
+          //     if (docs.isEmpty) {
+          //       likesRef.add({
+          //         'userId': currentUserId(),
+          //         'postId': post!.postId,
+          //         'dateCreated': Timestamp.now(),
+          //       });
+          //       addLikesToNotification();
+          //     } else {
+          //       likesRef.doc(docs[0].id).delete();
+          //       services.removeLikeFromNotification(
+          //           post!.ownerId!, post!.postId!, currentUserId());
+          //     }
+          //   },
+          //   icon: docs.isEmpty
+          //       ? Icon(
+          //           CupertinoIcons.heart,
+          //         )
+          //       : Icon(
+          //           CupertinoIcons.heart_fill,
+          //           color: Colors.red,
+          //         ),
+          // );
+          Future<bool> onLikeButtonTapped(bool isLiked) async {
+            if (docs.isEmpty) {
+              likesRef.add({
+                'userId': currentUserId(),
+                'postId': post!.postId,
+                'dateCreated': Timestamp.now(),
+              });
+              addLikesToNotification();
+              return !isLiked;
+            } else {
+              likesRef.doc(docs[0].id).delete();
+              services.removeLikeFromNotification(
+                  post!.ownerId!, post!.postId!, currentUserId());
+              return isLiked;
+            }
+          }
+
+          return LikeButton(
+            onTap: onLikeButtonTapped,
+            size: 25.0,
+            circleColor:
+            CircleColor(start: Color(0xffFFC0CB), end: Color(0xffff0000)),
+            bubblesColor: BubblesColor(
+                dotPrimaryColor: Color(0xffFFA500),
+                dotSecondaryColor: Color(0xffd8392b),
+                dotThirdColor: Color(0xffFF69B4),
+                dotLastColor: Color(0xffff8c00)),
+            likeBuilder: (bool isLiked) {
+              return Icon(
+                docs.isEmpty ? Ionicons.heart_outline : Ionicons.heart,
+                color: docs.isEmpty ? Theme
+                    .of(context)
+                    .brightness == Brightness.dark ? Colors.white
+                    : Colors.black
+                    : Colors.red,
+                size: 25,
+              );
             },
-            icon: docs.isEmpty
-                ? Icon(
-                    CupertinoIcons.heart,
-                  )
-                : Icon(
-                    CupertinoIcons.heart_fill,
-                    color: Colors.red,
-                  ),
           );
         }
         return Container();
@@ -257,7 +317,7 @@ class UserPost extends StatelessWidget {
         if (snapshot.hasData) {
           DocumentSnapshot snap = snapshot.data!;
           UserModel user =
-              UserModel.fromJson(snap.data() as Map<String, dynamic>);
+          UserModel.fromJson(snap.data() as Map<String, dynamic>);
           return Visibility(
             visible: !isMe,
             child: Align(
@@ -280,16 +340,16 @@ class UserPost extends StatelessWidget {
                       children: [
                         user.photoUrl!.isNotEmpty
                             ? CircleAvatar(
-                                radius: 14.0,
-                                backgroundColor: Color(0xff4D4D4D),
-                                backgroundImage: CachedNetworkImageProvider(
-                                  user.photoUrl ?? "",
-                                ),
-                              )
+                          radius: 14.0,
+                          backgroundColor: Color(0xff4D4D4D),
+                          backgroundImage: CachedNetworkImageProvider(
+                            user.photoUrl ?? "",
+                          ),
+                        )
                             : CircleAvatar(
-                                radius: 14.0,
-                                backgroundColor: Color(0xff4D4D4D),
-                              ),
+                          radius: 14.0,
+                          backgroundColor: Color(0xff4D4D4D),
+                        ),
                         SizedBox(width: 5.0),
                         Column(
                           mainAxisSize: MainAxisSize.min,

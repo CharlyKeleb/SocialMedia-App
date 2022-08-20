@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:social_media_app/chats/recent_chats.dart';
 import 'package:social_media_app/models/post.dart';
+import 'package:social_media_app/utils/constants.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/userpost.dart';
 
@@ -21,10 +22,10 @@ class _FeedsState extends State<Feeds> {
   @override
   void initState() {
     scrollController.addListener(() async {
-      if (scrollController.position.atEdge &&
-          scrollController.position.pixels == 0) {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
         setState(() {
-          page = page + 10;
+          page = page + 5;
         });
       }
     });
@@ -38,7 +39,7 @@ class _FeedsState extends State<Feeds> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'Wooble',
+          Constants.appName,
           style: TextStyle(fontWeight: FontWeight.w900),
         ),
         centerTitle: true,

@@ -51,6 +51,7 @@ dependencies:
   shared_preferences: ^2.0.6
   ionicons: ^0.2.1
   loading_overlay: ^0.3.0
+  like_button: ^2.0.4
 
 dev_dependencies:
   flutter_test:
