@@ -103,7 +103,7 @@ class _ConversationState extends State<Conversation> {
                           Message message = Message.fromJson(
                             messages.reversed.toList()[index].data(),
                           );
-                          return ChatBubble(
+                          return ChatBubbleWidget(
                             message: '${message.content}',
                             time: message.time!,
                             isMe: message.senderUid == user!.uid,
@@ -212,12 +212,20 @@ class _ConversationState extends State<Conversation> {
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
                   child: Hero(
                     tag: user.email!,
-                    child: CircleAvatar(
-                      radius: 25.0,
-                      backgroundImage: CachedNetworkImageProvider(
-                        '${user.photoUrl}',
-                      ),
-                    ),
+                    child: user.photoUrl!.isEmpty
+                        ? CircleAvatar(
+                            radius: 25.0,
+                            backgroundColor: Color(0xff4D4D4D),
+                            child: Center(
+                              child: Icon(Icons.error_outline),
+                            ),
+                          )
+                        : CircleAvatar(
+                            radius: 25.0,
+                            backgroundImage: CachedNetworkImageProvider(
+                              '${user.photoUrl}',
+                            ),
+                          ),
                   ),
                 ),
                 SizedBox(width: 10.0),
@@ -328,7 +336,19 @@ class _ConversationState extends State<Conversation> {
         setState(() {
           isFirst = false;
           chatId = id;
+          //Add the IDs of the two users to the chatID reference
+          //the users map will be concatenation of the two users
+          //involved in the chat
+          chatIdRef.add({
+            "users": getUser(firebaseAuth.currentUser!.uid, widget.userId),
+            "chatId": id
+          });
+          viewModel.sendMessage(widget.chatId, message);
         });
+        //update the reads to an empty map in other to avoid null value bug
+        chatRef.doc(chatId).update({'reads': {}});
+        //update the typing to an empty map in other to avoid null value bug
+        chatRef.doc(chatId).update({'typing': {}});
       } else {
         viewModel.sendMessage(
           widget.chatId,
@@ -336,6 +356,18 @@ class _ConversationState extends State<Conversation> {
         );
       }
     }
+  }
+
+  //this will concatenate the two users involved in the chat
+  //and  return a unique id, because firebase doesn't perform
+  //some complex queries
+  String getUser(String user1, String user2) {
+    user1 = user1.substring(0, 5);
+    user2 = user2.substring(0, 5);
+    List<String> list = [user1, user2];
+    list.sort();
+    var chatId = "${list[0]}-${list[1]}";
+    return chatId;
   }
 
   Stream<QuerySnapshot> messageListStream(String documentId) {

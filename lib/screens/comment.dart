@@ -153,7 +153,7 @@ class _CommentsState extends State<Comments> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          height: 250.0,
+          height: 350.0,
           width: MediaQuery.of(context).size.width - 20.0,
           child: cachedNetworkImage(widget.post!.mediaUrl!),
         ),

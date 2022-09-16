@@ -52,6 +52,7 @@ dependencies:
   ionicons: ^0.2.1
   loading_overlay: ^0.3.0
   like_button: ^2.0.4
+  flutter_chat_bubble: ^2.0.0
 
 dev_dependencies:
   flutter_test:

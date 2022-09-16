@@ -44,7 +44,7 @@ class _TabScreenState extends State<TabScreen> {
     },
     {
       'title': 'Profile',
-      'icon': CupertinoIcons.person,
+      'icon': CupertinoIcons.person_fill,
       'page': Profile(profileId: firebaseAuth.currentUser!.uid),
       'index': 4,
     },
@@ -83,9 +83,11 @@ class _TabScreenState extends State<TabScreen> {
                         icon: Icon(
                           item['icon'],
                           color: item['index'] != _page
-                              ? Colors.grey
+                              ? Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black
                               : Theme.of(context).colorScheme.secondary,
-                          size: 20.0,
+                          size: 25.0,
                         ),
                         onPressed: () => navigationTapped(item['index']),
                       ),

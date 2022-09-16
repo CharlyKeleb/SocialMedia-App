@@ -43,26 +43,6 @@ class PostService extends Service {
     });
   }
 
-  //uploads story to the story collection
-  uploadStory(File image, String description) async {
-    String link = await uploadImage(posts, image);
-    DocumentSnapshot doc =
-        await usersRef.doc(firebaseAuth.currentUser!.uid).get();
-    user = UserModel.fromJson(doc.data() as Map<String, dynamic>);
-    var ref = storyRef.doc();
-    ref.set({
-      "id": ref.id,
-      "postId": ref.id,
-      "username": user!.username,
-      "ownerId": firebaseAuth.currentUser!.uid,
-      "mediaUrl": link,
-      "description": description ?? "",
-      "timestamp": Timestamp.now(),
-    }).catchError((e) {
-      print(e);
-    });
-  }
-
 //upload a comment
   uploadComment(String currentUserId, String comment, String postId,
       String ownerId, String mediaUrl) async {
@@ -140,4 +120,6 @@ class PostService extends Service {
               });
     }
   }
+
+  //upload story
 }

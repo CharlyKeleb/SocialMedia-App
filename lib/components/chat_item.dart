@@ -46,12 +46,20 @@ class ChatItem extends StatelessWidget {
                 EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
             leading: Stack(
               children: <Widget>[
-                CircleAvatar(
-                  backgroundImage: CachedNetworkImageProvider(
-                    '${user.photoUrl}',
-                  ),
-                  radius: 25.0,
-                ),
+                user.photoUrl!.isEmpty
+                    ? CircleAvatar(
+                        radius: 25.0,
+                        backgroundColor: Color(0xff4D4D4D),
+                        child: Center(
+                          child: Icon(Icons.error_outline),
+                        ),
+                      )
+                    : CircleAvatar(
+                        backgroundImage: CachedNetworkImageProvider(
+                          '${user.photoUrl}',
+                        ),
+                        radius: 25.0,
+                      ),
                 Positioned(
                   bottom: 0.0,
                   right: 0.0,
@@ -133,7 +141,8 @@ class ChatItem extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           DocumentSnapshot snap = snapshot.data;
-          Map usersReads = snap.get('reads') ?? {};
+          final bool hasScore = snapshot.data!.data()!.containsKey('reads');
+          Map usersReads = hasScore ? snap.get('reads') ?? {} : {};
           int readCount = usersReads[currentUserId] ?? 0;
           int counter = messageCount! - readCount;
           if (counter == 0) {

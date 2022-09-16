@@ -1,17 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_bubble/bubble_type.dart';
+import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_3.dart';
 import 'package:social_media_app/components/text_time.dart';
 import 'package:social_media_app/models/enum/message_type.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class ChatBubble extends StatefulWidget {
+class ChatBubbleWidget extends StatefulWidget {
   final String? message;
   final MessageType? type;
   final Timestamp? time;
   final bool? isMe;
 
-  ChatBubble({
+  ChatBubbleWidget({
     @required this.message,
     @required this.time,
     @required this.isMe,
@@ -19,10 +22,10 @@ class ChatBubble extends StatefulWidget {
   });
 
   @override
-  _ChatBubbleState createState() => _ChatBubbleState();
+  _ChatBubbleWidgetState createState() => _ChatBubbleWidgetState();
 }
 
-class _ChatBubbleState extends State<ChatBubble> {
+class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
   Color? chatBubbleColor() {
     if (widget.isMe!) {
       return Theme.of(context).colorScheme.secondary;
@@ -61,24 +64,25 @@ class _ChatBubbleState extends State<ChatBubble> {
     return Column(
       crossAxisAlignment: align,
       children: <Widget>[
-        Container(
+        ChatBubble(
+          elevation: 0.0,
           margin: const EdgeInsets.all(3.0),
           padding: const EdgeInsets.all(5.0),
-          decoration: BoxDecoration(
-            color: chatBubbleColor(),
-            borderRadius: radius,
+          alignment:
+              widget.isMe! ? Alignment.centerRight : Alignment.centerLeft,
+          clipper: ChatBubbleClipper3(
+            type: widget.isMe!
+                ? BubbleType.sendBubble
+                : BubbleType.receiverBubble,
           ),
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width / 1.3,
-            minWidth: 20.0,
-          ),
+          backGroundColor: chatBubbleColor(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Padding(
                 padding:
-                    EdgeInsets.all(widget.type == MessageType.TEXT ? 5 : 0),
+                    EdgeInsets.all(widget.type == MessageType.TEXT ? 10 : 0),
                 child: widget.type == MessageType.TEXT
                     ? Text(
                         widget.message!,

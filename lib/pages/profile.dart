@@ -68,8 +68,8 @@ class _ProfileState extends State<Profile> {
                   child: Padding(
                     padding: const EdgeInsets.only(right: 25.0),
                     child: GestureDetector(
-                      onTap: () {
-                        firebaseAuth.signOut();
+                      onTap: () async {
+                        await firebaseAuth.signOut();
                         Navigator.of(context).push(
                             CupertinoPageRoute(builder: (_) => Register()));
                       },
@@ -197,7 +197,8 @@ class _ProfileState extends State<Profile> {
                                               ],
                                             ),
                                           )
-                                        : buildLikeButton()
+                                        : const Text('')
+                                    // : buildLikeButton()
                                   ],
                                 ),
                               ],

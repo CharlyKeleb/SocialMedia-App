@@ -48,7 +48,7 @@ class FabContainer extends StatelessWidget {
       ),
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor: .6,
+          heightFactor: .4,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -57,7 +57,7 @@ class FabContainer extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Center(
                   child: Text(
-                    'Create Post',
+                    'Choose Upload',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -72,7 +72,22 @@ class FabContainer extends StatelessWidget {
                   CupertinoIcons.camera_on_rectangle,
                   size: 25.0,
                 ),
-                title: Text('Make a Post'),
+                title: Text('Make a post'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (_) => CreatePost(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  CupertinoIcons.camera_on_rectangle,
+                  size: 25.0,
+                ),
+                title: Text('Add to story'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.of(context).push(

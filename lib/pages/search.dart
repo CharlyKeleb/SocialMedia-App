@@ -107,8 +107,11 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
                     onTap: () {
                       searchController.clear();
                     },
-                    child: Icon(Ionicons.close_outline,
-                        size: 12.0, color: Colors.black),
+                    child: Icon(
+                      Ionicons.close_outline,
+                      size: 12.0,
+                      // color: Colors.black,
+                    ),
                   ),
                   contentPadding: EdgeInsets.only(bottom: 10.0, left: 10.0),
                   border: InputBorder.none,
@@ -165,13 +168,42 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
                   ),
                   trailing: GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       Navigator.push(
                         context,
                         CupertinoPageRoute(
-                          builder: (_) => Conversation(
-                            userId: doc.id,
-                            chatId: 'newChat',
+                          builder: (_) => StreamBuilder(
+                            stream: chatIdRef
+                                .where(
+                                  "users",
+                                  isEqualTo: getUser(
+                                    firebaseAuth.currentUser!.uid,
+                                    doc.id,
+                                  ),
+                                )
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.hasData) {
+                                var snap = snapshot.data;
+                                List docs = snap!.docs;
+                                print(snapshot.data!.docs.toString());
+                                return docs.isEmpty
+                                    ? Conversation(
+                                        userId: doc.id,
+                                        chatId: 'newChat',
+                                      )
+                                    : Conversation(
+                                        userId: doc.id,
+                                        chatId:
+                                            docs[0].get('chatId').toString(),
+                                      );
+                              }
+                              return Conversation(
+                                userId: doc.id,
+                                chatId: 'newChat',
+                              );
+                            },
                           ),
                         ),
                       );
@@ -221,7 +253,19 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
     );
   }
 
+  //get concatenated list of users
+  //this will help us query the chat id reference in other
+  // to get the correct user id
+
+  String getUser(String user1, String user2) {
+    user1 = user1.substring(0, 5);
+    user2 = user2.substring(0, 5);
+    List<String> list = [user1, user2];
+    list.sort();
+    var chatId = "${list[0]}-${list[1]}";
+    return chatId;
+  }
+
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }
