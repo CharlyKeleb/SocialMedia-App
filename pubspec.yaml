@@ -53,6 +53,11 @@ dependencies:
   loading_overlay: ^0.3.0
   like_button: ^2.0.4
   flutter_chat_bubble: ^2.0.0
+  sliding_up_panel: ^2.0.0+1
+  permission_handler: ^10.1.0
+  camera: ^0.10.0+3
+  external_path: ^1.0.3
+  fluro: ^2.0.3
 
 dev_dependencies:
   flutter_test:

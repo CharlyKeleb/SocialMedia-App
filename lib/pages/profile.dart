@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -111,10 +112,30 @@ class _ProfileState extends State<Profile> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(left: 20.0),
-                              child: CircleAvatar(
-                                backgroundImage: NetworkImage(user.photoUrl!),
-                                radius: 40.0,
-                              ),
+                              child: user.photoUrl!.isEmpty
+                                  ? CircleAvatar(
+                                      radius: 40.0,
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                      child: Center(
+                                        child: Text(
+                                          '${user.username![0].toUpperCase()}',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.w900,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : CircleAvatar(
+                                      radius: 40.0,
+                                      backgroundImage:
+                                          CachedNetworkImageProvider(
+                                        '${user.photoUrl}',
+                                      ),
+                                    ),
                             ),
                             SizedBox(width: 20.0),
                             Column(

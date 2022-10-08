@@ -49,16 +49,24 @@ class ChatItem extends StatelessWidget {
                 user.photoUrl!.isEmpty
                     ? CircleAvatar(
                         radius: 25.0,
-                        backgroundColor: Color(0xff4D4D4D),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
                         child: Center(
-                          child: Icon(Icons.error_outline),
+                          child: Text(
+                            '${user.username![0].toUpperCase()}',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
                         ),
                       )
                     : CircleAvatar(
+                        radius: 25.0,
                         backgroundImage: CachedNetworkImageProvider(
                           '${user.photoUrl}',
                         ),
-                        radius: 25.0,
                       ),
                 Positioned(
                   bottom: 0.0,

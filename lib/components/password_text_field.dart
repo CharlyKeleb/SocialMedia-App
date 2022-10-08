@@ -64,6 +64,7 @@ class _PasswordFormBuilderState extends State<PasswordFormBuilder> {
                       secondary: Theme.of(context).colorScheme.secondary),
                 ),
                 child: TextFormField(
+                  cursorColor: Theme.of(context).colorScheme.secondary,
                   initialValue: widget.initialValue,
                   enabled: widget.enabled,
                   onChanged: (val) {

@@ -62,6 +62,7 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
                       secondary: Theme.of(context).colorScheme.secondary),
                 ),
                 child: TextFormField(
+                  cursorColor: Theme.of(context).colorScheme.secondary,
                   textCapitalization: TextCapitalization.none,
                   initialValue: widget.initialValue,
                   enabled: widget.enabled,

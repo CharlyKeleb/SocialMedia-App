@@ -35,10 +35,27 @@ class _ActivityItemsState extends State<ActivityItems> {
                 builder: (_) => ViewActivityDetails(activity: widget.activity!),
               ));
             },
-            leading: CircleAvatar(
-              radius: 25.0,
-              backgroundImage: NetworkImage(widget.activity!.userDp!),
-            ),
+            leading: widget.activity!.userDp!.isEmpty
+                ? CircleAvatar(
+                    radius: 25.0,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    child: Center(
+                      child: Text(
+                        '${widget.activity!.username![0].toUpperCase()}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  )
+                : CircleAvatar(
+                    radius: 25.0,
+                    backgroundImage: CachedNetworkImageProvider(
+                      '${widget.activity!.userDp!}',
+                    ),
+                  ),
             title: RichText(
               overflow: TextOverflow.ellipsis,
               text: TextSpan(

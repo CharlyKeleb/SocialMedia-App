@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media_app/posts/create_story.dart';
 import '../posts/create_post.dart';
 
 class FabContainer extends StatelessWidget {
@@ -92,7 +93,7 @@ class FabContainer extends StatelessWidget {
                   Navigator.pop(context);
                   Navigator.of(context).push(
                     CupertinoPageRoute(
-                      builder: (_) => CreatePost(),
+                      builder: (_) => CreateStory(),
                     ),
                   );
                 },

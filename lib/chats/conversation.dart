@@ -215,9 +215,17 @@ class _ConversationState extends State<Conversation> {
                     child: user.photoUrl!.isEmpty
                         ? CircleAvatar(
                             radius: 25.0,
-                            backgroundColor: Color(0xff4D4D4D),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondary,
                             child: Center(
-                              child: Icon(Icons.error_outline),
+                              child: Text(
+                                '${user.username![0].toUpperCase()}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
                             ),
                           )
                         : CircleAvatar(
@@ -272,7 +280,7 @@ class _ConversationState extends State<Conversation> {
             onTap: () {},
           );
         } else {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: circularProgress(context));
         }
       },
     );

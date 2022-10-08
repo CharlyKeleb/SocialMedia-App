@@ -328,19 +328,26 @@ class UserPost extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        user.photoUrl!.isNotEmpty
+                        user.photoUrl!.isEmpty
                             ? CircleAvatar(
                                 radius: 20.0,
-                                backgroundColor: Color(0xff4D4D4D),
-                                backgroundImage: CachedNetworkImageProvider(
-                                  user.photoUrl ?? "",
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.secondary,
+                                child: Center(
+                                  child: Text(
+                                    '${user.username![0].toUpperCase()}',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
                                 ),
                               )
                             : CircleAvatar(
                                 radius: 20.0,
-                                backgroundColor: Color(0xff4D4D4D),
-                                child: Center(
-                                  child: Icon(Icons.error_outline),
+                                backgroundImage: CachedNetworkImageProvider(
+                                  '${user.photoUrl}',
                                 ),
                               ),
                         SizedBox(width: 5.0),
