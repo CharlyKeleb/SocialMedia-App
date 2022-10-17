@@ -1,43 +1,43 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+class Status {
+  final String uid;
+  final String username;
+  final List<String> photoUrl;
+  final DateTime createdAt;
+  final String profilePic;
+  final String statusId;
+  final List<String> whoCanSee;
 
-class StoryModel {
-  String? id;
-  String? postId;
-  String? ownerId;
-  String? username;
-  String? caption;
-  List<String>? mediaUrl;
-  Timestamp? timestamp;
-
-  StoryModel({
-    this.id,
-    this.postId,
-    this.ownerId,
-    this.caption,
-    this.mediaUrl,
-    this.username,
-    this.timestamp,
+  Status({
+    required this.uid,
+    required this.username,
+    required this.photoUrl,
+    required this.createdAt,
+    required this.profilePic,
+    required this.statusId,
+    required this.whoCanSee,
   });
 
-  StoryModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    postId = json['postId'];
-    ownerId = json['ownerId'];
-    username = json['username'];
-    caption = json['caption'];
-    mediaUrl = json['mediaUrl'];
-    timestamp = json['timestamp'];
+  Map<String, dynamic> toMap() {
+    return {
+      'uid': uid,
+      'username': username,
+      'photoUrl': photoUrl,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'profilePic': profilePic,
+      'statusId': statusId,
+      'whoCanSee': whoCanSee,
+    };
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['postId'] = this.postId;
-    data['ownerId'] = this.ownerId;
-    data['caption'] = this.caption;
-    data['mediaUrl'] = this.mediaUrl;
-    data['timestamp'] = this.timestamp;
-    data['username'] = this.username;
-    return data;
+  factory Status.fromMap(Map<String, dynamic> map) {
+    return Status(
+      uid: map['uid'] ?? '',
+      username: map['username'] ?? '',
+      photoUrl: List<String>.from(map['photoUrl']),
+      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
+      profilePic: map['profilePic'] ?? '',
+      statusId: map['statusId'] ?? '',
+      whoCanSee: List<String>.from(map['whoCanSee']),
+    );
   }
 }

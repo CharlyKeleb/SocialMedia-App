@@ -30,7 +30,6 @@ class _ProfileState extends State<Profile> {
   int postCount = 0;
   int followersCount = 0;
   int followingCount = 0;
-  bool isToggle = true;
   bool isFollowing = false;
   UserModel? users;
   final DateTime timestamp = DateTime.now();
@@ -184,7 +183,6 @@ class _ProfileState extends State<Profile> {
                                             Text(
                                               user.email!,
                                               style: TextStyle(
-                                                // color: Color(0xff4D4D4D),
                                                 fontSize: 10.0,
                                               ),
                                             ),
@@ -235,7 +233,6 @@ class _ProfileState extends State<Profile> {
                                   child: Text(
                                     user.bio!,
                                     style: TextStyle(
-                                      //    color: Color(0xff4D4D4D),
                                       fontSize: 10.0,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -349,8 +346,6 @@ class _ProfileState extends State<Profile> {
                             'All Posts',
                             style: TextStyle(fontWeight: FontWeight.w900),
                           ),
-                          Spacer(),
-                          buildIcons(),
                         ],
                       ),
                     ),
@@ -363,28 +358,6 @@ class _ProfileState extends State<Profile> {
         ],
       ),
     );
-  }
-
-//show the toggling icons "grid" or "list" view.
-  buildIcons() {
-    if (isToggle) {
-      return IconButton(
-          icon: Icon(Ionicons.list),
-          onPressed: () {
-            setState(() {
-              isToggle = false;
-            });
-          });
-    } else if (isToggle == false) {
-      return IconButton(
-        icon: Icon(Icons.grid_on),
-        onPressed: () {
-          setState(() {
-            isToggle = true;
-          });
-        },
-      );
-    }
   }
 
   buildCount(String label, int count) {
@@ -545,34 +518,7 @@ class _ProfileState extends State<Profile> {
   }
 
   buildPostView() {
-    if (isToggle == true) {
-      return buildGridPost();
-    } else if (isToggle == false) {
-      return buildPosts();
-    }
-  }
-
-  buildPosts() {
-    return StreamBuilderWrapper(
-      shrinkWrap: true,
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      stream: postRef
-          .where('ownerId', isEqualTo: widget.profileId)
-          .orderBy('timestamp', descending: true)
-          .snapshots(),
-      physics: NeverScrollableScrollPhysics(),
-      itemBuilder: (_, DocumentSnapshot snapshot) {
-        PostModel posts = PostModel.fromJson(
-          snapshot.data() as Map<String, dynamic>,
-        );
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 15.0),
-          child: Posts(
-            post: posts,
-          ),
-        );
-      },
-    );
+    return buildGridPost();
   }
 
   buildGridPost() {

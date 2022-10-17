@@ -53,11 +53,8 @@ dependencies:
   loading_overlay: ^0.3.0
   like_button: ^2.0.4
   flutter_chat_bubble: ^2.0.0
-  sliding_up_panel: ^2.0.0+1
   permission_handler: ^10.1.0
-  camera: ^0.10.0+3
-  external_path: ^1.0.3
-  fluro: ^2.0.3
+  story_view: ^0.13.2
 
 dev_dependencies:
   flutter_test:
@@ -90,20 +87,22 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-     - family: Lato-Regular
-       fonts:
-         - asset: assets/fonts/Lato-Regular.ttf
+
+  #fonts:
+
+   #  - family: Lato-Regular
+   #    fonts:
+     #    - asset: assets/fonts/Lato-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
-     - family: Roboto-Regular
-       fonts:
-         - asset: assets/fonts/Roboto-Regular.ttf
+  #   - family: Roboto-Regular
+   #    fonts:
+  #       - asset: assets/fonts/Roboto-Regular.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-     - family: Ubuntu-Regular
-       fonts:
-         - asset: assets/fonts/Ubuntu-Regular.ttf
+   #  - family: Ubuntu-Regular
+   #    fonts:
+    #     - asset: assets/fonts/Ubuntu-Regular.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

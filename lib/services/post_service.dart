@@ -120,29 +120,4 @@ class PostService extends Service {
               });
     }
   }
-
-  //upload story
-  uploadStory(
-      File mediaUrl, String caption, String views, String viewerId) async {
-    String link = await uploadImage(posts, mediaUrl);
-    DocumentSnapshot doc =
-        await usersRef.doc(firebaseAuth.currentUser!.uid).get();
-    user = UserModel.fromJson(
-      doc.data() as Map<String, dynamic>,
-    );
-    var ref = storiesRef.doc();
-    ref.set({
-      "id": ref.id,
-      "postId": ref.id,
-      "username": user!.username,
-      "ownerId": firebaseAuth.currentUser!.uid,
-      "mediaUrl": [link],
-      "caption": caption,
-      "views": views,
-      "viewerId": viewerId,
-      "timestamp": Timestamp.now(),
-    }).catchError((e) {
-      print(e);
-    });
-  }
 }

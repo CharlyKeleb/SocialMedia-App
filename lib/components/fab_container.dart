@@ -1,7 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_media_app/posts/create_story.dart';
+import 'package:provider/provider.dart';
+import 'package:social_media_app/view_models/status/status_view_model.dart';
 import '../posts/create_post.dart';
 
 class FabContainer extends StatelessWidget {
@@ -13,6 +14,7 @@ class FabContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    StatusViewModel viewModel = Provider.of<StatusViewModel>(context);
     return OpenContainer(
       transitionType: ContainerTransitionType.fade,
       openBuilder: (BuildContext context, VoidCallback _) {
@@ -33,7 +35,7 @@ class FabContainer extends StatelessWidget {
             color: Theme.of(context).colorScheme.secondary,
           ),
           onPressed: () {
-            chooseUpload(context);
+            chooseUpload(context, viewModel);
           },
           mini: mini,
         );
@@ -41,7 +43,7 @@ class FabContainer extends StatelessWidget {
     );
   }
 
-  chooseUpload(BuildContext context) {
+  chooseUpload(BuildContext context, StatusViewModel viewModel) {
     return showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -89,13 +91,9 @@ class FabContainer extends StatelessWidget {
                   size: 25.0,
                 ),
                 title: Text('Add to story'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.of(context).push(
-                    CupertinoPageRoute(
-                      builder: (_) => CreateStory(),
-                    ),
-                  );
+                onTap: () async {
+                  // Navigator.pop(context);
+                  await viewModel.pickImage(context: context);
                 },
               ),
             ],
