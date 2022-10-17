@@ -21,15 +21,17 @@ class StatusService extends Service {
     required BuildContext context,
   }) async {
     try {
+      List<String> ids = [];
+
       String uid = userService.currentUid();
       String imageUrl = await uploadImage(statuses, statusImage);
 
       var allContacts = await usersRef.get().then((QuerySnapshot snapshot) {
         snapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
           print(documentSnapshot.get('id'));
+          ids.add(documentSnapshot.get('id'));
         });
       });
-      print('All Contacts ${allContacts}');
 
       List<String> statusImageUrls = [];
       var statusesSnapshot = await statusRef
@@ -59,7 +61,7 @@ class StatusService extends Service {
         createdAt: DateTime.now(),
         profilePic: profilePic,
         statusId: statusId,
-        whoCanSee: [],
+        whoCanSee: ids,
       );
 
       await statusRef.doc(statusId).set(status.toMap());
@@ -73,8 +75,13 @@ class StatusService extends Service {
     List<Status> statusData = [];
 
     try {
-      QuerySnapshot allContacts = await usersRef.get();
-
+      // List<String> ids = [];
+      // var allContacts = await usersRef.get().then((QuerySnapshot snapshot) {
+      //   snapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
+      //     print(documentSnapshot.get('id'));
+      //     ids.add(documentSnapshot.get('id'));
+      //   });
+      // });
       var statusesSnapshot = await statusRef.get();
       for (var tempData in statusesSnapshot.docs) {
         Status tempStatus =
