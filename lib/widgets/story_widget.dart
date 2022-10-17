@@ -78,8 +78,14 @@ class StoryWidget extends StatelessWidget {
                   );
                 },
               );
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Text('Loading'),
+              );
             } else {
-              return Text('No Stories');
+              return Center(
+                child: Text('No Stories'),
+              );
             }
           },
         ),
