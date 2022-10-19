@@ -19,6 +19,36 @@ class ConfirmStatus extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: BottomAppBar(
+        elevation: 10.0,
+        child: Container(
+          constraints: BoxConstraints(maxHeight: 100.0),
+          child: Flexible(
+            child: TextFormField(
+              style: TextStyle(
+                fontSize: 15.0,
+                color: Theme.of(context).textTheme.headline6!.color,
+              ),
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(10.0),
+                enabledBorder: InputBorder.none,
+                border: InputBorder.none,
+                hintText: "Type your caption",
+                hintStyle: TextStyle(
+                  color: Theme.of(context).textTheme.headline6!.color,
+                ),
+              ),
+              onSaved: (val) {
+                viewModel.setDescription(val!);
+              },
+              onChanged: (val) {
+                viewModel.setDescription(val);
+              },
+              maxLines: null,
+            ),
+          ),
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(
           Icons.done,

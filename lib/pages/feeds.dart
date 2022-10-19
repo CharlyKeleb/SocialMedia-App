@@ -38,7 +38,7 @@ class _FeedsState extends State<Feeds> {
 
   @override
   Widget build(BuildContext context) {
-    print('${firebaseAuth.currentUser!.uid}');
+    print('>>>');
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(

@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/models/story_model.dart';
-import 'package:social_media_app/models/user.dart';
 import 'package:social_media_app/services/services.dart';
 import 'package:social_media_app/services/user_service.dart';
 import 'package:social_media_app/utils/firebase.dart';
@@ -18,6 +17,8 @@ class StatusService extends Service {
     required String username,
     required String profilePic,
     required File statusImage,
+    String? description,
+    required Map? count,
     required BuildContext context,
   }) async {
     try {
@@ -25,15 +26,15 @@ class StatusService extends Service {
 
       String uid = userService.currentUid();
       String imageUrl = await uploadImage(statuses, statusImage);
-
-      var allContacts = await usersRef.get().then((QuerySnapshot snapshot) {
+      await usersRef.get().then((QuerySnapshot snapshot) {
         snapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
-          print(documentSnapshot.get('id'));
           ids.add(documentSnapshot.get('id'));
         });
       });
-
+      List<String> statusDescriptions = [];
       List<String> statusImageUrls = [];
+      List<List<String>> viewCounts = [];
+
       var statusesSnapshot = await statusRef
           .where(
             'uid',
@@ -44,21 +45,31 @@ class StatusService extends Service {
       if (statusesSnapshot.docs.isNotEmpty) {
         Status status = Status.fromMap(
             statusesSnapshot.docs[0].data() as Map<String, dynamic>);
+        statusDescriptions = status.description!;
         statusImageUrls = status.photoUrl;
         statusImageUrls.add(imageUrl);
+        statusDescriptions.add(description!);
         await statusRef.doc(statusesSnapshot.docs[0].id).update({
           'photoUrl': statusImageUrls,
+        });
+        await statusRef.doc(statusesSnapshot.docs[0].id).update({
+          'description': statusDescriptions,
+        });
+        await statusRef.doc(statusesSnapshot.docs[0].id).update({
+          'viewCount': viewCounts,
         });
         return;
       } else {
         statusImageUrls = [imageUrl];
+        statusDescriptions = [description!];
       }
 
       Status status = Status(
         uid: uid,
         username: username,
+        description: statusDescriptions,
         photoUrl: statusImageUrls,
-        createdAt: DateTime.now(),
+        createdAt: Timestamp.now(),
         profilePic: profilePic,
         statusId: statusId,
         whoCanSee: ids,
@@ -75,13 +86,6 @@ class StatusService extends Service {
     List<Status> statusData = [];
 
     try {
-      // List<String> ids = [];
-      // var allContacts = await usersRef.get().then((QuerySnapshot snapshot) {
-      //   snapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
-      //     print(documentSnapshot.get('id'));
-      //     ids.add(documentSnapshot.get('id'));
-      //   });
-      // });
       var statusesSnapshot = await statusRef.get();
       for (var tempData in statusesSnapshot.docs) {
         Status tempStatus =

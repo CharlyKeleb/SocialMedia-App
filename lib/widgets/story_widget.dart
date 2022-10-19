@@ -33,8 +33,10 @@ class StoryWidget extends StatelessWidget {
                             Navigator.push(
                               context,
                               CupertinoPageRoute(
-                                builder: (_) =>
-                                    StatusScreen(status: statusData),
+                                builder: (_) => StatusScreen(
+                                  status: statusData,
+                                  initPage: index,
+                                ),
                               ),
                             );
                           },

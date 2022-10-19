@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,6 +37,9 @@ class StatusViewModel extends ChangeNotifier {
   String? imgLink;
   bool edit = false;
   String? id;
+
+  //integers
+  int pageIndex = 0;
 
   setDescription(String val) {
     print('SetDescription $val');
@@ -96,9 +100,11 @@ class StatusViewModel extends ChangeNotifier {
           await usersRef.doc(firebaseAuth.currentUser!.uid).get();
       var currentUser = UserModel.fromJson(doc.data() as Map<String, dynamic>);
       await statusService.uploadStatus(
+          description: description,
           username: currentUser.username!,
           profilePic: currentUser.photoUrl!,
           statusImage: mediaUrl!,
+          count: {},
           context: context);
       loading = false;
       Navigator.pop(context);
@@ -118,6 +124,7 @@ class StatusViewModel extends ChangeNotifier {
     return statuses;
   }
 
+
   resetPost() {
     mediaUrl = null;
     description = null;
@@ -129,4 +136,5 @@ class StatusViewModel extends ChangeNotifier {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
   }
+
 }
