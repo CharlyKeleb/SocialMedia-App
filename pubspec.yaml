@@ -55,6 +55,7 @@ dependencies:
   flutter_chat_bubble: ^2.0.0
   permission_handler: ^10.1.0
   story: ^0.8.0
+  story_view: ^0.14.0
 
 dev_dependencies:
   flutter_test:

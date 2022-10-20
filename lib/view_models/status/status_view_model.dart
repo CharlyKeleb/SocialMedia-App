@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:social_media_app/models/message.dart';
+import 'package:social_media_app/models/status.dart';
 import 'package:social_media_app/models/story_model.dart';
 import 'package:social_media_app/models/user.dart';
 import 'package:social_media_app/posts/story/confrim_status.dart';
@@ -47,6 +49,7 @@ class StatusViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  //Functions
   //Functions
   pickImage({bool camera = false, BuildContext? context}) async {
     loading = true;
@@ -92,38 +95,22 @@ class StatusViewModel extends ChangeNotifier {
     }
   }
 
-  uploadStatus(BuildContext context) async {
-    try {
-      loading = true;
-      notifyListeners();
-      DocumentSnapshot doc =
-          await usersRef.doc(firebaseAuth.currentUser!.uid).get();
-      var currentUser = UserModel.fromJson(doc.data() as Map<String, dynamic>);
-      await statusService.uploadStatus(
-          description: description,
-          username: currentUser.username!,
-          profilePic: currentUser.photoUrl!,
-          statusImage: mediaUrl!,
-          count: {},
-          context: context);
-      loading = false;
-      Navigator.pop(context);
-      resetPost();
-      notifyListeners();
-    } catch (e) {
-      print('ERRRORRR UPLOADING $e');
-      loading = false;
-      resetPost();
-      showInSnackBar('Uploaded successfully!', context);
-      notifyListeners();
-    }
+  //send message
+  sendStatus(String chatId, StatusModel message) {
+    statusService.sendStatus(
+      message,
+      chatId,
+    );
   }
 
-  Future<List<Status>> getStatus(BuildContext context) async {
-    List<Status> statuses = await statusService.getStatus(context);
-    return statuses;
-  }
+  //send the first message
+  Future<String> sendFirstStatus(StatusModel message) async {
+    String newChatId = await statusService.sendFirstStatus(
+      message,
+    );
 
+    return newChatId;
+  }
 
   resetPost() {
     mediaUrl = null;
@@ -136,5 +123,4 @@ class StatusViewModel extends ChangeNotifier {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
   }
-
 }

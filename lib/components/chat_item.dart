@@ -40,7 +40,6 @@ class ChatItem extends StatelessWidget {
           UserModel user = UserModel.fromJson(
             documentSnapshot.data() as Map<String, dynamic>,
           );
-
           return ListTile(
             contentPadding:
                 EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),

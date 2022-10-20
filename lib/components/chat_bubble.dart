@@ -71,6 +71,7 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
           alignment:
               widget.isMe! ? Alignment.centerRight : Alignment.centerLeft,
           clipper: ChatBubbleClipper3(
+            nipSize: 0,
             type: widget.isMe!
                 ? BubbleType.sendBubble
                 : BubbleType.receiverBubble,

@@ -66,12 +66,22 @@ class _ActivityItemsState extends State<ActivityItems> {
                 children: [
                   TextSpan(
                     text: '${widget.activity!.username!} ',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 10.0),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10.0,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                   ),
                   TextSpan(
                     text: buildTextConfiguration(),
-                    style: TextStyle(fontSize: 10.0),
+                    style: TextStyle(
+                      fontSize: 10.0,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                   ),
                 ],
               ),
