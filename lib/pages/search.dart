@@ -10,6 +10,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:social_media_app/chats/conversation.dart';
 import 'package:social_media_app/models/user.dart';
 import 'package:social_media_app/pages/profile.dart';
+import 'package:social_media_app/utils/constants.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/indicators.dart';
 
@@ -71,9 +72,31 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: buildSearch(),
+        automaticallyImplyLeading: false,
+        title: Text(
+          Constants.appName,
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        centerTitle: true,
       ),
-      body: buildUsers(),
+      body: RefreshIndicator(
+        color: Theme.of(context).colorScheme.secondary,
+        onRefresh: () => getUsers(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: buildSearch(),
+            ),
+            Divider(),
+            buildUsers(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -81,42 +104,43 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
     return Row(
       children: [
         Container(
-          height: 35.0,
-          width: MediaQuery.of(context).size.width - 100,
+          height: 30.0,
+          width: MediaQuery.of(context).size.width - 50,
           decoration: BoxDecoration(
             color: Colors.grey.withOpacity(0.3),
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5.0),
-            child: Center(
-              child: TextFormField(
-                controller: searchController,
-                textAlignVertical: TextAlignVertical.center,
-                maxLength: 10,
-                maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(20),
-                ],
-                textCapitalization: TextCapitalization.sentences,
-                onChanged: (query) {
-                  search(query);
-                },
-                decoration: InputDecoration(
-                  suffixIcon: GestureDetector(
-                    onTap: () {
-                      searchController.clear();
-                    },
-                    child: Icon(Ionicons.close_outline,
-                        size: 12.0, color: Colors.black),
+            child: TextFormField(
+              controller: searchController,
+              textAlignVertical: TextAlignVertical.center,
+              maxLength: 10,
+              maxLengthEnforcement: MaxLengthEnforcement.enforced,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(20),
+              ],
+              textCapitalization: TextCapitalization.sentences,
+              onChanged: (query) {
+                search(query);
+              },
+              decoration: InputDecoration(
+                suffixIcon: GestureDetector(
+                  onTap: () {
+                    searchController.clear();
+                  },
+                  child: Icon(
+                    Ionicons.close_outline,
+                    size: 12.0,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
-                  contentPadding: EdgeInsets.only(bottom: 10.0, left: 10.0),
-                  border: InputBorder.none,
-                  counterText: '',
-                  hintText: 'Search...',
-                  hintStyle: TextStyle(
-                    fontSize: 15.0,
-                  ),
+                ),
+                // contentPadding: EdgeInsets.only(bottom: 10.0, left: 10.0),
+                border: InputBorder.none,
+                counterText: '',
+                hintText: 'Search...',
+                hintStyle: TextStyle(
+                  fontSize: 13.0,
                 ),
               ),
             ),
@@ -134,28 +158,45 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
               style: TextStyle(fontWeight: FontWeight.bold)),
         );
       } else {
-        return ListView.builder(
-          itemCount: filteredUsers.length,
-          itemBuilder: (BuildContext context, int index) {
-            DocumentSnapshot doc = filteredUsers[index];
-            UserModel user =
-                UserModel.fromJson(doc.data() as Map<String, dynamic>);
-            if (doc.id == currentUserId()) {
-              Timer(Duration(milliseconds: 500), () {
-                setState(() {
-                  removeFromList(index);
-                });
-              });
-            }
-            return Column(
-              children: [
-                ListTile(
+        return Expanded(
+          child: Container(
+            child: ListView.builder(
+              itemCount: filteredUsers.length,
+              itemBuilder: (BuildContext context, int index) {
+                DocumentSnapshot doc = filteredUsers[index];
+                UserModel user =
+                    UserModel.fromJson(doc.data() as Map<String, dynamic>);
+                if (doc.id == currentUserId()) {
+                  Timer(Duration(milliseconds: 500), () {
+                    setState(() {
+                      removeFromList(index);
+                    });
+                  });
+                }
+                return ListTile(
                   onTap: () => showProfile(context, profileId: user.id!),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 25.0),
-                  leading: CircleAvatar(
-                    radius: 35.0,
-                    backgroundImage: CachedNetworkImageProvider(user.photoUrl!),
-                  ),
+                  leading: user.photoUrl!.isEmpty
+                      ? CircleAvatar(
+                          radius: 20.0,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondary,
+                          child: Center(
+                            child: Text(
+                              '${user.username![0].toUpperCase()}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                        )
+                      : CircleAvatar(
+                          radius: 20.0,
+                          backgroundImage: CachedNetworkImageProvider(
+                            '${user.photoUrl}',
+                          ),
+                        ),
                   title: Text(
                     user.username!,
                     style: TextStyle(fontWeight: FontWeight.bold),
@@ -165,13 +206,41 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
                   ),
                   trailing: GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
                       Navigator.push(
                         context,
                         CupertinoPageRoute(
-                          builder: (_) => Conversation(
-                            userId: doc.id,
-                            chatId: 'newChat',
+                          builder: (_) => StreamBuilder(
+                            stream: chatIdRef
+                                .where(
+                                  "users",
+                                  isEqualTo: getUser(
+                                    firebaseAuth.currentUser!.uid,
+                                    doc.id,
+                                  ),
+                                )
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.hasData) {
+                                var snap = snapshot.data;
+                                List docs = snap!.docs;
+                                print(snapshot.data!.docs.toString());
+                                return docs.isEmpty
+                                    ? Conversation(
+                                        userId: doc.id,
+                                        chatId: 'newChat',
+                                      )
+                                    : Conversation(
+                                        userId: doc.id,
+                                        chatId:
+                                            docs[0].get('chatId').toString(),
+                                      );
+                              }
+                              return Conversation(
+                                userId: doc.id,
+                                chatId: 'newChat',
+                              );
+                            },
                           ),
                         ),
                       );
@@ -198,11 +267,10 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
                       ),
                     ),
                   ),
-                ),
-                Divider(),
-              ],
-            );
-          },
+                );
+              },
+            ),
+          ),
         );
       }
     } else {
@@ -221,7 +289,19 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
     );
   }
 
+  //get concatenated list of users
+  //this will help us query the chat id reference in other
+  // to get the correct user id
+
+  String getUser(String user1, String user2) {
+    user1 = user1.substring(0, 5);
+    user2 = user2.substring(0, 5);
+    List<String> list = [user1, user2];
+    list.sort();
+    var chatId = "${list[0]}-${list[1]}";
+    return chatId;
+  }
+
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

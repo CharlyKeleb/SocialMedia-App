@@ -35,10 +35,27 @@ class _ActivityItemsState extends State<ActivityItems> {
                 builder: (_) => ViewActivityDetails(activity: widget.activity!),
               ));
             },
-            leading: CircleAvatar(
-              radius: 25.0,
-              backgroundImage: NetworkImage(widget.activity!.userDp!),
-            ),
+            leading: widget.activity!.userDp!.isEmpty
+                ? CircleAvatar(
+                    radius: 25.0,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    child: Center(
+                      child: Text(
+                        '${widget.activity!.username![0].toUpperCase()}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  )
+                : CircleAvatar(
+                    radius: 25.0,
+                    backgroundImage: CachedNetworkImageProvider(
+                      '${widget.activity!.userDp!}',
+                    ),
+                  ),
             title: RichText(
               overflow: TextOverflow.ellipsis,
               text: TextSpan(
@@ -49,12 +66,22 @@ class _ActivityItemsState extends State<ActivityItems> {
                 children: [
                   TextSpan(
                     text: '${widget.activity!.username!} ',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 10.0),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10.0,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                   ),
                   TextSpan(
                     text: buildTextConfiguration(),
-                    style: TextStyle(fontSize: 10.0),
+                    style: TextStyle(
+                      fontSize: 10.0,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                   ),
                 ],
               ),

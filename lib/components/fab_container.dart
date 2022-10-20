@@ -1,6 +1,9 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:social_media_app/posts/story/confrim_status.dart';
+import 'package:social_media_app/view_models/status/status_view_model.dart';
 import '../posts/create_post.dart';
 
 class FabContainer extends StatelessWidget {
@@ -12,6 +15,7 @@ class FabContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    StatusViewModel viewModel = Provider.of<StatusViewModel>(context);
     return OpenContainer(
       transitionType: ContainerTransitionType.fade,
       openBuilder: (BuildContext context, VoidCallback _) {
@@ -32,7 +36,7 @@ class FabContainer extends StatelessWidget {
             color: Theme.of(context).colorScheme.secondary,
           ),
           onPressed: () {
-            chooseUpload(context);
+            chooseUpload(context, viewModel);
           },
           mini: mini,
         );
@@ -40,7 +44,7 @@ class FabContainer extends StatelessWidget {
     );
   }
 
-  chooseUpload(BuildContext context) {
+  chooseUpload(BuildContext context, StatusViewModel viewModel) {
     return showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -48,7 +52,7 @@ class FabContainer extends StatelessWidget {
       ),
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor: .6,
+          heightFactor: .4,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -57,7 +61,7 @@ class FabContainer extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Center(
                   child: Text(
-                    'Create Post',
+                    'Choose Upload',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -72,7 +76,7 @@ class FabContainer extends StatelessWidget {
                   CupertinoIcons.camera_on_rectangle,
                   size: 25.0,
                 ),
-                title: Text('Make a Post'),
+                title: Text('Make a post'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.of(context).push(
@@ -80,6 +84,18 @@ class FabContainer extends StatelessWidget {
                       builder: (_) => CreatePost(),
                     ),
                   );
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  CupertinoIcons.camera_on_rectangle,
+                  size: 25.0,
+                ),
+                title: Text('Add to story'),
+                onTap: () async {
+                  // Navigator.pop(context);
+                  await viewModel.pickImage(context: context);
+
                 },
               ),
             ],

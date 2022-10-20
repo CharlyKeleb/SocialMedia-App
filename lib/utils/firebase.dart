@@ -19,9 +19,10 @@ CollectionReference followersRef = firestore.collection('followers');
 CollectionReference followingRef = firestore.collection('following');
 CollectionReference likesRef = firestore.collection('likes');
 CollectionReference favUsersRef = firestore.collection('favoriteUsers');
-
-
+CollectionReference chatIdRef = firestore.collection('chatIds');
+CollectionReference statusRef = firestore.collection('status');
 
 // Storage refs
-Reference profilePic =storage.ref().child('profilePic');
-Reference posts =storage.ref().child('posts');
+Reference profilePic = storage.ref().child('profilePic');
+Reference posts = storage.ref().child('posts');
+Reference statuses = storage.ref().child('status');

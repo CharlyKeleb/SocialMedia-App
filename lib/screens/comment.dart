@@ -91,15 +91,31 @@ class _CommentsState extends State<Comments> {
                             ),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10.0),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                borderSide: BorderSide(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                borderSide: BorderSide(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                                 borderSide: BorderSide(
-                                  color: Theme.of(context).primaryColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Theme.of(context).primaryColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
@@ -153,7 +169,7 @@ class _CommentsState extends State<Comments> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          height: 250.0,
+          height: 350.0,
           width: MediaQuery.of(context).size.width - 20.0,
           child: cachedNetworkImage(widget.post!.mediaUrl!),
         ),
@@ -210,7 +226,7 @@ class _CommentsState extends State<Comments> {
   buildComments() {
     return CommentsStreamWrapper(
       shrinkWrap: true,
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      // padding: const EdgeInsets.symmetric(horizontal: 20.0),
       stream: commentRef
           .doc(widget.post!.postId)
           .collection('comments')

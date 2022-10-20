@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,7 +30,6 @@ class _ProfileState extends State<Profile> {
   int postCount = 0;
   int followersCount = 0;
   int followingCount = 0;
-  bool isToggle = true;
   bool isFollowing = false;
   UserModel? users;
   final DateTime timestamp = DateTime.now();
@@ -68,8 +68,8 @@ class _ProfileState extends State<Profile> {
                   child: Padding(
                     padding: const EdgeInsets.only(right: 25.0),
                     child: GestureDetector(
-                      onTap: () {
-                        firebaseAuth.signOut();
+                      onTap: () async {
+                        await firebaseAuth.signOut();
                         Navigator.of(context).push(
                             CupertinoPageRoute(builder: (_) => Register()));
                       },
@@ -111,10 +111,30 @@ class _ProfileState extends State<Profile> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(left: 20.0),
-                              child: CircleAvatar(
-                                backgroundImage: NetworkImage(user.photoUrl!),
-                                radius: 40.0,
-                              ),
+                              child: user.photoUrl!.isEmpty
+                                  ? CircleAvatar(
+                                      radius: 40.0,
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                      child: Center(
+                                        child: Text(
+                                          '${user.username![0].toUpperCase()}',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.w900,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : CircleAvatar(
+                                      radius: 40.0,
+                                      backgroundImage:
+                                          CachedNetworkImageProvider(
+                                        '${user.photoUrl}',
+                                      ),
+                                    ),
                             ),
                             SizedBox(width: 20.0),
                             Column(
@@ -163,7 +183,6 @@ class _ProfileState extends State<Profile> {
                                             Text(
                                               user.email!,
                                               style: TextStyle(
-                                                // color: Color(0xff4D4D4D),
                                                 fontSize: 10.0,
                                               ),
                                             ),
@@ -197,7 +216,8 @@ class _ProfileState extends State<Profile> {
                                               ],
                                             ),
                                           )
-                                        : buildLikeButton()
+                                        : const Text('')
+                                    // : buildLikeButton()
                                   ],
                                 ),
                               ],
@@ -213,7 +233,6 @@ class _ProfileState extends State<Profile> {
                                   child: Text(
                                     user.bio!,
                                     style: TextStyle(
-                                      //    color: Color(0xff4D4D4D),
                                       fontSize: 10.0,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -327,8 +346,6 @@ class _ProfileState extends State<Profile> {
                             'All Posts',
                             style: TextStyle(fontWeight: FontWeight.w900),
                           ),
-                          Spacer(),
-                          buildIcons(),
                         ],
                       ),
                     ),
@@ -341,28 +358,6 @@ class _ProfileState extends State<Profile> {
         ],
       ),
     );
-  }
-
-//show the toggling icons "grid" or "list" view.
-  buildIcons() {
-    if (isToggle) {
-      return IconButton(
-          icon: Icon(Ionicons.list),
-          onPressed: () {
-            setState(() {
-              isToggle = false;
-            });
-          });
-    } else if (isToggle == false) {
-      return IconButton(
-        icon: Icon(Icons.grid_on),
-        onPressed: () {
-          setState(() {
-            isToggle = true;
-          });
-        },
-      );
-    }
   }
 
   buildCount(String label, int count) {
@@ -523,34 +518,7 @@ class _ProfileState extends State<Profile> {
   }
 
   buildPostView() {
-    if (isToggle == true) {
-      return buildGridPost();
-    } else if (isToggle == false) {
-      return buildPosts();
-    }
-  }
-
-  buildPosts() {
-    return StreamBuilderWrapper(
-      shrinkWrap: true,
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      stream: postRef
-          .where('ownerId', isEqualTo: widget.profileId)
-          .orderBy('timestamp', descending: true)
-          .snapshots(),
-      physics: NeverScrollableScrollPhysics(),
-      itemBuilder: (_, DocumentSnapshot snapshot) {
-        PostModel posts = PostModel.fromJson(
-          snapshot.data() as Map<String, dynamic>,
-        );
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 15.0),
-          child: Posts(
-            post: posts,
-          ),
-        );
-      },
-    );
+    return buildGridPost();
   }
 
   buildGridPost() {
