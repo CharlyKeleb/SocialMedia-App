@@ -30,6 +30,7 @@ Star⭐ the repo if you like what you see😉.
 * Notifications Feed showing recent likes / comments of your posts + new followers
 * Swipe to delete notification
 * Dark Mode Support
+* Stories/Status
 * Used Provider to manage state
 
 ## Screenshots
@@ -43,6 +44,8 @@ Star⭐ the repo if you like what you see😉.
 <img src="ss/w11.png" width="400"> <img src="ss/w12.png" width="400">
 <img src="ss/w13.png" width="400"> <img src="ss/w14.png" width="400">
 <img src="ss/w15.png" width="400"> <img src="ss/w16.png" width="400">
+<img src="ss/w17.png" width="400"> <img src="ss/w18.png" width="400">
+
 
 </p>
 
@@ -93,11 +96,9 @@ Double check install instructions for both
     - https://pub.dartlang.org/packages/cloud_firestore
 
 # What's Next?
-- [] Saving posts
-- [] Video Calling ['under development']
-- [] Audio Calling
+- [] Video Calling
 - [] Reels
-- [] Sending and Uploading Videos
+- [] Sending and Uploading Videos(Video Compatibility)
 
 # Note
   - The stories feature is ready, you can write a cloud scheduler function to auto delete stories
