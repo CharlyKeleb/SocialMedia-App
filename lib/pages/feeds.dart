@@ -92,7 +92,6 @@ class _FeedsState extends State<Feeds> {
                       var snap = snapshot.data;
                       List docs = snap!.docs;
                       return ListView.builder(
-                        // physics: const NeverScrollableScrollPhysics(),
                         controller: scrollController,
                         itemCount: docs.length,
                         shrinkWrap: true,
@@ -121,13 +120,6 @@ class _FeedsState extends State<Feeds> {
                   },
                 ),
               ),
-              // SizedBox(height: 10.0),
-              // loadingMore
-              //     ? Container(
-              //         height: 80.0,
-              //         child: circularProgress(context),
-              //       )
-              //     : SizedBox(),
             ],
           ),
         ),

@@ -5,15 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:social_media_app/auth/register/register.dart';
-import 'package:social_media_app/components/stream_builder_wrapper.dart';
 import 'package:social_media_app/components/stream_grid_wrapper.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/models/user.dart';
 import 'package:social_media_app/screens/edit_profile.dart';
+import 'package:social_media_app/screens/list_posts.dart';
 import 'package:social_media_app/screens/settings.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/post_tiles.dart';
-import 'package:social_media_app/widgets/posts_view.dart';
 
 class Profile extends StatefulWidget {
   final profileId;
@@ -71,7 +70,10 @@ class _ProfileState extends State<Profile> {
                       onTap: () async {
                         await firebaseAuth.signOut();
                         Navigator.of(context).push(
-                            CupertinoPageRoute(builder: (_) => Register()));
+                          CupertinoPageRoute(
+                            builder: (_) => Register(),
+                          ),
+                        );
                       },
                       child: Text(
                         'Log Out',
@@ -346,6 +348,26 @@ class _ProfileState extends State<Profile> {
                             'All Posts',
                             style: TextStyle(fontWeight: FontWeight.w900),
                           ),
+                          const Spacer(),
+                          IconButton(
+                            onPressed: () async {
+                              DocumentSnapshot doc =
+                                  await usersRef.doc(widget.profileId).get();
+                              var currentUser = UserModel.fromJson(
+                                doc.data() as Map<String, dynamic>,
+                              );
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (_) => ListPosts(
+                                    userId: widget.profileId,
+                                    username: currentUser.username,
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: Icon(Ionicons.grid_outline),
+                          )
                         ],
                       ),
                     ),
