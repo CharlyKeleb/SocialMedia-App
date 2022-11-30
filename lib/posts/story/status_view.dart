@@ -47,7 +47,7 @@ class _StatusScreenState extends State<StatusScreen> {
                     indicatorPadding:
                         EdgeInsets.symmetric(vertical: 50.0, horizontal: 20.0),
                     indicatorHeight: 15.0,
-                    initialPage: widget.initPage,
+                    initialPage: 0,
                     onPageLimitReached: () {
                       Navigator.pop(context);
                     },
@@ -72,7 +72,6 @@ class _StatusScreenState extends State<StatusScreen> {
                             .doc(stats.statusId)
                             .update({'viewers': allViewers});
                       }
-
                       return Container(
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
@@ -92,9 +91,8 @@ class _StatusScreenState extends State<StatusScreen> {
                                     DocumentSnapshot documentSnapshot = snapshot
                                         .data as DocumentSnapshot<Object?>;
                                     UserModel user = UserModel.fromJson(
-                                      documentSnapshot.data()
-                                          as Map<String, dynamic>,
-                                    );
+                                        documentSnapshot.data()
+                                            as Map<String, dynamic>);
                                     return Padding(
                                       padding:
                                           const EdgeInsets.only(right: 10.0),

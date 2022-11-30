@@ -15,7 +15,7 @@ class Chats extends StatelessWidget {
     viewModel.setUser();
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(
+        leading: GestureDetector(
           onTap: (){
             Navigator.pop(context);
           },

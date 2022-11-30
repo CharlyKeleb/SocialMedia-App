@@ -92,7 +92,7 @@ class StoryWidget extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(
-                      CupertinoPageRoute(
+                      MaterialPageRoute(
                         builder: (_) => StatusScreen(
                           statusId: chatId,
                           storyId: messageId,

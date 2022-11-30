@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/models/notification.dart';
+import 'package:social_media_app/pages/profile.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/view_notification_details.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -27,72 +28,72 @@ class _ActivityItemsState extends State<ActivityItems> {
       onDismissed: (v) {
         delete();
       },
-      child: Column(
-        children: [
-          ListTile(
-            onTap: () {
-              Navigator.of(context).push(CupertinoPageRoute(
-                builder: (_) => ViewActivityDetails(activity: widget.activity!),
-              ));
-            },
-            leading: widget.activity!.userDp!.isEmpty
-                ? CircleAvatar(
-                    radius: 25.0,
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
-                    child: Center(
-                      child: Text(
-                        '${widget.activity!.username![0].toUpperCase()}',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                  )
-                : CircleAvatar(
-                    radius: 25.0,
-                    backgroundImage: CachedNetworkImageProvider(
-                      '${widget.activity!.userDp!}',
-                    ),
-                  ),
-            title: RichText(
-              overflow: TextOverflow.ellipsis,
-              text: TextSpan(
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14.0,
-                ),
-                children: [
-                  TextSpan(
-                    text: '${widget.activity!.username!} ',
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+        onTap: () {
+          Navigator.of(context).push(
+            CupertinoPageRoute(
+              builder: (_) => widget.activity!.type == "follow"
+                  ? Profile(profileId: widget.activity!.userId)
+                  : ViewActivityDetails(activity: widget.activity!),
+            ),
+          );
+        },
+        leading: widget.activity!.userDp!.isEmpty
+            ? CircleAvatar(
+                radius: 20.0,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                child: Center(
+                  child: Text(
+                    '${widget.activity!.username![0].toUpperCase()}',
                     style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15.0,
                       fontWeight: FontWeight.bold,
-                      fontSize: 10.0,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : Colors.black,
                     ),
                   ),
-                  TextSpan(
-                    text: buildTextConfiguration(),
-                    style: TextStyle(
-                      fontSize: 10.0,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : Colors.black,
-                    ),
-                  ),
-                ],
+                ),
+              )
+            : CircleAvatar(
+                radius: 20.0,
+                backgroundImage: CachedNetworkImageProvider(
+                  '${widget.activity!.userDp!}',
+                ),
               ),
+        title: RichText(
+          overflow: TextOverflow.ellipsis,
+          text: TextSpan(
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 14.0,
             ),
-            subtitle: Text(
-              timeago.format(widget.activity!.timestamp!.toDate()),
-            ),
-            trailing: previewConfiguration(),
+            children: [
+              TextSpan(
+                text: '${widget.activity!.username!} ',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14.0,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
+                ),
+              ),
+              TextSpan(
+                text: buildTextConfiguration(),
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
+                ),
+              ),
+            ],
           ),
-          Divider(),
-        ],
+        ),
+        subtitle: Text(
+          timeago.format(widget.activity!.timestamp!.toDate()),
+        ),
+        trailing: previewConfiguration(),
       ),
     );
   }

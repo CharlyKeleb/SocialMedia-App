@@ -45,7 +45,6 @@ class UserModel {
     data['isOnline'] = this.isOnline;
     data['lastSeen'] = this.lastSeen;
     data['id'] = this.id;
-
     return data;
   }
 }

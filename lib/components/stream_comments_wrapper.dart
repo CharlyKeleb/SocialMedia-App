@@ -28,7 +28,7 @@ class CommentsStreamWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-     stream: stream,
+      stream: stream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           var list = snapshot.data!.docs.toList();
@@ -41,7 +41,17 @@ class CommentsStreamWrapper extends StatelessWidget {
                     ),
                   ),
                 )
-              : ListView.builder(
+              : ListView.separated(
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        height: 0.5,
+                        width: MediaQuery.of(context).size.width / 1.3,
+                        child: const Divider(),
+                      ),
+                    );
+                  },
                   reverse: true,
                   padding: padding,
                   scrollDirection: scrollDirection,

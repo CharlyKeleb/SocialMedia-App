@@ -51,7 +51,6 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
         String userName = user['username'];
         return userName.toLowerCase().contains(query.toLowerCase());
       }).toList();
-
       setState(() {
         filteredUsers = userSearch as List<DocumentSnapshot<Object?>>;
       });
@@ -92,7 +91,6 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: buildSearch(),
             ),
-            Divider(),
             buildUsers(),
           ],
         ),
@@ -107,7 +105,7 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
           height: 30.0,
           width: MediaQuery.of(context).size.width - 50,
           decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.3),
+            color: Colors.grey.withOpacity(0.2),
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: Padding(
@@ -155,7 +153,7 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
       if (filteredUsers.isEmpty) {
         return Center(
           child: Text("No User Found",
-              style: TextStyle(fontWeight: FontWeight.bold)),
+              style: TextStyle(fontWeight: FontWeight.bold),),
         );
       } else {
         return Expanded(

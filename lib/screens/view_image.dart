@@ -36,15 +36,18 @@ class _ViewImageState extends State<ViewImage> {
         child: buildImage(context),
       ),
       bottomNavigationBar: BottomAppBar(
-          elevation: 0.0,
-          color: Colors.transparent,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-              height: 50.0,
-              width: MediaQuery.of(context).size.width,
-              child: Row(children: [
+        elevation: 0.0,
+        color: Colors.transparent,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Container(
+            height: 50.0,
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              children: [
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       widget.post!.username!,
@@ -55,16 +58,20 @@ class _ViewImageState extends State<ViewImage> {
                       children: [
                         Icon(Ionicons.alarm_outline, size: 13.0),
                         SizedBox(width: 3.0),
-                        Text(timeago.format(widget.post!.timestamp!.toDate())),
+                        Text(
+                          timeago.format(widget.post!.timestamp!.toDate()),
+                        ),
                       ],
                     ),
                   ],
                 ),
                 Spacer(),
                 buildLikeButton(),
-              ]),
+              ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 

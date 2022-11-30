@@ -45,7 +45,7 @@ class ChatItem extends StatelessWidget {
                 EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
             leading: Stack(
               children: <Widget>[
-                user.photoUrl!.isEmpty
+                user.photoUrl == null || user.photoUrl!.isEmpty
                     ? CircleAvatar(
                         radius: 25.0,
                         backgroundColor:
@@ -109,13 +109,11 @@ class ChatItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 SizedBox(height: 10),
-                TextTime(
-                  child: Text(
-                    "${timeago.format(time!.toDate())}",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 11,
-                    ),
+                Text(
+                  "${timeago.format(time!.toDate())}",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    fontSize: 11,
                   ),
                 ),
                 SizedBox(height: 5),

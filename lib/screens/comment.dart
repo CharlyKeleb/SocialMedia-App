@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -236,34 +237,76 @@ class _CommentsState extends State<Comments> {
       itemBuilder: (_, DocumentSnapshot snapshot) {
         CommentModel comments =
             CommentModel.fromJson(snapshot.data() as Map<String, dynamic>);
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-              leading: CircleAvatar(
-                radius: 20.0,
-                backgroundImage: NetworkImage(comments.userDp!),
+        // return Column(
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   mainAxisAlignment: MainAxisAlignment.start,
+        //   children: [
+        //     ListTile(
+        //       contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+        //       leading: CircleAvatar(
+        //         radius: 20.0,
+        //         backgroundImage: NetworkImage(comments.userDp!),
+        //       ),
+        //       title: Text(
+        //         comments.username!,
+        //         style: TextStyle(fontWeight: FontWeight.w700),
+        //       ),
+        //       subtitle: Text(
+        //         timeago.format(comments.timestamp!.toDate()),
+        //         style: TextStyle(fontSize: 12.0),
+        //       ),
+        //     ),
+        //     Padding(
+        //       padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        //       child: Text(
+        //         comments.comment!,
+        //         style: TextStyle(fontWeight: FontWeight.w400),
+        //       ),
+        //     ),
+        //     Divider()
+        //   ],
+        // );
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 20.0,
+                    backgroundImage: CachedNetworkImageProvider(comments.userDp!),
+                  ),
+                  SizedBox(width: 10.0),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        comments.username!,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      Text(
+                        timeago.format(comments.timestamp!.toDate()),
+                        style: TextStyle(fontSize: 10.0),
+                      ),
+                    ],
+                  )
+                ],
               ),
-              title: Text(
-                comments.username!,
-                style: TextStyle(fontWeight: FontWeight.w700),
+              Padding(
+                padding: const EdgeInsets.only(left: 50.0),
+                child: Text( comments.comment!.trim()),
               ),
-              subtitle: Text(
-                timeago.format(comments.timestamp!.toDate()),
-                style: TextStyle(fontSize: 12.0),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Text(
-                comments.comment!,
-                style: TextStyle(fontWeight: FontWeight.w400),
-              ),
-            ),
-            Divider()
-          ],
+              SizedBox(height: 10.0),
+            ],
+          ),
         );
       },
     );

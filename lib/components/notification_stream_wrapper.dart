@@ -41,7 +41,17 @@ class ActivityStreamWrapper extends StatelessWidget {
                     ),
                   ),
                 )
-              : ListView.builder(
+              : ListView.separated(
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        height: 0.5,
+                        width: MediaQuery.of(context).size.width / 1.3,
+                        child: const Divider(),
+                      ),
+                    );
+                  },
                   padding: padding,
                   scrollDirection: scrollDirection,
                   itemCount: list.length,
