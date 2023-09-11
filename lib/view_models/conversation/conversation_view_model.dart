@@ -39,11 +39,11 @@ class ConversationViewModel extends ChangeNotifier {
   }
 
   pickImage({int? source, BuildContext? context, String? chatId}) async {
-    PickedFile? pickedFile = source == 0
-        ? await picker.getImage(
+    XFile? pickedFile = source == 0
+        ? await picker.pickImage(
             source: ImageSource.camera,
           )
-        : await picker.getImage(
+        : await picker.pickImage(
             source: ImageSource.gallery,
           );
 

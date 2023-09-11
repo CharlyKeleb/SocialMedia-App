@@ -87,7 +87,7 @@ class EditProfileViewModel extends ChangeNotifier {
     loading = true;
     notifyListeners();
     try {
-      PickedFile? pickedFile = await picker.getImage(
+      XFile? pickedFile = await picker.pickImage(
         source: camera ? ImageSource.camera : ImageSource.gallery,
       );
       CroppedFile? croppedFile = await ImageCropper().cropImage(

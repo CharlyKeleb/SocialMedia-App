@@ -35,106 +35,114 @@ class ChatItem extends StatelessWidget {
       stream: usersRef.doc('$userId').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          DocumentSnapshot documentSnapshot =
-              snapshot.data as DocumentSnapshot<Object?>;
-          UserModel user = UserModel.fromJson(
-            documentSnapshot.data() as Map<String, dynamic>,
-          );
-          return ListTile(
-            contentPadding:
-                EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-            leading: Stack(
-              children: <Widget>[
-                user.photoUrl == null || user.photoUrl!.isEmpty
-                    ? CircleAvatar(
-                        radius: 25.0,
-                        backgroundColor:
-                            Theme.of(context).colorScheme.secondary,
-                        child: Center(
-                          child: Text(
-                            '${user.username![0].toUpperCase()}',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.w900,
+          // DocumentSnapshot documentSnapshot =
+          //     snapshot.data as DocumentSnapshot<Object?>;
+
+          DocumentSnapshot documentSnapshot = snapshot.data as DocumentSnapshot;
+          Map<String, dynamic>? userData =
+              documentSnapshot.data() as Map<String, dynamic>?;
+          if (userData != null) {
+            UserModel user = UserModel.fromJson(
+              documentSnapshot.data() as Map<String, dynamic>,
+            );
+            return ListTile(
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+              leading: Stack(
+                children: <Widget>[
+                  user.photoUrl == null || user.photoUrl!.isEmpty
+                      ? CircleAvatar(
+                          radius: 25.0,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondary,
+                          child: Center(
+                            child: Text(
+                              '${user.username![0].toUpperCase()}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.w900,
+                              ),
                             ),
                           ),
+                        )
+                      : CircleAvatar(
+                          radius: 25.0,
+                          backgroundImage: CachedNetworkImageProvider(
+                            '${user.photoUrl}',
+                          ),
                         ),
-                      )
-                    : CircleAvatar(
-                        radius: 25.0,
-                        backgroundImage: CachedNetworkImageProvider(
-                          '${user.photoUrl}',
-                        ),
+                  Positioned(
+                    bottom: 0.0,
+                    right: 0.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(6.0),
                       ),
-                Positioned(
-                  bottom: 0.0,
-                  right: 0.0,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(6.0),
-                    ),
-                    height: 15,
-                    width: 15,
-                    child: Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: user.isOnline ?? false
-                              ? Color(0xff00d72f)
-                              : Colors.grey,
-                          borderRadius: BorderRadius.circular(6),
+                      height: 15,
+                      width: 15,
+                      child: Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: user.isOnline ?? false
+                                ? Color(0xff00d72f)
+                                : Colors.grey,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          height: 11,
+                          width: 11,
                         ),
-                        height: 11,
-                        width: 11,
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            title: Text(
-              '${user.username}',
-              maxLines: 1,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
+                ],
               ),
-            ),
-            subtitle: Text(
-              type == MessageType.IMAGE ? "IMAGE" : "$msg",
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-            ),
-            trailing: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                SizedBox(height: 10),
-                Text(
-                  "${timeago.format(time!.toDate())}",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w300,
-                    fontSize: 11,
+              title: Text(
+                '${user.username}',
+                maxLines: 1,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Text(
+                type == MessageType.IMAGE ? "IMAGE" : "$msg",
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+              trailing: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  Text(
+                    "${timeago.format(time!.toDate())}",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      fontSize: 11,
+                    ),
                   ),
-                ),
-                SizedBox(height: 5),
-                buildCounter(context),
-              ],
-            ),
-            onTap: () {
-              Navigator.of(context, rootNavigator: true).push(
-                CupertinoPageRoute(
-                  builder: (BuildContext context) {
-                    return Conversation(
-                      userId: userId!,
-                      chatId: chatId!,
-                    );
-                  },
-                ),
-              );
-            },
-          );
+                  SizedBox(height: 5),
+                  buildCounter(context),
+                ],
+              ),
+              onTap: () {
+                Navigator.of(context, rootNavigator: true).push(
+                  CupertinoPageRoute(
+                    builder: (BuildContext context) {
+                      return Conversation(
+                        userId: userId!,
+                        chatId: chatId!,
+                      );
+                    },
+                  ),
+                );
+              },
+            );
+          } else {
+            return SizedBox.shrink();
+          }
         } else {
-          return SizedBox();
+          return SizedBox.shrink();
         }
       },
     );

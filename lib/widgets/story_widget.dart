@@ -14,7 +14,7 @@ class StoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100.0,
+      height: 110.0,
       child: Padding(
         padding: const EdgeInsets.only(left: 5.0),
         child: StreamBuilder<QuerySnapshot>(
@@ -119,9 +119,9 @@ class StoryWidget extends StatelessWidget {
                       ],
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(1.0),
+                      padding: const EdgeInsets.all(1.5),
                       child: CircleAvatar(
-                        radius: 35.0,
+                        radius: 30.0,
                         backgroundColor: Colors.grey,
                         backgroundImage: CachedNetworkImageProvider(
                           user.photoUrl!,
@@ -130,11 +130,12 @@ class StoryWidget extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(height: 5.0),
                 Text(
                   user.username!,
                   style: TextStyle(
                     fontSize: 10.0,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w900,
                   ),
                 )
               ],

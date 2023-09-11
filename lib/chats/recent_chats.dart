@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/components/chat_item.dart';
 import 'package:social_media_app/models/message.dart';
@@ -7,16 +9,27 @@ import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/view_models/user/user_view_model.dart';
 import 'package:social_media_app/widgets/indicators.dart';
 
-class Chats extends StatelessWidget {
+class Chats extends StatefulWidget {
+  @override
+  State<Chats> createState() => _ChatsState();
+}
+
+class _ChatsState extends State<Chats> {
+  @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Provider.of<UserViewModel>(context, listen: false).setUser();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    UserViewModel viewModel =
-        Provider.of<UserViewModel>(context, listen: false);
-    viewModel.setUser();
+    UserViewModel viewModel = Provider.of<UserViewModel>(context);
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
-          onTap: (){
+          onTap: () {
             Navigator.pop(context);
           },
           child: Icon(Icons.keyboard_backspace),
