@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
 
   ThemeData themeData(ThemeData theme) {
     return theme.copyWith(
-      textTheme: GoogleFonts.nunitoTextTheme(
+      textTheme: GoogleFonts.latoTextTheme(
         theme.textTheme,
       ),
     );

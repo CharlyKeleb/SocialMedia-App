@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_media_app/auth/register/register.dart';
+import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/view_models/theme/theme_view_model.dart';
 
 class Setting extends StatefulWidget {
@@ -32,16 +34,17 @@ class _SettingState extends State<Setting> {
         child: ListView(
           children: <Widget>[
             ListTile(
-                title: Text(
-                  "About",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                  ),
+              title: Text(
+                "About",
+                style: TextStyle(
+                  fontWeight: FontWeight.w900,
                 ),
-                subtitle: Text(
-                  "A Fully Functional Social Media Application Made by CharlyKeleb",
-                ),
-                trailing: Icon(Icons.error)),
+              ),
+              subtitle: Text(
+                "A Fully Functional Social Media Application Made by CharlyKeleb",
+              ),
+              trailing: Icon(Icons.error),
+            ),
             Divider(),
             ListTile(
               title: Text(
@@ -61,6 +64,30 @@ class _SettingState extends State<Setting> {
                 ),
               ),
             ),
+            Divider(),
+            ListTile(
+              onTap: () async {
+                await firebaseAuth.signOut();
+                Navigator.of(context).pushReplacement(
+                  CupertinoPageRoute(
+                    builder: (_) => Register(),
+                  ),
+                );
+              },
+              subtitle: Text(
+                "Logout",
+                style: TextStyle(
+                  fontSize: 22.0,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+              ),
+              trailing: Icon(
+                Icons.chevron_right,
+                size: 30.0,
+                color: Theme.of(context).iconTheme.color,
+              ),
+            ),
+            Divider(),
           ],
         ),
       ),

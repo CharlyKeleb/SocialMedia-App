@@ -59,9 +59,7 @@ class _CommentsState extends State<Comments> {
                     child: buildFullPost(),
                   ),
                   Divider(thickness: 1.5),
-                  Flexible(
-                    child: buildComments(),
-                  )
+                  buildComments()
                 ],
               ),
             ),
@@ -82,60 +80,21 @@ class _CommentsState extends State<Comments> {
                       Flexible(
                         child: ListTile(
                           contentPadding: EdgeInsets.all(0),
-                          title: TextField(
-                            textCapitalization: TextCapitalization.sentences,
+                          title: CupertinoSearchTextField(
                             controller: commentsTEC,
+                            prefixIcon: SizedBox.shrink(),
                             style: TextStyle(
                               fontSize: 15.0,
                               color:
-                                  Theme.of(context).textTheme.headline6!.color,
+                                  Theme.of(context).textTheme.titleLarge!.color,
                             ),
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(10.0),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                                borderSide: BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                                borderSide: BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                                borderSide: BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              hintText: "Write your comment...",
-                              hintStyle: TextStyle(
-                                fontSize: 15.0,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline6!
-                                    .color,
-                              ),
-                            ),
-                            maxLines: null,
+                            placeholder: "Write your comment...",
                           ),
                           trailing: GestureDetector(
                             onTap: () async {
                               await services.uploadComment(
                                 currentUserId(),
-                                commentsTEC.text,
+                                commentsTEC.text.trim(),
                                 widget.post!.postId!,
                                 widget.post!.ownerId!,
                                 widget.post!.mediaUrl!,
@@ -145,7 +104,7 @@ class _CommentsState extends State<Comments> {
                             child: Padding(
                               padding: const EdgeInsets.only(right: 10.0),
                               child: Icon(
-                                Icons.send,
+                                Ionicons.send,
                                 color: Theme.of(context).colorScheme.secondary,
                               ),
                             ),
@@ -227,7 +186,6 @@ class _CommentsState extends State<Comments> {
   buildComments() {
     return CommentsStreamWrapper(
       shrinkWrap: true,
-      // padding: const EdgeInsets.symmetric(horizontal: 20.0),
       stream: commentRef
           .doc(widget.post!.postId)
           .collection('comments')
@@ -237,35 +195,6 @@ class _CommentsState extends State<Comments> {
       itemBuilder: (_, DocumentSnapshot snapshot) {
         CommentModel comments =
             CommentModel.fromJson(snapshot.data() as Map<String, dynamic>);
-        // return Column(
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   mainAxisAlignment: MainAxisAlignment.start,
-        //   children: [
-        //     ListTile(
-        //       contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-        //       leading: CircleAvatar(
-        //         radius: 20.0,
-        //         backgroundImage: NetworkImage(comments.userDp!),
-        //       ),
-        //       title: Text(
-        //         comments.username!,
-        //         style: TextStyle(fontWeight: FontWeight.w700),
-        //       ),
-        //       subtitle: Text(
-        //         timeago.format(comments.timestamp!.toDate()),
-        //         style: TextStyle(fontSize: 12.0),
-        //       ),
-        //     ),
-        //     Padding(
-        //       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        //       child: Text(
-        //         comments.comment!,
-        //         style: TextStyle(fontWeight: FontWeight.w400),
-        //       ),
-        //     ),
-        //     Divider()
-        //   ],
-        // );
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Column(
@@ -278,7 +207,8 @@ class _CommentsState extends State<Comments> {
                 children: [
                   CircleAvatar(
                     radius: 20.0,
-                    backgroundImage: CachedNetworkImageProvider(comments.userDp!),
+                    backgroundImage:
+                        CachedNetworkImageProvider(comments.userDp!),
                   ),
                   SizedBox(width: 10.0),
                   Column(
@@ -302,7 +232,7 @@ class _CommentsState extends State<Comments> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 50.0),
-                child: Text( comments.comment!.trim()),
+                child: Text(comments.comment!.trim()),
               ),
               SizedBox(height: 10.0),
             ],
@@ -321,30 +251,7 @@ class _CommentsState extends State<Comments> {
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
           List<QueryDocumentSnapshot> docs = snapshot.data?.docs ?? [];
-          // return IconButton(
-          //   onPressed: () {
-          //     if (docs.isEmpty) {
-          //       likesRef.add({
-          //         'userId': currentUserId(),
-          //         'postId': widget.post!.postId,
-          //         'dateCreated': Timestamp.now(),
-          //       });
-          //       addLikesToNotification();
-          //     } else {
-          //       likesRef.doc(docs[0].id).delete();
-          //
-          //       removeLikeFromNotification();
-          //     }
-          //   },
-          //   icon: docs.isEmpty
-          //       ? Icon(
-          //           CupertinoIcons.heart,
-          //         )
-          //       : Icon(
-          //           CupertinoIcons.heart_fill,
-          //           color: Colors.red,
-          //         ),
-          // );
+
           ///added animated like button
           Future<bool> onLikeButtonTapped(bool isLiked) async {
             if (docs.isEmpty) {
@@ -393,7 +300,7 @@ class _CommentsState extends State<Comments> {
         '$count likes',
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 10.0,
+          fontSize: 13.0,
         ),
       ),
     );

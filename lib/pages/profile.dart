@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:social_media_app/auth/register/register.dart';
 import 'package:social_media_app/components/stream_grid_wrapper.dart';
@@ -11,6 +12,7 @@ import 'package:social_media_app/models/user.dart';
 import 'package:social_media_app/screens/edit_profile.dart';
 import 'package:social_media_app/screens/list_posts.dart';
 import 'package:social_media_app/screens/settings.dart';
+import 'package:social_media_app/utils/constants.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/post_tiles.dart';
 
@@ -59,34 +61,14 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+          Constants.appName,
+          style: GoogleFonts.bigshotOne(
+            fontSize: 25.0,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
         centerTitle: true,
-        title: Text('WOOBLE'),
-        actions: [
-          widget.profileId == firebaseAuth.currentUser!.uid
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 25.0),
-                    child: GestureDetector(
-                      onTap: () async {
-                        await firebaseAuth.signOut();
-                        Navigator.of(context).push(
-                          CupertinoPageRoute(
-                            builder: (_) => Register(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        'Log Out',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 15.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              : SizedBox()
-        ],
       ),
       body: CustomScrollView(
         slivers: <Widget>[
@@ -159,7 +141,7 @@ class _ProfileState extends State<Profile> {
                                             user.username!,
                                             style: TextStyle(
                                               fontSize: 15.0,
-                                              fontWeight: FontWeight.w900,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                             maxLines: null,
                                           ),
@@ -170,7 +152,9 @@ class _ProfileState extends State<Profile> {
                                             user.country!,
                                             style: TextStyle(
                                               fontSize: 12.0,
-                                              fontWeight: FontWeight.w600,
+                                              color: Theme.of(context)
+                                                  .iconTheme
+                                                  .color,
                                             ),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
@@ -185,13 +169,17 @@ class _ProfileState extends State<Profile> {
                                             Text(
                                               user.email!,
                                               style: TextStyle(
-                                                fontSize: 10.0,
+                                                fontSize: 12.0,
+                                                color: Theme.of(context)
+                                                    .iconTheme
+                                                    .color,
                                               ),
                                             ),
                                           ],
                                         ),
                                       ],
                                     ),
+                                    const SizedBox(width: 40.0),
                                     widget.profileId == currentUserId()
                                         ? InkWell(
                                             onTap: () {
@@ -201,24 +189,14 @@ class _ProfileState extends State<Profile> {
                                                 ),
                                               );
                                             },
-                                            child: Column(
-                                              children: [
-                                                Icon(
-                                                  Ionicons.settings_outline,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                                ),
-                                                Text(
-                                                  'settings',
-                                                  style: TextStyle(
-                                                    fontSize: 11.5,
-                                                  ),
-                                                )
-                                              ],
+                                            child: Icon(
+                                              Ionicons.settings_outline,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
                                             ),
                                           )
-                                        : const Text('')
+                                        : const SizedBox.shrink()
                                     // : buildLikeButton()
                                   ],
                                 ),
@@ -235,8 +213,7 @@ class _ProfileState extends State<Profile> {
                                   child: Text(
                                     user.bio!,
                                     style: TextStyle(
-                                      fontSize: 10.0,
-                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12.0,
                                     ),
                                     maxLines: null,
                                   ),
@@ -263,9 +240,9 @@ class _ProfileState extends State<Profile> {
                                           snapshot.data;
                                       List<DocumentSnapshot> docs = snap!.docs;
                                       return buildCount(
-                                          "POSTS", docs.length ?? 0);
+                                          "Posts", docs.length ?? 0);
                                     } else {
-                                      return buildCount("POSTS", 0);
+                                      return buildCount("Posts", 0);
                                     }
                                   },
                                 ),
@@ -289,9 +266,9 @@ class _ProfileState extends State<Profile> {
                                           snapshot.data;
                                       List<DocumentSnapshot> docs = snap!.docs;
                                       return buildCount(
-                                          "FOLLOWERS", docs.length ?? 0);
+                                          "Followers", docs.length ?? 0);
                                     } else {
-                                      return buildCount("FOLLOWERS", 0);
+                                      return buildCount("Followers", 0);
                                     }
                                   },
                                 ),
@@ -315,9 +292,9 @@ class _ProfileState extends State<Profile> {
                                           snapshot.data;
                                       List<DocumentSnapshot> docs = snap!.docs;
                                       return buildCount(
-                                          "FOLLOWING", docs.length ?? 0);
+                                          "Following", docs.length ?? 0);
                                     } else {
-                                      return buildCount("FOLLOWING", 0);
+                                      return buildCount("Following", 0);
                                     }
                                   },
                                 ),
@@ -346,7 +323,10 @@ class _ProfileState extends State<Profile> {
                         children: [
                           Text(
                             'All Posts',
-                            style: TextStyle(fontWeight: FontWeight.w900),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.0,
+                            ),
                           ),
                           const Spacer(),
                           IconButton(
@@ -389,7 +369,7 @@ class _ProfileState extends State<Profile> {
           count.toString(),
           style: TextStyle(
             fontSize: 16.0,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.bold,
             fontFamily: 'Ubuntu-Regular',
           ),
         ),
@@ -398,7 +378,6 @@ class _ProfileState extends State<Profile> {
           label,
           style: TextStyle(
             fontSize: 15,
-            fontWeight: FontWeight.w400,
             fontFamily: 'Ubuntu-Regular',
           ),
         )

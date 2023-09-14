@@ -18,8 +18,9 @@ class StoryWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 5.0),
         child: StreamBuilder<QuerySnapshot>(
-          stream: userChatsStream('${firebaseAuth.currentUser!.uid}'),
+          stream: viewersStream('${firebaseAuth.currentUser!.uid}'),
           builder: (context, snapshot) {
+            print(snapshot.error);
             if (snapshot.hasData) {
               List chatList = snapshot.data!.docs;
               if (chatList.isNotEmpty) {
@@ -31,7 +32,7 @@ class StoryWidget extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     DocumentSnapshot statusListSnapshot = chatList[index];
                     return StreamBuilder<QuerySnapshot>(
-                      stream: messageListStream(statusListSnapshot.id),
+                      stream: statusListStream(statusListSnapshot.id),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           List statuses = snapshot.data!.docs;
@@ -43,10 +44,11 @@ class StoryWidget extends StatelessWidget {
                           // list so we can get the rest of the user's id
                           users.remove('${firebaseAuth.currentUser!.uid}');
                           return _buildStatusAvatar(
-                              statusListSnapshot.get('userId'),
-                              statusListSnapshot.id,
-                              status.statusId!,
-                              index);
+                            statusListSnapshot.get('userId'),
+                            statusListSnapshot.id,
+                            status.statusId!,
+                            index,
+                          );
                         } else {
                           return const SizedBox();
                         }
@@ -86,7 +88,7 @@ class StoryWidget extends StatelessWidget {
             documentSnapshot.data() as Map<String, dynamic>,
           );
           return Padding(
-            padding: const EdgeInsets.only(right: 10.0),
+            padding: const EdgeInsets.only(right: 20.0),
             child: Column(
               children: [
                 InkWell(
@@ -121,10 +123,14 @@ class StoryWidget extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(1.5),
                       child: CircleAvatar(
-                        radius: 30.0,
-                        backgroundColor: Colors.grey,
-                        backgroundImage: CachedNetworkImageProvider(
-                          user.photoUrl!,
+                        radius: 33.0,
+                        backgroundColor: Colors.white,
+                        child: CircleAvatar(
+                          radius: 30.0,
+                          backgroundColor: Colors.grey,
+                          backgroundImage: CachedNetworkImageProvider(
+                            user.photoUrl!,
+                          ),
                         ),
                       ),
                     ),
@@ -134,7 +140,7 @@ class StoryWidget extends StatelessWidget {
                 Text(
                   user.username!,
                   style: TextStyle(
-                    fontSize: 10.0,
+                    fontSize: 14.0,
                     fontWeight: FontWeight.w900,
                   ),
                 )
@@ -148,11 +154,16 @@ class StoryWidget extends StatelessWidget {
     );
   }
 
-  Stream<QuerySnapshot> userChatsStream(String uid) {
-    return statusRef.where('whoCanSee', arrayContains: '$uid').snapshots();
+  Stream<QuerySnapshot> viewersStream(String uid) {
+    return statusRef
+        .where('whoCanSee', arrayContains: '$uid')
+        .snapshots();
   }
 
-  Stream<QuerySnapshot> messageListStream(String documentId) {
-    return statusRef.doc(documentId).collection('statuses').snapshots();
+  Stream<QuerySnapshot> statusListStream(String documentId) {
+    return statusRef
+        .doc(documentId)
+        .collection('statuses')
+        .snapshots();
   }
 }

@@ -38,7 +38,7 @@ class _ConversationState extends State<Conversation> {
     scrollController.addListener(() {
       focusNode.unfocus();
     });
-    if (widget.chatId == 'newChat') {
+    if (widget.chatId == 'newMsg') {
       isFirst = true;
     }
     chatId = widget.chatId;

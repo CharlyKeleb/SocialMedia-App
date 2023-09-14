@@ -37,7 +37,7 @@ class _ChatsState extends State<Chats> {
         title: Text("Chats"),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: userChatsStream('${viewModel.user!.uid ?? ""}'),
+        stream: userChatsStream('${viewModel.user?.uid ?? ""}'),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List chatList = snapshot.data!.docs;

@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:social_media_app/chats/conversation.dart';
 import 'package:social_media_app/models/user.dart';
@@ -74,7 +76,8 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
         automaticallyImplyLeading: false,
         title: Text(
           Constants.appName,
-          style: TextStyle(
+          style: GoogleFonts.bigshotOne(
+            fontSize: 25.0,
             fontWeight: FontWeight.w900,
           ),
         ),
@@ -102,45 +105,15 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
     return Row(
       children: [
         Container(
-          height: 30.0,
+          height: 40.0,
           width: MediaQuery.of(context).size.width - 50,
-          decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(20.0),
-          ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0),
-            child: TextFormField(
-              controller: searchController,
-              textAlignVertical: TextAlignVertical.center,
-              maxLength: 10,
-              maxLengthEnforcement: MaxLengthEnforcement.enforced,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(20),
-              ],
-              textCapitalization: TextCapitalization.sentences,
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: CupertinoSearchTextField(
+              placeholder: 'Search user',
               onChanged: (query) {
                 search(query);
               },
-              decoration: InputDecoration(
-                suffixIcon: GestureDetector(
-                  onTap: () {
-                    searchController.clear();
-                  },
-                  child: Icon(
-                    Ionicons.close_outline,
-                    size: 12.0,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                ),
-                // contentPadding: EdgeInsets.only(bottom: 10.0, left: 10.0),
-                border: InputBorder.none,
-                counterText: '',
-                hintText: 'Search...',
-                hintStyle: TextStyle(
-                  fontSize: 13.0,
-                ),
-              ),
             ),
           ),
         ),
@@ -152,8 +125,10 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
     if (!loading) {
       if (filteredUsers.isEmpty) {
         return Center(
-          child: Text("No User Found",
-              style: TextStyle(fontWeight: FontWeight.bold),),
+          child: Text(
+            "No User Found",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
         );
       } else {
         return Expanded(
@@ -175,7 +150,7 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
                   onTap: () => showProfile(context, profileId: user.id!),
                   leading: user.photoUrl!.isEmpty
                       ? CircleAvatar(
-                          radius: 20.0,
+                          radius: 25.0,
                           backgroundColor:
                               Theme.of(context).colorScheme.secondary,
                           child: Center(
@@ -190,7 +165,7 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
                           ),
                         )
                       : CircleAvatar(
-                          radius: 20.0,
+                          radius: 25.0,
                           backgroundImage: CachedNetworkImageProvider(
                             '${user.photoUrl}',
                           ),
@@ -202,66 +177,52 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
                   subtitle: Text(
                     user.email!,
                   ),
-                  trailing: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (_) => StreamBuilder(
-                            stream: chatIdRef
-                                .where(
-                                  "users",
-                                  isEqualTo: getUser(
-                                    firebaseAuth.currentUser!.uid,
-                                    doc.id,
-                                  ),
-                                )
-                                .snapshots(),
-                            builder: (context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (snapshot.hasData) {
-                                var snap = snapshot.data;
-                                List docs = snap!.docs;
-                                print(snapshot.data!.docs.toString());
-                                return docs.isEmpty
-                                    ? Conversation(
-                                        userId: doc.id,
-                                        chatId: 'newChat',
-                                      )
-                                    : Conversation(
-                                        userId: doc.id,
-                                        chatId:
-                                            docs[0].get('chatId').toString(),
-                                      );
-                              }
-                              return Conversation(
-                                userId: doc.id,
-                                chatId: 'newChat',
-                              );
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      height: 30.0,
-                      width: 62.0,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.secondary,
-                        borderRadius: BorderRadius.circular(3.0),
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Text(
-                            'Message',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.bold,
+                  trailing: Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (_) => StreamBuilder(
+                              stream: chatIdRef
+                                  .where(
+                                    "users",
+                                    isEqualTo: getUser(
+                                      firebaseAuth.currentUser!.uid,
+                                      doc.id,
+                                    ),
+                                  )
+                                  .snapshots(),
+                              builder: (context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasData) {
+                                  var snap = snapshot.data;
+                                  List docs = snap!.docs;
+                                  print(snapshot.data!.docs.toString());
+                                  return docs.isEmpty
+                                      ? Conversation(
+                                          userId: doc.id,
+                                          chatId: 'newMsg',
+                                        )
+                                      : Conversation(
+                                          userId: doc.id,
+                                          chatId:
+                                              docs[0].get('chatId').toString(),
+                                        );
+                                }
+                                return Conversation(
+                                  userId: doc.id,
+                                  chatId: 'newMsg',
+                                );
+                              },
                             ),
                           ),
-                        ),
+                        );
+                      },
+                      child: Icon(
+                        Iconsax.message,
+                        color: Theme.of(context).iconTheme.color,
                       ),
                     ),
                   ),
@@ -272,8 +233,11 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
         );
       }
     } else {
-      return Center(
-        child: circularProgress(context),
+      return Padding(
+        padding: const EdgeInsets.only(top: 20.0),
+        child: Center(
+          child: CupertinoActivityIndicator(),
+        ),
       );
     }
   }

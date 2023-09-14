@@ -150,14 +150,14 @@ class _ActivityItemsState extends State<ActivityItems> {
       child: CachedNetworkImage(
         imageUrl: widget.activity!.mediaUrl!,
         placeholder: (context, url) {
-          return circularProgress(context);
+          return CupertinoActivityIndicator();
         },
         errorWidget: (context, url, error) {
           return Icon(Icons.error);
         },
-        height: 40.0,
+        height: 50.0,
         fit: BoxFit.cover,
-        width: 40.0,
+        width: 50.0,
       ),
     );
   }

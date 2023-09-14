@@ -15,10 +15,10 @@ class ChatBubbleWidget extends StatefulWidget {
   final bool? isMe;
 
   ChatBubbleWidget({
-    @required this.message,
-    @required this.time,
-    @required this.isMe,
-    @required this.type,
+    required this.message,
+    required this.time,
+    required this.isMe,
+    required this.type,
   });
 
   @override
@@ -52,14 +52,14 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
         widget.isMe! ? CrossAxisAlignment.end : CrossAxisAlignment.start;
     final radius = widget.isMe!
         ? BorderRadius.only(
-            topLeft: Radius.circular(5.0),
-            bottomLeft: Radius.circular(5.0),
+            topLeft: Radius.circular(10.0),
+            bottomLeft: Radius.circular(10.0),
             bottomRight: Radius.circular(10.0),
           )
         : BorderRadius.only(
-            topRight: Radius.circular(5.0),
+            topRight: Radius.circular(10.0),
             bottomLeft: Radius.circular(10.0),
-            bottomRight: Radius.circular(5.0),
+            bottomRight: Radius.circular(10.0),
           );
     return Column(
       crossAxisAlignment: align,
@@ -70,8 +70,8 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
           padding: const EdgeInsets.all(5.0),
           alignment:
               widget.isMe! ? Alignment.centerRight : Alignment.centerLeft,
-          clipper: ChatBubbleClipper3(
-            nipSize: 0,
+          clipper: ChatBubbleClipper4(
+            // nipSize: 0,
             type: widget.isMe!
                 ? BubbleType.sendBubble
                 : BubbleType.receiverBubble,
