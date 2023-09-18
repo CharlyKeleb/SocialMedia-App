@@ -8,6 +8,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/chats/recent_chats.dart';
 import 'package:social_media_app/models/post.dart';
+import 'package:social_media_app/screens/notification.dart';
 import 'package:social_media_app/utils/constants.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/view_models/status/home/home_view_model.dart';
@@ -51,8 +52,22 @@ class _FeedsState extends State<Feeds> with AutomaticKeepAliveClientMixin {
         actions: [
           IconButton(
             icon: Icon(
+              Iconsax.notification,
+              size: 25.0,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (_) => Activities(),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(
               Iconsax.message,
-              size: 30.0,
+              size: 25.0,
             ),
             onPressed: () {
               Navigator.push(
@@ -63,7 +78,7 @@ class _FeedsState extends State<Feeds> with AutomaticKeepAliveClientMixin {
               );
             },
           ),
-          SizedBox(width: 20.0),
+          SizedBox(width: 5.0),
         ],
       ),
       body: RefreshIndicator(
@@ -77,7 +92,6 @@ class _FeedsState extends State<Feeds> with AutomaticKeepAliveClientMixin {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               StoryWidget(),
-
               Flexible(
                 child: ListView.builder(
                   controller: viewModel.scrollController,
