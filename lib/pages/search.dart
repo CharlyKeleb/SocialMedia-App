@@ -76,7 +76,7 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
         automaticallyImplyLeading: false,
         title: Text(
           Constants.appName,
-          style: GoogleFonts.bigshotOne(
+          style: TextStyle(
             fontSize: 25.0,
             fontWeight: FontWeight.w900,
           ),

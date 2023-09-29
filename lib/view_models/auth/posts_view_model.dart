@@ -6,6 +6,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/screens/mainscreen.dart';
 import 'package:social_media_app/services/post_service.dart';
@@ -22,14 +23,13 @@ class PostsViewModel extends ChangeNotifier {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  //Variables
+  //booleans
+  bool edit = false;
   bool loading = false;
+
+  //strings
   String? username;
-  File? mediaUrl;
-  final picker = ImagePicker();
   String? location;
-  Position? position;
-  Placemark? placemark;
   String? bio;
   String? description;
   String? email;
@@ -37,10 +37,20 @@ class PostsViewModel extends ChangeNotifier {
   String? ownerId;
   String? userId;
   String? type;
-  File? userDp;
   String? imgLink;
-  bool edit = false;
   String? id;
+
+  //locators
+  Placemark? placemark;
+  Position? position;
+
+  //files
+  File? mediaUrl;
+  File? userDp;
+
+  //initializers
+  final picker = ImagePicker();
+  final player = AudioPlayer();
 
   //controllers
   TextEditingController locationTEC = TextEditingController();

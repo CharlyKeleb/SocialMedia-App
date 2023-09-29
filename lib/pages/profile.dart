@@ -63,7 +63,7 @@ class _ProfileState extends State<Profile> {
       appBar: AppBar(
         title: Text(
           Constants.appName,
-          style: GoogleFonts.bigshotOne(
+          style: TextStyle(
             fontSize: 25.0,
             fontWeight: FontWeight.w900,
           ),
@@ -78,7 +78,7 @@ class _ProfileState extends State<Profile> {
             floating: false,
             toolbarHeight: 5.0,
             collapsedHeight: 6.0,
-            expandedHeight: 225.0,
+            expandedHeight: 230.0,
             flexibleSpace: FlexibleSpaceBar(
               background: StreamBuilder(
                 stream: usersRef.doc(widget.profileId).snapshots(),

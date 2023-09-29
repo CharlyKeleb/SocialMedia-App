@@ -46,7 +46,7 @@ class _CreatePostState extends State<CreatePost> {
             ),
             title: Text(
               Constants.appName,
-              style: GoogleFonts.bigshotOne(
+              style: TextStyle(
                 fontSize: 25.0,
                 fontWeight: FontWeight.w900,
               ),

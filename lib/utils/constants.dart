@@ -18,6 +18,7 @@ class Constants {
 
   static ThemeData lightTheme = ThemeData(
     backgroundColor: lightBG,
+    fontFamily: 'General Sans',
     primaryColor: lightPrimary,
     textSelectionTheme: TextSelectionThemeData(
       cursorColor: lightAccent,

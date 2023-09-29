@@ -93,6 +93,8 @@ class _WoobleReelsState extends State<WoobleReels> {
                                           child: CircleAvatar(
                                             radius: 18.0,
                                             backgroundColor: Colors.grey,
+                                            backgroundImage: AssetImage(
+                                                'assets/images/cm0.jpeg'),
                                           ),
                                         ),
                                       ),
@@ -104,6 +106,7 @@ class _WoobleReelsState extends State<WoobleReels> {
                                         'CharlyKeleb.dev',
                                         style: TextStyle(
                                           fontSize: 15.0,
+                                          color:Colors.white,
                                           fontWeight: FontWeight.w900,
                                         ),
                                       ),
@@ -114,40 +117,49 @@ class _WoobleReelsState extends State<WoobleReels> {
                                   "Hi guys, we just rolled out a new release",
                                   style: TextStyle(
                                     fontSize: 14.0,
+                                    color:Colors.white,
+
                                   ),
                                 ),
-                                OutlinedButton(
-                                  style: ButtonStyle(
-                                    overlayColor:
-                                        MaterialStateProperty.all<Color>(
-                                      Colors.grey.withOpacity(0.6),
-                                    ),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
+                                SizedBox(
+                                  width: 200.0,
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                      overlayColor:
+                                          MaterialStateProperty.all<Color>(
+                                        Colors.grey.withOpacity(0.2),
                                       ),
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Iconsax.music,
-                                        size: 15.0,
-                                        color: Colors.white,
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                        Colors.grey.withOpacity(0.2),
                                       ),
-                                      SizedBox(width: 10.0),
-                                      Text(
-                                        "Blow off my cover",
-                                        style: TextStyle(
-                                          fontSize: 14.5,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
                                         ),
                                       ),
-                                    ],
+                                    ),
+                                    onPressed: () {},
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Iconsax.music,
+                                          size: 15.0,
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(width: 10.0),
+                                        Text(
+                                          "Blow off my cover",
+                                          style: TextStyle(
+                                            fontSize: 14.5,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 )
                               ],
