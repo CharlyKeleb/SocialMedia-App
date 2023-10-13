@@ -58,6 +58,8 @@ dependencies:
   iconsax: ^0.0.8
   geocoding: ^2.0.0
   just_audio: ^0.9.35
+  shimmer: ^3.0.0
+  video_player: ^2.7.2
 
 dev_dependencies:
   flutter_test:

@@ -13,7 +13,7 @@ class PostService extends Service {
 
 //uploads profile picture to the users collection
   uploadProfilePicture(File image, User user) async {
-    String link = await uploadImage(profilePic, image);
+    String link = await uploadMedia(profilePic, image);
     var ref = usersRef.doc(user.uid);
     ref.update({
       "photoUrl": link,
@@ -22,7 +22,7 @@ class PostService extends Service {
 
 //uploads post to the post collection
   uploadPost(File image, String location, String description) async {
-    String link = await uploadImage(posts, image);
+    String link = await uploadMedia(posts, image);
     DocumentSnapshot doc =
         await usersRef.doc(firebaseAuth.currentUser!.uid).get();
     user = UserModel.fromJson(
@@ -39,6 +39,30 @@ class PostService extends Service {
       "location": location ?? "Wooble",
       "timestamp": Timestamp.now(),
     }).catchError((e) {
+      print(e);
+    });
+  }
+
+  //uploads reels to the reels collection
+  uploadReel(File video, String music, String description) async {
+    String link = await uploadMedia(posts, video);
+    DocumentSnapshot doc =
+        await usersRef.doc(firebaseAuth.currentUser!.uid).get();
+    user = UserModel.fromJson(
+      doc.data() as Map<String, dynamic>,
+    );
+    var ref = reelsRef.doc();
+    ref.set({
+      "id": ref.id,
+      "postId": ref.id,
+      "username": user!.username,
+      "ownerId": firebaseAuth.currentUser!.uid,
+      "mediaUrl": link,
+      "music": music,
+      "description": description ?? "",
+      "timestamp": Timestamp.now(),
+    }).catchError((e) {
+      //print
       print(e);
     });
   }

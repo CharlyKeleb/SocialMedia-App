@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -9,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/screens/mainscreen.dart';
+import 'package:social_media_app/services/pagination_service.dart';
 import 'package:social_media_app/services/post_service.dart';
 import 'package:social_media_app/services/user_service.dart';
 import 'package:social_media_app/utils/constants.dart';
@@ -26,10 +28,20 @@ class PostsViewModel extends ChangeNotifier {
   //booleans
   bool edit = false;
   bool loading = false;
+  bool loadingMore = false;
+  bool loadMore = true;
+
+  //firestore
+  final FirestorePagination _pagination = FirestorePagination(30);
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  //list
+  List<DocumentSnapshot> data = [];
 
   //strings
   String? username;
   String? location;
+  String? selectedSong;
   String? bio;
   String? description;
   String? email;
@@ -47,6 +59,7 @@ class PostsViewModel extends ChangeNotifier {
   //files
   File? mediaUrl;
   File? userDp;
+  File? video;
 
   //initializers
   final picker = ImagePicker();
@@ -58,6 +71,11 @@ class PostsViewModel extends ChangeNotifier {
   //Setters
   setEdit(bool val) {
     edit = val;
+    notifyListeners();
+  }
+
+  setSong(String val) {
+    selectedSong = val;
     notifyListeners();
   }
 
@@ -139,6 +157,23 @@ class PostsViewModel extends ChangeNotifier {
     }
   }
 
+  //pick a video from gallery
+  pickVideo({bool camera = false, required context}) async {
+    loading = true;
+    notifyListeners();
+    try {
+      XFile? pickedFile = await picker.pickVideo(
+        source: camera ? ImageSource.camera : ImageSource.gallery,
+      );
+      video = File(pickedFile!.path);
+      loading = false;
+      notifyListeners();
+    } catch (e) {
+      loading = false;
+      notifyListeners();
+    }
+  }
+
   getLocation() async {
     loading = true;
     notifyListeners();
@@ -163,11 +198,37 @@ class PostsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  //get reels
+  getReels() async {
+    Query<Map<String, dynamic>> query =
+        _firestore.collection('reels').orderBy('timestamp', descending: true);
+    final QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
+    data.addAll(querySnapshot.docs);
+  }
+
   uploadPosts(BuildContext context) async {
     try {
       loading = true;
       notifyListeners();
       await postService.uploadPost(mediaUrl!, location!, description!);
+      loading = false;
+      resetPost();
+      notifyListeners();
+    } catch (e) {
+      print(e);
+      loading = false;
+      resetPost();
+      showInSnackBar('Uploaded successfully!', context);
+      notifyListeners();
+    }
+  }
+
+  uploadReel(BuildContext context) async {
+    try {
+      loading = true;
+      notifyListeners();
+      await postService.uploadReel(
+          mediaUrl!, selectedSong ?? "", description ?? "");
       loading = false;
       resetPost();
       notifyListeners();

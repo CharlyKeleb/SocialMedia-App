@@ -14,6 +14,7 @@ class HomeViewModel extends ChangeNotifier {
 
   ScrollController scrollController = ScrollController();
 
+  //listens to the scroll controller and fetch new reels
   listener() {
     scrollController.addListener(() {
       if (scrollController.position.pixels ==
@@ -49,6 +50,7 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
+  //load feeds
   Future<void> loadData() async {
     if (!loading) return;
     loading = true;

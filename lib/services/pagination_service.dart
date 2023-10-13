@@ -27,4 +27,5 @@ class FirestorePagination {
       return [];
     }
   }
+
 }

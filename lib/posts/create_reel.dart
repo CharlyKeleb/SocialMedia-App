@@ -2,11 +2,14 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:social_media_app/components/custom_audio.dart';
+import 'package:social_media_app/components/custom_video_player.dart';
 import 'package:social_media_app/models/music_model.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/view_models/auth/posts_view_model.dart';
@@ -38,7 +41,7 @@ class _CreateReelState extends State<CreateReel> {
               child: InkWell(
                 onTap: () {},
                 child: Text(
-                  'Post',
+                  'upload',
                   style: TextStyle(
                     // fontSize: 14.0,
                     color: Theme.of(context).colorScheme.secondary,
@@ -55,14 +58,67 @@ class _CreateReelState extends State<CreateReel> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  height: MediaQuery.of(context).size.height / 2.3,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/cm0.jpeg'),
-                      fit: BoxFit.cover,
-                    ),
+                InkWell(
+                  onTap: () => viewModel.pickVideo(
+                    context: context,
+                    camera: false,
+                  ),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width - 30,
+                    decoration: Theme.of(context).brightness == Brightness.dark
+                        ? BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white.withOpacity(0.1),
+                                offset: Offset(-6.0, -6.0),
+                                blurRadius: 16.0,
+                              ),
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.4),
+                                offset: Offset(6.0, 6.0),
+                                blurRadius: 16.0,
+                              ),
+                            ],
+                            color: Color(0xff2B2B2B),
+                            borderRadius: BorderRadius.circular(12.0),
+                          )
+                        : BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey.withOpacity(0.1),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white.withOpacity(0.8),
+                                offset: Offset(-6.0, -6.0),
+                                blurRadius: 16.0,
+                              ),
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                offset: Offset(6.0, 6.0),
+                                blurRadius: 16.0,
+                              ),
+                            ],
+                            color: Color(0xFFEFEEEE),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                    child: viewModel.video == null
+                        ? Center(
+                            child: Text(
+                              'Pick a video',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
+                          )
+                        : MiniVideoPlayer(
+                            autoPlay: true,
+                            videoUrl: viewModel.video?.path ?? "",
+                            fromNetwork: false,
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.width - 30,
+                          ),
                   ),
                 ),
                 SizedBox(height: 20.0),
@@ -82,7 +138,7 @@ class _CreateReelState extends State<CreateReel> {
                         ),
                       ),
                     ),
-                    onPressed: () => selectMusic(),
+                    onPressed: () => selectMusic(viewModel),
                     child: Row(
                       children: [
                         Text(
@@ -98,6 +154,14 @@ class _CreateReelState extends State<CreateReel> {
                       ],
                     ),
                   ),
+                ),
+                SizedBox(height: 5.0),
+                Row(
+                  children: [
+                    Icon(Iconsax.music, size: 15.0),
+                    SizedBox(width: 10.0),
+                    Text(viewModel.selectedSong ?? 'M HUNCHO - TRANQUILTY'),
+                  ],
                 ),
                 SizedBox(height: 20.0),
                 Text(
@@ -123,8 +187,8 @@ class _CreateReelState extends State<CreateReel> {
     );
   }
 
-  selectMusic() {
-    int selectedTileIndex = -1;
+  selectMusic(PostsViewModel viewModel) {
+    int? selectedTileIndex;
     return showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -185,13 +249,17 @@ class _CreateReelState extends State<CreateReel> {
                                     : null,
                                 // Change color when selected
                                 onTap: () {
-                                  setState(() {
-                                    if (selectedTileIndex == index) {
-                                      selectedTileIndex = -1;
-                                    } else {
+                                  if (selectedTileIndex == index) {
+                                    setState(() {
+                                      selectedTileIndex = null;
+                                    });
+                                  } else {
+                                    setState(() {
                                       selectedTileIndex = index;
-                                    }
-                                  });
+                                    });
+                                    print('>>>>>>>>>>>>> ${song.name ?? ""}');
+                                    viewModel.setSong(song.name!);
+                                  }
                                 },
                                 leading: Container(
                                   height: 50,
@@ -214,48 +282,69 @@ class _CreateReelState extends State<CreateReel> {
                           },
                         );
                       } else {
-                        return ListTile(
-                          leading: Container(
-                            height: 100.0,
-                            width: 60.0,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.4),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: Icon(CupertinoIcons.play, size: 30.0),
-                            ),
-                          ),
-                          title: Container(
-                            height: 10.0,
-                            width: 120.0,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.4),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                          ),
-                          subtitle: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                height: 10.0,
-                                width: 80.0,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.4),
-                                  borderRadius: BorderRadius.circular(10.0),
+                        return ListView.separated(
+                          itemCount: 5,
+                          separatorBuilder: (BuildContext context, int index) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 30.0, right: 20),
+                              child: Divider(),
+                            );
+                          },
+                          itemBuilder: (BuildContext context, int index) {
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey,
+                              highlightColor: Colors.grey.withOpacity(0.2),
+                              child: ListTile(
+                                leading: Container(
+                                  height: 50.0,
+                                  width: 50.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.4),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Center(
+                                    child:
+                                        Icon(CupertinoIcons.play, size: 30.0),
+                                  ),
+                                ),
+                                title: Container(
+                                  height: 15.0,
+                                  width: 100.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.4),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                subtitle: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 5.0),
+                                    Container(
+                                      height: 15.0,
+                                      width: 50.0,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(0.4),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5.0),
+                                    Container(
+                                      height: 15.0,
+                                      width: 200.0,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(0.4),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
-                              Container(
-                                height: 10.0,
-                                width: 300.0,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.4),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              )
-                            ],
-                          ),
+                            );
+                          },
                         );
                       }
                     },

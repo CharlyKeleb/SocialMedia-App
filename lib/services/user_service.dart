@@ -30,7 +30,7 @@ class UserService extends Service {
     users.bio = bio;
     users.country = country;
     if (image != null) {
-      users.photoUrl = await uploadImage(profilePic, image);
+      users.photoUrl = await uploadMedia(profilePic, image);
     }
     await usersRef.doc(currentUid()).update({
       'username': username,
