@@ -1,16 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:like_button/like_button.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:social_media_app/models/post.dart';
 import 'package:social_media_app/models/user.dart';
-import 'package:social_media_app/services/post_service.dart';
 import 'package:social_media_app/utils/firebase.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:social_media_app/components/video_player.dart';
 import 'package:social_media_app/view_models/auth/posts_view_model.dart';
 
 class WoobleReels extends StatefulWidget {
@@ -49,12 +49,7 @@ class _WoobleReelsState extends State<WoobleReels> {
           );
           return Stack(
             children: [
-              Image.asset(
-                'assets/images/cm0.jpeg',
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                fit: BoxFit.cover,
-              ),
+             VideoPlayerScreen(videoUrl: posts.mediaUrl??""),
               Column(
                 children: [
                   Container(

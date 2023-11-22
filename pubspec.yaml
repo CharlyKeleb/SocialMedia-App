@@ -30,7 +30,6 @@ dependencies:
   cupertino_icons: ^1.0.0
   google_sign_in: ^6.1.5
   percent_indicator: ^4.2.2
-  cached_network_image: ^3.0.0
   flutter_spinkit: ^5.0.0
   cloud_firestore: ^4.9.1
   fluttertoast: ^8.0.7
@@ -60,6 +59,7 @@ dependencies:
   just_audio: ^0.9.35
   shimmer: ^3.0.0
   video_player: ^2.7.2
+  cached_network_image: ^3.3.0
 
 dev_dependencies:
   flutter_test:

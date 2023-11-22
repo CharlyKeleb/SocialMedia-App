@@ -41,7 +41,7 @@ class _ViewImageState extends State<ViewImage> {
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Container(
-            height: 50.0,
+            height: 60.0,
             width: MediaQuery.of(context).size.width,
             child: Row(
               children: [
@@ -51,9 +51,9 @@ class _ViewImageState extends State<ViewImage> {
                   children: [
                     Text(
                       widget.post!.username!,
-                      style: TextStyle(fontWeight: FontWeight.w800),
+                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: 10.0),
                     ),
-                    SizedBox(height: 3.0),
+                    // SizedBox(height: 3.0),
                     Row(
                       children: [
                         Icon(Ionicons.alarm_outline, size: 13.0),
@@ -144,29 +144,7 @@ class _ViewImageState extends State<ViewImage> {
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
           List<QueryDocumentSnapshot> docs = snapshot.data?.docs ?? [];
-          // return IconButton(
-          //   onPressed: () {
-          //     if (docs.isEmpty) {
-          //       likesRef.add({
-          //         'userId': currentUserId(),
-          //         'postId': widget.post!.postId,
-          //         'dateCreated': Timestamp.now(),
-          //       });
-          //       addLikesToNotification();
-          //     } else {
-          //       likesRef.doc(docs[0].id).delete();
-          //       removeLikeFromNotification();
-          //     }
-          //   },
-          //   icon: docs.isEmpty
-          //       ? Icon(
-          //           CupertinoIcons.heart,
-          //         )
-          //       : Icon(
-          //           CupertinoIcons.heart_fill,
-          //           color: Colors.red,
-          //         ),
-          // );
+
           ///added animated like button
           Future<bool> onLikeButtonTapped(bool isLiked) async {
             if (docs.isEmpty) {

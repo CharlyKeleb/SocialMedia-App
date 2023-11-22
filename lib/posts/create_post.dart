@@ -56,8 +56,8 @@ class _CreatePostState extends State<CreatePost> {
               GestureDetector(
                 onTap: () async {
                   await viewModel.uploadPosts(context);
-                  Navigator.pop(context);
-                  viewModel.resetPost();
+                  // Navigator.pop(context);
+                  // viewModel.resetPost();
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),

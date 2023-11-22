@@ -1,10 +1,7 @@
-import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:ionicons/ionicons.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -31,7 +28,7 @@ class _CreateReelState extends State<CreateReel> {
   Widget build(BuildContext context) {
     PostsViewModel viewModel = Provider.of<PostsViewModel>(context);
     return LoadingOverlay(
-      isLoading: false,
+      isLoading: viewModel.loading,
       progressIndicator: CircularProgressIndicator(),
       child: Scaffold(
         appBar: AppBar(
@@ -39,7 +36,7 @@ class _CreateReelState extends State<CreateReel> {
             Padding(
               padding: EdgeInsets.all(14.0),
               child: InkWell(
-                onTap: () {},
+                onTap: () => viewModel.uploadReel(context),
                 child: Text(
                   'upload',
                   style: TextStyle(
@@ -59,10 +56,9 @@ class _CreateReelState extends State<CreateReel> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 InkWell(
-                  onTap: () => viewModel.pickVideo(
-                    context: context,
-                    camera: false,
-                  ),
+                  onTap: () {
+                    viewModel.pickVideo(context: context, camera: false);
+                  },
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.width - 30,
@@ -188,7 +184,6 @@ class _CreateReelState extends State<CreateReel> {
   }
 
   selectMusic(PostsViewModel viewModel) {
-    int? selectedTileIndex;
     return showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -244,22 +239,9 @@ class _CreateReelState extends State<CreateReel> {
                             return StatefulBuilder(builder:
                                 (BuildContext context, StateSetter setState) {
                               return ListTile(
-                                tileColor: selectedTileIndex == index
-                                    ? Colors.blue
-                                    : null,
-                                // Change color when selected
-                                onTap: () {
-                                  if (selectedTileIndex == index) {
-                                    setState(() {
-                                      selectedTileIndex = null;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      selectedTileIndex = index;
-                                    });
-                                    print('>>>>>>>>>>>>> ${song.name ?? ""}');
-                                    viewModel.setSong(song.name!);
-                                  }
+                                onTap: () async {
+                                  await viewModel.setSong(song.name!);
+                                  Navigator.pop(context);
                                 },
                                 leading: Container(
                                   height: 50,

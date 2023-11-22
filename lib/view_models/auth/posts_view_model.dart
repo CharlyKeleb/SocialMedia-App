@@ -200,17 +200,23 @@ class PostsViewModel extends ChangeNotifier {
 
   //get reels
   getReels() async {
-    Query<Map<String, dynamic>> query =
-        _firestore.collection('reels').orderBy('timestamp', descending: true);
-    final QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
-    data.addAll(querySnapshot.docs);
+    try {
+      Query<Map<String, dynamic>> query =
+          _firestore.collection('reels').orderBy('timestamp', descending: true);
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await query.get();
+      data.addAll(querySnapshot.docs);
+    } catch (e) {
+      print('>>>>> $e');
+    }
   }
 
   uploadPosts(BuildContext context) async {
     try {
       loading = true;
       notifyListeners();
-      await postService.uploadPost(mediaUrl!, location!, description!);
+      await postService.uploadPost(
+          mediaUrl!, location ?? "", description ?? "");
       loading = false;
       resetPost();
       notifyListeners();
@@ -218,7 +224,7 @@ class PostsViewModel extends ChangeNotifier {
       print(e);
       loading = false;
       resetPost();
-      showInSnackBar('Uploaded successfully!', context);
+      showInSnackBar('Error Uploading!', context);
       notifyListeners();
     }
   }
@@ -228,7 +234,10 @@ class PostsViewModel extends ChangeNotifier {
       loading = true;
       notifyListeners();
       await postService.uploadReel(
-          mediaUrl!, selectedSong ?? "", description ?? "");
+        video!,
+        selectedSong ?? "",
+        description ?? "",
+      );
       loading = false;
       resetPost();
       notifyListeners();
@@ -236,7 +245,7 @@ class PostsViewModel extends ChangeNotifier {
       print(e);
       loading = false;
       resetPost();
-      showInSnackBar('Uploaded successfully!', context);
+      showInSnackBar('An error occured!', context);
       notifyListeners();
     }
   }
