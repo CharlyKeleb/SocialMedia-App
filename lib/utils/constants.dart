@@ -24,7 +24,7 @@ class Constants {
       cursorColor: lightAccent,
     ),
     scaffoldBackgroundColor: lightBG,
-    bottomAppBarTheme: BottomAppBarTheme(
+    bottomAppBarTheme: BottomAppBarThemeData(
       elevation: 0,
       color: lightBG,
     ),
@@ -58,7 +58,7 @@ class Constants {
     textSelectionTheme: TextSelectionThemeData(
       cursorColor: darkAccent,
     ),
-    bottomAppBarTheme: BottomAppBarTheme(
+    bottomAppBarTheme: BottomAppBarThemeData(
       elevation: 0,
       color: darkBG,
     ),
